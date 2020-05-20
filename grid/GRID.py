@@ -273,7 +273,7 @@ class GRID():
 
         saveDT(self, path, prefix)
         updateProgress(prog, name="Exporting Figures")
-        savePlot(self, path, prefix)
+        # savePlot(self, path, prefix)
 
         if h5:
             updateProgress(prog, name="Exporting shapefile")

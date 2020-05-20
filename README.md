@@ -9,6 +9,8 @@
 [![](https://img.shields.io/github/license/poissonfish/photo_grid)](https://github.com/Poissonfish/photo_grid/blob/master/LICENSE)
 [![](https://img.shields.io/github/languages/code-size/poissonfish/photo_grid)](https://github.com/Poissonfish/photo_grid/search?l=Python)
 
+<img src = "res/abstract.png" width = 1000>
+
 ### [Software Page (zzlab.net)](https://zzlab.net/GRID)
 
 ### [User Manual](https://poissonfish.github.io/GRID)

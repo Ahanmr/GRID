@@ -21,7 +21,7 @@ grid = gd.GRID()
 grid.loadData(
     # pathImg="/Users/jameschen/Dropbox/James Chen/GRID/Prototype/PineApple.jpg")
     # pathImg="/Users/jameschen/Dropbox/James Chen/GRID/Manuscript/Remote Sensing/First Revision/Demo/demo_2.tif")
-    pathImg="/Users/jameschen/Dropbox/James Chen/Projects/GRID/Prototype/GRID_Demo_Croped.jpg")
+    pathImg="/Users/jameschen/Dropbox/James Chen/Projects/GRID/Prototype/Alfalfa/GRID_Demo_Croped.jpg")
     # pathImg = "/Users/jameschen/Dropbox/James Chen/Projects/GRID/Prototype/Challenge/GRID_raw.png")
 # grid.cropImg(pts=[[5492.947791164658, 3003.9558232931727],
 #                   [5382.598393574297, 2108.8995983935743],
@@ -32,7 +32,7 @@ grid.binarizeImg(k=3, lsSelect=[0], valShad=0, valSmth=0)
 grid.findPlots(nRow=23, nCol=12)
 # grid.cpuSeg()
 
-g = GRID_GUI(grid, 4)  # 0:input, 1:crop, 2:kmean, 3:anchor, 4:output
+g = GRID_GUI(grid, 3)  # 0:input, 1:crop, 2:kmean, 3:anchor, 4:output
 app.exec_()
 
 
@@ -298,6 +298,55 @@ app.exec_()
 # plt.show()
 
 
+# k = 5
+# row = k
+# col = 4
+# i = 0
+
+# grid.binarizeImg(k=k, lsSelect=[0], valShad=0, valSmth=0, outplot=False)
+
+# === === === index value === === ===
+# import os
+# os.chdir("..")
+# sys.path
+# sys.path.remove("/Users/jameschen/Dropbox/photo_grid/grid")
+# os.getcwd()
+
+# import grid as gd
+# import numpy as np
+# import matplotlib.pyplot as plt
+
+# grid = gd.GRID()
+# # 90 deg
+# pathImg = "/Users/jameschen/Dropbox/James Chen/Projects/GRID/Prototype/Alfalfa/GRID_Demo_Croped.jpg"
+# grid.loadData(pathImg)
+# grid.binarizeImg(k=3, lsSelect=[0], valShad=0, valSmth=0)
+# grid.findPlots(nRow=23, nCol=12)
+# grid.cpuSeg()
+
+# # progress bar
+# nD = grid.imgs.depth
+# lsK = grid.imgs.paramKMs["lsSelect"]
+
+# # grab info from GRID obj
+# img = grid.imgs.get("crop").copy().astype(np.int)
+# ch1Sub = 1 if img.shape[2] == 3 else 3  # replace NIR with Gr if it's RGB
+
+
+# imgNum = (img[:, :, ch1Sub] - img[:, :, 0])
+# imgDet = (img[:, :, ch1Sub] + img[:, :, 0] + 1e-8)
+# imgNDVI = imgNum / imgDet
+
+# imgDet.shape
+# imgNum[1100:1200, 180:220]
+# imgNum[1100:1200, :50]
+# imgDet[1100:1200, 180:220]
+# imgDet[1100:1200, :50]
+
+# plt.imshow(img)
+# plt.imshow(imgNum)
+# plt.imshow(imgDet)
+# plt.imshow(imgNDVI)
 
 # === === === detect default rank of K === === === ===
 # import grid as gd
@@ -416,3 +465,4 @@ app.exec_()
 # app.exec_()
 
 #
+# 
