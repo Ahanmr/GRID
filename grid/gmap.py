@@ -144,7 +144,7 @@ class GMap():
                     self.nAxsCur[i] != nSigs[i] or
                     self.angles[i] != self.anglesCur[i]):
                 sig, intercept = self.cpuIntercept(angles[i], nSigs[i], nSmooth)
-            
+
                 self.sigs[i] = sig
                 self.itcs[i] = intercept
                 # update number of peaks
@@ -173,7 +173,7 @@ class GMap():
         ----------
         """
         imgH, imgW = self.imgBin.shape
-        tol = 0.025 
+        tol = 0.025
         bdN, bdS = -imgH*tol, imgH*(1+tol)
         bdW, bdE = -imgW*tol, imgW*(1+tol)
 
@@ -184,11 +184,6 @@ class GMap():
 
         itc_maj = np.sort(intercepts[0])
         itc_min = np.sort(intercepts[1])
-
-        print("old itc")
-        print(intercepts[1])
-        print("new itc")
-        print(itc_min)
 
         plotsMaj = []
         plotsMin = []
@@ -216,10 +211,10 @@ class GMap():
                     pMin += 1
             pMaj += 1
 
-        if idxCol==idxMaj:
+        if idxCol == idxMaj:
             dataframe = pd.DataFrame(
                 {"row": plotsMin, "col": plotsMaj, "pt": pts})
-        elif idxCol==idxMin:
+        elif idxCol == idxMin:
             dataframe = pd.DataFrame(
                 {"row": plotsMaj, "col": plotsMin, "pt": pts})
 
@@ -248,7 +243,7 @@ class GMap():
         ----------
         """
         dt = self.dt
-        return dt[(dt.row == row) & (dt.col==col)]['pt'].values[0]
+        return dt[(dt.row == row) & (dt.col == col)]['pt'].values[0]
 
     def getName(self, row, col):
         """

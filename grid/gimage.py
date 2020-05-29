@@ -304,12 +304,10 @@ class GImage():
         """
 
         for key in self.imgs.keys():
-            bugmsg(key)
             if key == 'raw' or key == 'rawRs': continue
             try:
                 self.set(key=key, value=np.rot90(self.get(key=key), nRot))
-            except Exception as e:
-                bugmsg(e)
+            except Exception:
                 None
         self.setShape(self.get("crop").shape)
 

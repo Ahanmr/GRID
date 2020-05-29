@@ -21,15 +21,12 @@ grid = gd.GRID()
 grid.loadData(
     # pathImg="/Users/jameschen/Dropbox/James Chen/GRID/Prototype/PineApple.jpg")
     # pathImg="/Users/jameschen/Dropbox/James Chen/GRID/Manuscript/Remote Sensing/First Revision/Demo/demo_2.tif")
-    pathImg="/Users/jameschen/Dropbox/James Chen/Projects/GRID/Prototype/Alfalfa/GRID_Demo_Croped.jpg")
-    # pathImg = "/Users/jameschen/Dropbox/James Chen/Projects/GRID/Prototype/Challenge/GRID_raw.png")
-# grid.cropImg(pts=[[5492.947791164658, 3003.9558232931727],
-#                   [5382.598393574297, 2108.8995983935743],
-#                   [1826.8955823293172, 2501.253012048193],
-#                   [1924.9839357429719, 3371.7871485943774]])
+    # pathImg="/Users/jameschen/Dropbox/James Chen/Projects/GRID/Prototype/Alfalfa/GRID_Demo_Croped.jpg")
+    # pathImg = "/Users/jameschen/Dropbox/photo_grid/test/GRID_raw.png")
+    pathImg = "/Users/jameschen/Dropbox/photo_grid/test/OatPea.png")
 
 grid.binarizeImg(k=3, lsSelect=[0], valShad=0, valSmth=0)
-grid.findPlots(nRow=23, nCol=12)
+# grid.findPlots(nRow=23, nCol=12)
 # grid.cpuSeg()
 
 g = GRID_GUI(grid, 3)  # 0:input, 1:crop, 2:kmean, 3:anchor, 4:output
