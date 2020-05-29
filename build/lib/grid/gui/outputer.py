@@ -369,7 +369,7 @@ class Widget_Seg(Widget_Img):
                 # if contain cursor
                 if rec_agent.contains(pos):
                     self.agent_click = agent
-                    if self.task==1:
+                    if self.task == 1:
                         # zoom and mod border
                         bd_W = rec_agent.x()
                         bd_N = rec_agent.y()
@@ -379,22 +379,20 @@ class Widget_Seg(Widget_Img):
                         dis_N = abs(pos.y()-bd_N)
                         dis_E = abs(pos.x()-bd_E)
                         dis_S = abs(pos.y()-bd_S)
-                        # bugmsg("W:%.2f, N:%.2f, E:%.2f, S:%.2f" %(dis_W, dis_N, dis_E, dis_S))
                         dir_idx = np.argmin(np.array([dis_N, dis_W, dis_S, dis_E]))
-                        if dir_idx==0:
+                        if dir_idx == 0:
                             self.dir = Dir.NORTH
-                        elif dir_idx==1:
+                        elif dir_idx == 1:
                             self.dir = Dir.WEST
-                        elif dir_idx==2:
+                        elif dir_idx == 2:
                             self.dir = Dir.SOUTH
-                        elif dir_idx==3:
+                        elif dir_idx == 3:
                             self.dir = Dir.EAST
                     break
 
         # mag module
         if event.button() == Qt.RightButton:
             self.task = (self.task + 1) % 4
-            bugmsg(self.task)
             self.mouseMoveEvent(event)
 
     def mouseMoveEvent(self, event):

@@ -88,9 +88,12 @@ class PnAnchor(QWidget):
         if agMaj == 0:
             self.idxMaj = 0
             self.rbMajAg[0].setChecked(True)
+            self.wgImg.isMajV = True
         else:
             self.idxMaj = 1
             self.rbMajAg[1].setChecked(True)
+            self.wgImg.isMajV = False
+
         self.spbTk[0].setValue(len(self.grid.map.itcs[0]))
         self.loAxis[0].addWidget(self.lbAg[0], 0, 0)
         self.loAxis[0].addWidget(self.rbMajAg[0], 0, 1)
@@ -200,7 +203,7 @@ class PnAnchor(QWidget):
 
         # major angle
         self.wgImg.isMajV = self.rbMajAg[0].isChecked()
-        self.idxMaj = 0 if self.wgImg.isMajV else 1 # v -> 0°
+        self.idxMaj = 0 if self.wgImg.isMajV else 1  # v -> 0°
 
         # print("before")
         # print("ops:%2f" % (angleOp))
@@ -389,13 +392,6 @@ class PnAnchor(QWidget):
                 ls_y = np.array(intercepts) + self.ptX * slope
                 self.idxAnc = np.abs(self.ptY-ls_y).argmin()
 
-        print("==press idx")
-        print(self.idxAnc)
-        print("==press itcs")
-        print(objMap.itcs[1])
-        print("==press sigs")
-        print(objMap.sigs[1])
-
     def mouseMoveEvent(self, event):
         pos = event.pos()
         objMap = self.grid.map
@@ -425,8 +421,6 @@ class PnAnchor(QWidget):
                 ptX = self.getPtGui2Map(pos.x(), axis=0)
                 self.itc_new = ptY - ptX * slope
 
-                print("==move idx")
-                print(self.idxAnc)
                 objMap.modMinAnchor(self.idxAnc, self.itc_new)  # self.ptY
 
             self.update()
@@ -467,7 +461,7 @@ class PnAnchor(QWidget):
                     value = self.spbTk[self.idx_tool].value() + 1
                     self.switch = False
                     self.spbTk[self.idx_tool].setValue(value)
-                
+
         self.update()
         self.ptX = -1
         self.ptY = -1
@@ -504,7 +498,7 @@ class WidgetAnchor(Widget_Img):
         super().paintImage(painter)
         pen = QPen()
 
-        print(self.isMajTool)
+        ## Major axis
         # tool switch (major)
         pen_width = 3 if self.isMajTool else 1
         pen.setWidth(pen_width)
@@ -522,21 +516,28 @@ class WidgetAnchor(Widget_Img):
             else:
                 painter.drawLine(self.rgX[0], pt, self.rgX[1], pt)
 
-        # lines from another axis
+        ## Minor axis
         for itc in self.itcs:
-            x1, x2 = self.rgX 
-            y1 = self.rgY[0] + itc
-            y2 = y1 + (x2-x1)*self.slp
+            if self.grid.map.angles[1] != 0:
+                # if minor axis angle is not equal to 0
+                x1, x2 = self.rgX 
+                y1 = self.rgY[0] + itc
+                y2 = y1 + (x2-x1)*self.slp
+            else:
+                # if minor axis angle is equal to 0
+                y1, y2 = self.rgY
+                x1 = self.rgX[0] + itc
+                x2 = x1
 
             # tool switch (minor)
             pen_width = 1 if self.isMajTool else 3
             pen.setWidth(pen_width)
             if self.isMajTool:
                 pen.setStyle(Qt.DotLine)
-            else:  
+            else:
                 pen.setStyle(Qt.SolidLine)
             painter.setPen(pen)
-
+                    
             try:
                 painter.drawLine(x1, y1, x2, y2)
                 pen.setWidth(3)
@@ -545,12 +546,12 @@ class WidgetAnchor(Widget_Img):
                 if self.isMajV:
                     for x in self.ptMajLine:
                         ptX = x
-                        ptY = y1+(x-x1)*self.slp
+                        ptY = y1 + (x - x1) * self.slp
                         if self.isInRange(ptX, ptY):
                             drawCross(ptX, ptY, painter, size=4)
                 else:
                     for y in self.ptMajLine:
-                        ptX = x1 + ((y-y1)/self.slp)
+                        ptX = x1 + ((y - y1) / self.slp)
                         ptY = y
                         if self.isInRange(ptX, ptY):
                             drawCross(ptX, ptY, painter, size=4)

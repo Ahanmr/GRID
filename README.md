@@ -25,7 +25,7 @@
 
 ## Update Log
 
-### May 29, 2020 (1.0)
+### May 29, 2020 (1.0.1)
     * Minor bug fixes (visualization of layout detection)
 
 ### Apr 28, 2020 (0.3.5)
