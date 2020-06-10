@@ -25,6 +25,9 @@
 
 ## Update Log
 
+### Jun 10, 2020 (1.0.2)
+    * The shapefile can match the coordinate system in GeoTiff now
+   
 ### May 29, 2020 (1.0.1)
     * Minor bug fixes (visualization of layout detection)
 

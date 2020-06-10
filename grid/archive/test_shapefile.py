@@ -6,6 +6,46 @@ import rasterio.mask
 import fiona
 import os
 
+os.chdir("/Users/jameschen/Dropbox/photo_grid/test/Jacob")
+os.listdir()
+
+
+f = rasterio.open('RGB-integer.tif')
+f.profile
+f.width
+f.height
+
+f.bounds
+# BoundingBox(left=474888.6157, bottom=5140151.9396, right=474942.6952, top=5140222.4708)
+# ^, ->
+f.transform * (0, 0)
+
+[list(f.transform * pts[i]) for i in range(4)]
+
+f.transform * (f.width, f.height)
+f.close()
+
+with rasterio.open('RGB-integer.tif') as dataset:
+
+    # Read the dataset's valid data mask as a ndarray.
+    mask = dataset.dataset_mask()
+
+    # Extract feature shapes and values from the array.
+    for geom, val in rasterio.features.shapes(
+            mask, transform=dataset.transform):
+
+        # Transform shapes from the dataset's own coordinate
+        # reference system to CRS84 (EPSG:4326).
+        geom = rasterio.warp.transform_geom(
+            dataset.crs, 'EPSG:4326', geom, precision=6)
+
+        # Print GeoJSON shapes to stdout.
+        print(geom)
+
+plt.imshow(mask)
+geom['type']
+list(geom)
+
 
 os.chdir("/Users/jameschen/Dropbox/photo_grid/data/shapefile")
 

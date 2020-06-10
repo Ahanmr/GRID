@@ -238,8 +238,8 @@ class GRID():
 
     # === === === === === === MAP === === === === === ===
 
-    def updateCenters(self, idx, angle=-1, nPeaks=0):
-        if angle != -1:
+    def updateCenters(self, idx, angle=-999, nPeaks=0):
+        if angle != -999:
             self.map.angles[idx] = angle
         if nPeaks != 0:
             self.map.nAxs[idx] = nPeaks

@@ -2,36 +2,104 @@ import os
 # os.chdir("/Users/jameschen")
 # os.chdir("/Users/jameschen/Dropbox/photo_grid")
 from PyQt5.QtWidgets import QApplication
-from .gridGUI import *
-from .lib import *
+os.chdir("..")
+sys.path
+sys.path.remove("/Users/jameschen/Dropbox/photo_grid/grid")
+import numpy as np
+import cv2
 import matplotlib.pyplot as plt
 import grid as gd
-from grid import lib
-import statistics
-import cv2
-import numpy as np
-import pandas as pd
-from tqdm import tqdm
+os.getcwd()
+
 app = QApplication(sys.argv)
 # === === === === === === DEBUG === === === === === ===
 
 grid = gd.GRID()
-# grid.loadData("/Users/jameschen/Dropbox/James_Git/FN/data/demo.png")
-# grid.loadData("/Users/jameschen/Desktop/testGRID.png")
-grid.loadData(
-    # pathImg="/Users/jameschen/Dropbox/James Chen/GRID/Prototype/PineApple.jpg")
-    # pathImg="/Users/jameschen/Dropbox/James Chen/GRID/Manuscript/Remote Sensing/First Revision/Demo/demo_2.tif")
-    # pathImg="/Users/jameschen/Dropbox/James Chen/Projects/GRID/Prototype/Alfalfa/GRID_Demo_Croped.jpg")
-    # pathImg = "/Users/jameschen/Dropbox/photo_grid/test/GRID_raw.png")
-    pathImg = "/Users/jameschen/Dropbox/photo_grid/test/OatPea.png")
+grid.loadData(pathImg = "/Users/jameschen/Dropbox/photo_grid/test/Jacob/RGB-integer.tif")
+grid.cropImg(pts=[[4446.843373493975, 5406.265060240964],
+                  [3685.3975903614455, 2192.9638554216867],
+                  [1218.313253012048, 2725.975903614458],
+                  [1949.301204819277, 5984.963855421686]])
 
-grid.binarizeImg(k=3, lsSelect=[0], valShad=0, valSmth=0)
-# grid.findPlots(nRow=23, nCol=12)
-# grid.cpuSeg()
+grid.binarizeImg(k=5, lsSelect=[0, 1], features=[0, 1, 2], valShad=0, valSmth=0)
+grid.findPlots(nRow=4, nCol=13)
+grid.cpuSeg()
+grid.save(path="/Users/jameschen/Dropbox/photo_grid/test/Jacob/", prefix="jacob", h5=True)
+
 
 g = GRID_GUI(grid, 3)  # 0:input, 1:crop, 2:kmean, 3:anchor, 4:output
 app.exec_()
 
+# === === === === === === DEBUG === === === === === ===
+
+
+### recover scale
+import pandas as pd
+import shapefile
+
+path = "/Users/jameschen/Dropbox/photo_grid/test/Jacob/"
+prefix = "jacob"
+h5 = True
+pathDT = os.path.join(path, prefix+"_data.csv")
+pathSp = os.path.join(path, prefix)
+
+# info
+imgH = grid.map.imgH
+dt = pd.read_csv(pathDT)
+mat_H = grid.imgs.mat_H
+tiff_transform = grid.imgs.tiff_transform
+pts_crop = grid.imgs.pts_crop
+n_rot = grid.imgs.n_rot
+org = (int(grid.imgs.widthRs / 2), int(grid.imgs.heightRs / 2))
+
+f = shapefile.Writer(pathSp)
+# define fields
+cols = dt.columns
+
+for col in cols:
+    instance = dt[col][0]
+
+    if isinstance(instance, object):
+        # characters
+        mode = "C"
+        arg1, arg2 = 20, 20
+    else:
+        # integer, floating
+        mode = "N"
+        arg1, arg2 = 10, 10
+
+    f.field(col, mode, arg1, arg2)
+
+# for idx, entry in dt.iterrows():
+entry = dt.iloc[0]
+# get agents
+row = entry["row"]
+col = entry["col"]
+agent = grid.agents.get(row, col)
+
+pts_crop = [[agent.border["WEST"], agent.border["NORTH"]],
+            [agent.border["EAST"], agent.border["NORTH"]],
+            [agent.border["EAST"], agent.border["SOUTH"]],
+            [agent.border["WEST"], agent.border["SOUTH"]]]
+
+# recover
+pts_rec = recover_scale(pts_crop, mat_H)
+
+# try remapping to Tiff coordinate if applicable
+try:
+    pts_rec = [list(tiff_transform * pts_rec[i]) for i in range(4)]
+except Exception as e:
+    print(e)
+
+# input shape file
+f.poly([pts_rec])
+
+# attributes
+dc = {c: entry[c] for c in dt.columns}
+f.record(**dict(dc))
+
+
+###### ###### ###### ###### ###### ###### ###### ######
 
 ### repeatability
 # import os

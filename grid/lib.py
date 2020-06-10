@@ -131,8 +131,8 @@ def cropImg(img, pts, resize=1600, img_W=None, img_H=None):
         img_W = (sum((pt_NE-pt_NW)**2)**(1/2)+sum((pt_SE-pt_SW)**2)**(1/2))/2
         img_H = (sum((pt_SE-pt_NE)**2)**(1/2)+sum((pt_SW-pt_NW)**2)**(1/2))/2
         while (img_W > resize):
-            img_W /= 2
-            img_H /= 2
+            img_W *= .8
+            img_H *= .8
     shape = (int(img_W), int(img_H))
     # generate target point
     pts2 = np.float32(
@@ -142,26 +142,46 @@ def cropImg(img, pts, resize=1600, img_W=None, img_H=None):
     dst = cv2.warpPerspective(img, M, (shape[0], shape[1]))
     dst = np.array(dst).astype(np.uint8)
 
-    return dst
+    return dst, M
 
 
-def rotatePts(pts, angle):
+def rotatePts(pts, angle, org=(0, 0)):
     """
     ----------
     Parameters
     ----------
     """
+    ox, oy = org
     ptx = np.array([pts[i, 0] for i in range(len(pts))])
     pty = np.array([pts[i, 1] for i in range(len(pts))])
-    qx = math.cos(math.radians(angle))*(ptx) - \
-        math.sin(math.radians(angle))*(pty)
-    qy = math.sin(math.radians(angle))*(ptx) + \
-        math.cos(math.radians(angle))*(pty)
+    qx = ox + math.cos(math.radians(angle))*(ptx - ox) - \
+        math.sin(math.radians(angle))*(pty - oy)
+    qy = oy + math.sin(math.radians(angle))*(ptx - ox) + \
+        math.cos(math.radians(angle))*(pty - oy)
     qpts = [[qx[i], qy[i]] for i in range(len(pts))]
     return np.array(qpts)
 
-# === === === === === GRID pickle === === === === ===
 
+# def rotate(origin, point, angle):
+#     """
+#     Rotate a point counterclockwise by a given angle around a given origin.
+
+#     The angle should be given in radians.
+
+#     @ contributed by Mark Dickinson
+#     https://stackoverflow.com/users/270986/mark-dickinson
+#     source:
+#     https://stackoverflow.com/questions/34372480/rotate-point-about-another-point-in-degrees-python
+#     """
+#     ox, oy = origin
+#     px, py = point
+
+#     ag = np.pi / 180 * angle
+#     qx = ox + np.cos(ag) * (px - ox) - np.sin(ag) * (py - oy)
+#     qy = oy + np.sin(ag) * (px - ox) + np.cos(ag) * (py - oy)
+#     return qx, qy
+
+# === === === === === GRID pickle === === === === ===
 
 def pickleGRID(obj, path):
     with open(path, "wb") as file:
@@ -267,22 +287,65 @@ def rotateVec(vec, angle):
     return (xp, yp)
 
 
+def recover_scale(mat_in, mat_H):
+    """
+    recover the cropped shaped into original scale
+
+    parameters
+    ----------
+    mat_in: 4 x 2 matrix
+    mat_H: 3 x 3 matrix
+    """
+
+    n_points = len(mat_in)
+    # conver mat_in into 4 x 3 matrix
+    mat_in = np.array([list(mat_in[i]) + [1] for i in range(4)])
+
+    # solve recovered matrix
+    mat_recover = np.matmul(np.linalg.inv(mat_H), mat_in.transpose())
+
+    # transpose back to the right dimension (4 x 3)
+    mat_recover = mat_recover.transpose()
+
+    # extract the first 2 elements in each point (4 x 2)
+    mat_recover = [mat_recover[i, :2] for i in range(n_points)]
+
+    # return
+    return np.array(np.matrix(mat_recover)).tolist()
+
+
 def getFourierTransform(sig):
     sigf = abs(np.fft.fft(sig)/len(sig))
     return sigf[2:int(len(sigf)/2)]
     # return sigf[2:25]
 
 
-def getCardIntercept(lsValues, angle, imgH=0):
+def getCardIntercept(sig, angle, imgH=0):
+    """
+    transform signal to intercept
+    """
     if angle == 0:
-        # 
-        return lsValues * 1
+        return sig * 1
     else:
         coef = 1 / np.sin(np.pi / 180 * abs(angle))
         if angle < 0:
-            return lsValues * coef
+            return sig * coef
         else:
-            return imgH - lsValues * coef
+            return imgH - sig * coef
+
+
+def getSigFromItc(itc, angle, imgH=0):
+    """
+    transform intercept to signal
+    """
+    if angle < 0 or angle > 90:
+        sig = itc * np.sin(np.pi / 180 * abs(angle))
+    elif angle > 0 and angle <= 90:
+        sig = (imgH - itc) * np.sin(np.pi / 180 * abs(angle))
+    else:
+        # angle = 0
+        sig = itc
+    return sig
 
 
 def getLineABC(slope, intercept):
@@ -368,6 +431,7 @@ def qCross(x, y, painter, size=2):
     l2_ed_x, l2_ed_y = x+size, y-size
     painter.drawLine(l1_st_x, l1_st_y, l1_ed_x, l1_ed_y)
     painter.drawLine(l2_st_x, l2_st_y, l2_ed_x, l2_ed_y)
+
 
 def pltCross(x, y, size=3, width=1, color="red"):
     pt1X = [x-size, x+size]

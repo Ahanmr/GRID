@@ -389,8 +389,11 @@ class PnAnchor(QWidget):
                 slope = objMap.slps[1]
                 intercepts = objMap.itcs[1]
                 # search index by intercepts, will be fine for angle < 0
-                ls_y = np.array(intercepts) + self.ptX * slope
-                self.idxAnc = np.abs(self.ptY-ls_y).argmin()
+                if objMap.angles[1] == 0:
+                    self.idxAnc = np.abs(self.ptX-objMap.sigs[1]).argmin()
+                else:
+                    ls_y = np.array(intercepts) + self.ptX * slope
+                    self.idxAnc = np.abs(self.ptY-ls_y).argmin()
 
     def mouseMoveEvent(self, event):
         pos = event.pos()
@@ -410,7 +413,6 @@ class PnAnchor(QWidget):
                 objMap.modMajAnchor(self.idxAnc, pt)  # self.ptX
             else:
                 # minor axis
-                slope = objMap.slps[1]
                 if pos.y() > self.wgImg.rgY[0] and pos.y() < self.wgImg.rgY[1]:
                     ptY = self.getPtGui2Map(pos.y(), axis=1)
                 elif pos.y() <= self.wgImg.rgY[0]:
@@ -419,7 +421,18 @@ class PnAnchor(QWidget):
                     ptY = objMap.imgH - 1
 
                 ptX = self.getPtGui2Map(pos.x(), axis=0)
-                self.itc_new = ptY - ptX * slope
+
+                if objMap.angles[1] == 0:
+                    self.itc_new = ptX
+                else:
+                    self.itc_new = ptY - ptX * objMap.slps[1]
+        
+                # print("")
+                # print("======")
+                # print("move ptY");print(ptY)
+                # print("move ptX");print(ptX)
+                # print("move slope");print(slope)
+                # print("move itc");print(self.itc_new)
 
                 objMap.modMinAnchor(self.idxAnc, self.itc_new)  # self.ptY
 
@@ -453,8 +466,13 @@ class PnAnchor(QWidget):
                     self.switch = False
                     self.spbTk[self.idx_tool].setValue(value)
             else:
-                new_itc = ptY - ptX * objMap.slps[1]
                 # add tick minor
+                # check if angle is 0 or not:
+                if objMap.angles[1] == 0:
+                    new_itc = ptX
+                else:
+                    new_itc = ptY - ptX * objMap.slps[1]
+                # pass itc
                 if self.ptYpress == ptY and abs(itc-new_itc).min() > itc.std() / 20:
                     objMap.addMinAnchor(new_itc)
                     self.switch = True

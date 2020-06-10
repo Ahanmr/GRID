@@ -45,8 +45,8 @@ class PnKmeaner(QWidget):
         self.ck_ft = []
         for i in range(self.nFeatures):
             checkbox = QCheckBox(str(i+1))
-            if i < 3:
-                checkbox.setChecked(True)
+            # if i < 3:
+            checkbox.setChecked(True)
             checkbox.stateChanged.connect(self.change_k)
             self.ck_ft.extend([checkbox])
             self.lo_ft.addWidget(self.ck_ft[i])

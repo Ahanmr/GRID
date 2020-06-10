@@ -1,6 +1,6 @@
 __author__ = "Chunpeng James Chen"
-__version__ = "0.3.51"
-__update__ = "Apr 28, 2020"
+__version__ = "1.0.1"
+__update__ = "May 29, 2020"
 
 # imports
 import subprocess
@@ -69,6 +69,9 @@ from .grid import *
 
 """
 Update Log
+
+- May 29, 2020 (1.0.1)
+    * Minor bug fixes (visualization of layout detection)
 
 - Apr 28, 2020 (0.3.5)
     * Support exporting ESRI shapefile
