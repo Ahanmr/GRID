@@ -13,7 +13,7 @@ import rasterio
 import shapefile
 
 # self import
-from .lib import initProgress, updateProgress, pltImShow, pltSegPlot
+from .lib import initProgress, updateProgress, pltImShow, pltSegPlot, recover_scale
 from .dir import Dir
 
 
@@ -70,7 +70,11 @@ def loadImg(path):
             else:
                 updateProgress(prog, name="Done")
 
-    return npImg
+    # try to fetch geo info
+    transform = rasObj.transform
+
+    rasObj.close()
+    return npImg, transform
 
 
 def loadImgWeb(URL):
@@ -313,6 +317,11 @@ def saveShape(grid, path, prefix="GRID"):
     # info
     imgH = grid.map.imgH
     dt = pd.read_csv(pathDT)
+    mat_H = grid.imgs.mat_H
+    tiff_transform = grid.imgs.tiff_transform
+    pts_crop = grid.imgs.pts_crop
+    n_rot = grid.imgs.n_rot
+    org = (int(grid.imgs.widthRs / 2), int(grid.imgs.heightRs / 2))
 
     with shapefile.Writer(pathSp) as f:
         # define fields
@@ -339,13 +348,27 @@ def saveShape(grid, path, prefix="GRID"):
             agent = grid.agents.get(row, col)
 
             # polygon
-            bN = imgH - agent.border["NORTH"]
-            bW = agent.border["WEST"]
-            bS = imgH - agent.border["SOUTH"]
-            bE = agent.border["EAST"]
-            f.poly([[[bW, bN], [bE, bN], [bE, bS], [bW, bS], [bW, bN]]])
+            # bN = imgH - agent.border["NORTH"]
+            # bW = agent.border["WEST"]
+            # bS = imgH - agent.border["SOUTH"]
+            # bE = agent.border["EAST"]
+            pts_crop = [[agent.border["WEST"], agent.border["NORTH"]],
+                        [agent.border["EAST"], agent.border["NORTH"]],
+                        [agent.border["EAST"], agent.border["SOUTH"]],
+                        [agent.border["WEST"], agent.border["SOUTH"]]]
+            
+            # recover
+            pts_rec = recover_scale(pts_crop, mat_H)
+
+            # try remapping to Tiff coordinate
+            try:
+                pts_rec = [list(tiff_transform * pts_rec[i]) for i in range(4)]
+            except Exception as e:
+                print(e)
+
+            # input shape file
+            f.poly([pts_rec])
 
             # attributes
             dc = {c: entry[c] for c in dt.columns}
             f.record(**dict(dc))
-

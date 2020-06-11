@@ -1,6 +1,6 @@
 __author__ = "Chunpeng James Chen"
-__version__ = "1.0.1"
-__update__ = "May 29, 2020"
+__version__ = "1.0.2"
+__update__ = "Jun 10, 2020"
 
 # imports
 import subprocess
@@ -22,7 +22,8 @@ if "-m" not in sys.argv[0]:
     print("    Try 'python -m grid' in Terminel to launch GRID GUI,")
     print("         as command-line version is not ready yet.")
 print("~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~")
-print("New feature: support exporting ESRI shapefile                   ")
+print("Recent update: ")
+print("         support ESRI shapefile compatible in QGIS    ")
 print("~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~")
 
 
@@ -69,6 +70,9 @@ from .grid import *
 
 """
 Update Log
+
+- Jun 10, 2020 (1.0.2)
+    * The shapefile can match the coordinate system in GeoTiff now
 
 - May 29, 2020 (1.0.1)
     * Minor bug fixes (visualization of layout detection)

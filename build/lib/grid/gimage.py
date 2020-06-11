@@ -36,7 +36,13 @@ class GImage():
         self.width, self.height, self.depth = 0, 0, 0
         self.widthRs, self.heightRs = 0, 0
         self.shape = (self.height, self.width, self.depth)
-        self.shapeRs = (self.heightRs, self.widthRs, self.depth) 
+        self.shapeRs = (self.heightRs, self.widthRs, self.depth)
+        self.n_rot = 0
+
+        # crop/ geo-reference
+        self.tiff_transform = None
+        self.pts_crop = []
+        self.mat_H = None
 
         # kmean param.
         self.paramKMs = {
@@ -80,7 +86,7 @@ class GImage():
 
             # image
             if isLocalImg:
-                imgInput = loadImg(pathImg)
+                imgInput, self.tiff_transform = loadImg(pathImg)
             else:
                 imgInput = loadImgWeb(pathImg)
         elif isinstance(pathImg, np.ndarray):
@@ -139,12 +145,19 @@ class GImage():
             self.set(key='mean',
                      value=self.get('crop')[:, :, :3].mean(axis=2))
             self.setShape(shape=self.get(key='crop').shape)
+            self.pts_crop = np.float32([[0, 0],
+                                        [self.shape[0], 0],
+                                        [0, self.shape[1]],
+                                        [self.shape[0], self.shape[1]]])
         else:
+            imgCrop, M = cropImg(self.imgs['raw'], pts)
             self.set(key='crop',
-                     value=cropImg(self.imgs['raw'], pts))
+                     value=imgCrop)
             self.set(key='mean',
                      value=self.get('crop')[:, :, :3].mean(axis=2))
             self.setShape(shape=self.get(key='crop').shape)
+            self.mat_H = M
+            self.pts_crop = pts
 
         self.resetParam()
 
@@ -303,8 +316,12 @@ class GImage():
         ----------
         """
 
+        self.n_rot += nRot
+
         for key in self.imgs.keys():
-            if key == 'raw' or key == 'rawRs': continue
+            if key == 'raw' or key == 'rawRs':
+                # only rotate cropped images
+                continue
             try:
                 self.set(key=key, value=np.rot90(self.get(key=key), nRot))
             except Exception:
@@ -320,14 +337,14 @@ class GImage():
         if isRaw:
             try:
                 self.height, self.width, self.depth = shape
-            except:
+            except Exception:
                 self.height, self.width = shape
                 self.depth = 1
             self.shape = (self.height, self.width, self.depth)
         else:
             try:
                 self.heightRs, self.widthRs, self.depth = shape
-            except:
+            except Exception:
                 self.heightRs, self.widthRs = shape
                 self.depth = 1
             self.shapeRs = (self.heightRs, self.widthRs, self.depth)
@@ -341,4 +358,4 @@ class GImage():
         if is3D:
             return self.shape if isRaw else self.shapeRs
         else:
-            return self.shape[:2] if isRaw else self.shapeRs[:2] 
+            return self.shape[:2] if isRaw else self.shapeRs[:2]

@@ -311,6 +311,7 @@ def saveH5(grid, path, prefix="GRID"):
 
 
 def saveShape(grid, path, prefix="GRID"):
+    print("save")
     pathDT = os.path.join(path, prefix+"_data.csv")
     pathSp = os.path.join(path, prefix)
 
@@ -330,14 +331,15 @@ def saveShape(grid, path, prefix="GRID"):
         for col in cols:
             instance = dt[col][0]
 
-            if isinstance(instance, object):
-                # characters
-                mode = "C"
-                arg1, arg2 = 20, 20
-            else:
+            try:
+                float(instance)
                 # integer, floating
                 mode = "N"
                 arg1, arg2 = 10, 10
+            except ValueError:
+                # characters
+                mode = "C"
+                arg1, arg2 = 20, 20
 
             f.field(col, mode, arg1, arg2)
 

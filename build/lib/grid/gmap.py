@@ -292,11 +292,9 @@ class GMap():
         angle = self.angles[1]
 
         # signal
+        new_signal = getSigFromItc(itc, angle, self.imgH)
+        
         temp = self.sigs
-        if angle < 0 or angle > 90:
-            new_signal = itc * np.sin(np.pi / 180 * abs(angle))
-        elif angle >= 0 and angle <= 90:
-            new_signal = (self.imgH - itc) * np.sin(np.pi / 180 * abs(angle))
         try:
             temp[1].append(new_signal)
         except Exception:
@@ -323,23 +321,22 @@ class GMap():
     def modMinAnchor(self, index, itc):
         angle = self.angles[1]
 
-        if angle < 0 or angle > 90:
-            print("case1")
-            self.sigs[1][index] = itc * np.sin(np.pi / 180 * abs(angle))
-        elif angle >= 0 and angle <= 90:
-            print("case2")
-            ##### NOTE: sigs have inversed order when angle > 0!!! 
-            # n_itc = len(self.itcs[1])
-            # index_sig = np.flip(np.arange(n_itc))[index]
-            self.sigs[1][index] = (self.imgH - itc) * \
-                np.sin(np.pi / 180 * abs(angle))
+        self.sigs[1][index] = getSigFromItc(itc, angle, self.imgH)
 
-        self.itcs[1][index] = itc
+        # print("")
+        # print("before")
+        # print(self.itcs[1][index])
+        # print("after")
+        # print(itc)
 
-        print("=== itcs")
-        print(self.itcs[1])
-        print("=== sigs")
-        print(self.sigs[1])
+        # self.itcs[1][index] = itc
+        self.itcs[1] = getCardIntercept(
+            self.sigs[1], self.angles[1], self.imgH)
+
+        # print("=== itcs")
+        # print(self.itcs[1])
+        # print("=== sigs")
+        # print(self.sigs[1])
         self.dt = self.getDfCoordinate(self.angles, self.slps, self.itcs)
 
 
