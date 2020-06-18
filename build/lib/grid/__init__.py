@@ -1,6 +1,6 @@
 __author__ = "Chunpeng James Chen"
-__version__ = "1.0.3"
-__update__ = "Jun 10, 2020"
+__version__ = "1.1.0"
+__update__ = "Jun 17, 2020"
 
 # imports
 import subprocess
@@ -70,6 +70,9 @@ from .grid import *
 
 """
 Update Log
+
+- Jun 17, 2020 (1.1)
+    * The shapefile can be used for the same field taken from different season
 
 - Jun 10, 2020 (1.0.2)
     * The shapefile can match the coordinate system in GeoTiff now

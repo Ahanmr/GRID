@@ -496,7 +496,7 @@ class PnAnchor(QWidget):
 
     def run(self):
         self.grid.agents.setup(gmap=self.grid.map,
-                               img=self.grid.imgs.get('binSeg'))
+                               gimg=self.grid.imgs)
 
 
 class WidgetAnchor(Widget_Img):

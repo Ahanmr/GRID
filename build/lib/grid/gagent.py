@@ -1,5 +1,6 @@
 # basic imports
 import numpy as np
+import pandas as pd
 
 # self imports
 from .lib import *
@@ -28,7 +29,7 @@ class GAgent():
         self.subflag = True
         self.window = 1000
 
-    def setup(self, gmap, img):
+    def setup(self, gmap, gimg):
         """
         ----------
         Parameters
@@ -36,18 +37,93 @@ class GAgent():
         """
 
         self.agents = []
-        self.img = img
+        self.img = gimg.get('binSeg')
         self.shape = self.img.shape
         self.imgH, self.imgW = self.shape
-        self.nRow, self.nCol = gmap.nRow, gmap.nCol
-        dt = gmap.dt
-        fr, fc = [], []
 
+        # get nrow, ncol, and data.frame
+        if not gimg.hasShp:
+            self.nRow, self.nCol = gmap.nRow, gmap.nCol
+            dt = gmap.dt
+        else:
+            '''
+            A case when a shapefile is loaded
+            '''
+            # get transformation info
+            affine = gimg.tiff_transform
+            pts_crop = gimg.pts_crop
+            mat_H = gimg.mat_H
+
+            # load agents
+            agents = gimg.f_shp.shapeRecords()
+
+            # iteratively search for agents
+            ls_id = []
+            ls_row = []
+            ls_col = []
+            ls_ct = []
+            ls_w, ls_n, ls_e, ls_s = [], [], [], []
+            nrow = -1
+            ncol = -1
+
+            n_agents = len(agents)
+            for i in range(n_agents):
+                # extract agent info
+                pts_ag = agents[i].shape.points
+                att_ag = agents[i].record
+
+                # find the remap pts
+                pts_xy = [invAffine(pts_ag[i], affine) for i in range(4)]
+                pts_crop_temp = np.matmul(
+                    mat_H, np.float32(pts_xy).transpose()).transpose()
+                pts_crop = np.array([(pts_crop_temp[i][0]/pts_crop_temp[i][2],
+                                    pts_crop_temp[i][1]/pts_crop_temp[i][2]) for i in range(4)],
+                                    dtype=int)
+
+                # find the centers
+                pt_ct = np.mean(pts_crop, axis=0, dtype=int)
+                ls_ct.append(pt_ct)
+                # find the borders
+                bd_w, bd_n = np.min(pts_crop, axis=0)
+                bd_e, bd_s = np.max(pts_crop, axis=0)
+                # examine the border
+                bd_w = 0 if bd_w < 0 else bd_w
+                bd_n = 0 if bd_n < 0 else bd_n
+                bd_e = self.imgW - 1 if bd_e >= self.imgW else bd_e
+                bd_s = self.imgH - 1 if bd_s >= self.imgH else bd_s
+                # put in the list
+                ls_w.append(bd_w)
+                ls_n.append(bd_n)
+                ls_e.append(bd_e)
+                ls_s.append(bd_s)
+                # get row and col
+                row, col = np.array(att_ag[1:3], dtype=int)
+                ls_row.append(row)
+                ls_col.append(col)
+                nrow = row if row > nrow else nrow
+                ncol = col if col > ncol else ncol
+                # get name
+                name = att_ag[0]
+                ls_id.append(name)
+
+            # add by 1 as it's 0-index
+            nrow += 1
+            ncol += 1
+
+            # assign
+            self.nRow, self.nCol = nrow, ncol
+            gmap.dt = pd.DataFrame(
+                {"var": ls_id, "row": ls_row, "col": ls_col, "pt": ls_ct,
+                 "bd_w": ls_w, "bd_n": ls_n, "bd_e": ls_e, "bd_s": ls_s})
+            dt = gmap.dt
+
+        # initialize agents
+        fr, fc = [], []
         for row in range(self.nRow):
             lsAgentsRow = []
             for col in range(self.nCol):
                 try:
-                    entry = dt[(dt.row == row) & (dt.col == col)].iloc[0]                
+                    entry = dt[(dt.row == row) & (dt.col == col)].iloc[0]
                     ptX, ptY = entry["pt"]
                     name = entry["var"]
                 except Exception:
@@ -58,6 +134,14 @@ class GAgent():
                     name = "_FAKE"
                 agent = Agent(name=name, row=row, col=col)
                 self.setCoordinate(agent=agent, x=ptX, y=ptY)
+                try:
+                    # load boundaries if available
+                    agent.setBorder(Dir.WEST, entry['bd_w'])
+                    agent.setBorder(Dir.NORTH, entry['bd_n'])
+                    agent.setBorder(Dir.EAST, entry['bd_e'])
+                    agent.setBorder(Dir.SOUTH, entry['bd_s'])
+                except Exception:
+                    None
                 lsAgentsRow.append(agent)
             self.agents.append(lsAgentsRow)
 
@@ -558,7 +642,7 @@ class Agent():
         '''
         Will ragne from 0 to 1
         '''
-        isH = dir.value%2 # E->1, S->0
+        isH = dir.value % 2 # E->1, S->0
         rg = self.getPreDim(isHeight=isH)
         bd = self.getBorder(dir)
         return img[rg, bd].mean() if isH else img[bd, rg].mean()
@@ -615,7 +699,7 @@ class Agent():
             self.x += value
             self.border[Dir.WEST.name] += value
             self.border[Dir.EAST.name] += value
-    
+
     def getQRect(self):
         """
         GUI SPECIFIC

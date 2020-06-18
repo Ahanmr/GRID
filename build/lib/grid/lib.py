@@ -93,56 +93,86 @@ def binarizeSmImg(image, cutoff=0.5):
     return imgOut.astype(np.int)
 
 
-def cropImg(img, pts, resize=1600, img_W=None, img_H=None):
-    """
-    ----------
-    Parameters
-    ----------
-    img : str
-          path to the image file 
-    pts : list of 2-tuple
-          each tuple is a coordinate (x, y)
-    -------
-    Returns
-    -------
-    npImg : 3-d ndarray encoded in UINT8
+def find_angle(v1, v2):
+    dot_product = np.dot(v1 / np.linalg.norm(v1), v2 / np.linalg.norm(v2))
+    # cap dot_product
+    if dot_product > 1:
+        dot_product = 1
+    elif dot_product < -1:
+        dot_product = -1
+    angle = np.arccos(dot_product) * 180 / np.pi
+    if v1[0] * v2[1] - v1[1] * v2[0] > 0:
+        return angle
+    else:
+        return 360 - angle
 
+
+def sortPts(pts):
+    """
+    NOTE: qmap has inverse Y! UP has smaller y value
+    """
+    # get centroid to calculate vector
+    pts_center = np.median(pts, axis=0)
+    vec = pts - pts_center
+
+    # get order
+    vec_ag = [find_angle(vec[i], (-1, 0)) for i in range(4)]
+    order = np.flip(np.argsort(vec_ag))
+    # return sorted pts
+    return np.array(pts)[order]
+
+
+def cropImg(img, pts, resize=1600):
+    """
+    Perspectively project assigned area (pts) to a rectangle image
+    -----
+    param.
+    -----
+    img: 2-d numpy array
+    pts: a vector of xy coordinate, length is 4. Must be in the order as:
+         (NW, NE, SE, SW)
     """
 
-    # convert to opencv cpmatitable
-    pts = np.array(pts).astype(np.float32)
-    # find four corners
-    token = True
-    while token:
-        try:
-            order_x = np.argsort([pts[i, 0] for i in range(4)])
-            order_y = np.argsort([pts[i, 1] for i in range(4)])
-            pt_NW = pts[order_x[:2][np.isin(order_x[:2], order_y[:2])][0]]
-            pt_SW = pts[order_x[:2][np.isin(order_x[:2], order_y[2:])][0]]
-            pt_NE = pts[order_x[2:][np.isin(order_x[2:], order_y[:2])][0]]
-            pt_SE = pts[order_x[2:][np.isin(order_x[2:], order_y[2:])][0]]
-            token = False
-        except Exception:
-            pts = rotatePts(pts, 15)
-    # generate sorted source point
-    pts = np.array([pt_NW, pt_NE, pt_SW, pt_SE])
-    if img_W is None:
-        # estimate output dimension
-        img_W = (sum((pt_NE-pt_NW)**2)**(1/2)+sum((pt_SE-pt_SW)**2)**(1/2))/2
-        img_H = (sum((pt_SE-pt_NE)**2)**(1/2)+sum((pt_SW-pt_NW)**2)**(1/2))/2
-        while (img_W > resize):
-            img_W *= .8
-            img_H *= .8
+    # define input coordinates
+    pts = np.float32(pts)
+
+    # assign sorted pts
+    pt_NW, pt_NE, pt_SE, pt_SW = sortPts(pts)
+
+    # estimate output dimension
+    img_W = (euclidean(pt_NW, pt_NE) + euclidean(pt_SE, pt_SW))/2
+    img_H = (euclidean(pt_SE, pt_NE) + euclidean(pt_SW, pt_NW))/2
+
+    # resize output dimension
+    rate = .7
+    while (img_W > resize):
+        img_W *= rate
+        img_H *= rate
+
     shape = (int(img_W), int(img_H))
+
     # generate target point
     pts2 = np.float32(
-        [[0, 0], [shape[0], 0], [0, shape[1]], [shape[0], shape[1]]])
+        # NW,    NE,            SE,                   SW
+        [[0, 0], [shape[0], 0], [shape[0], shape[1]], [0, shape[1]]])
+
     # transformation
-    M = cv2.getPerspectiveTransform(pts, pts2)
-    dst = cv2.warpPerspective(img, M, (shape[0], shape[1]))
+    H = cv2.getPerspectiveTransform(pts, pts2)
+    dst = cv2.warpPerspective(img, H, (shape[0], shape[1]))
     dst = np.array(dst).astype(np.uint8)
 
-    return dst, M
+    # return cropped image and H matrix
+    return dst, H
+
+
+def euclidean(p1, p2):
+    """
+    calculate Euclidean distance betweeen p1 and p2
+    input can be either tuple or matrix
+    """
+
+    p1, p2 = np.array(p1), np.array(p2)
+    return sum((p1 - p2) ** 2) ** (0.5)
 
 
 def rotatePts(pts, angle, org=(0, 0)):
@@ -280,11 +310,31 @@ def rotateBinNdArray(img, angle):
 
 
 def rotateVec(vec, angle):
-    deg = np.pi/180
+    deg = np.pi / 180
     x, y = vec[0], vec[1]
-    xp = np.cos(deg*angle)*x - np.sin(deg*angle)*y
-    yp = np.sin(deg*angle)*x + np.cos(deg*angle)*y
+    xp = np.cos(deg * angle) * x - np.sin(deg * angle) * y
+    yp = np.sin(deg * angle) * x + np.cos(deg * angle) * y
     return (xp, yp)
+
+
+def invAffine(pt, affine, is3d=True):
+    """
+    convert GIS coordinate to (x, y)
+
+    NOTE:
+    # a = width of a pixel
+    # b = row rotation(typically zero)
+    # c = x-coordinate of the center of the upper-left pixel
+    # d = column rotation(typically zero)
+    # e = height of a pixel(typically negative)
+    # f = y-coordinate of the center of the upper-left pixel
+    """
+    # transformation
+    xg = (pt[0] - affine[2]) / affine[0]
+    yg = (pt[1] - affine[5]) / affine[4]
+
+    # return
+    return (xg, yg, 1) if is3d else (xg, yg)
 
 
 def recover_scale(mat_in, mat_H):
@@ -505,6 +555,7 @@ def pltSegPlot(agents, plotBase, isRect=False, isCenter=False, path=None, prefix
                     qCross(center[0], center[1], painter, size=3)
         painter.end()
         qimg.save(file, "PNG")
+
 
 def pltImShowMulti(imgs, titles=None, vertical=False):
     nImgs = len(imgs)
