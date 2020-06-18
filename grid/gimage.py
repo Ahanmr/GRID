@@ -1,5 +1,6 @@
 # basic imports
 import numpy as np
+import shapefile
 
 # self imports
 from .io import *
@@ -40,6 +41,8 @@ class GImage():
         self.n_rot = 0
 
         # crop/ geo-reference
+        self.f_shp = None
+        self.hasShp = False
         self.tiff_transform = None
         self.pts_crop = []
         self.mat_H = None
@@ -74,7 +77,7 @@ class GImage():
 
         self.imgs[key] = value
 
-    def load(self, pathImg):
+    def load(self, pathImg, pathShp=None):
         """
         ----------
         Parameters
@@ -87,6 +90,16 @@ class GImage():
             # image
             if isLocalImg:
                 imgInput, self.tiff_transform = loadImg(pathImg)
+                try:
+                    print("pathShp")
+                    print(pathShp)
+                    self.f_shp = shapefile.Reader(pathShp)
+                    tmp = self.f_shp.shapeRecords()  # test if it can be read
+                    self.hasShp = True
+                except Exception:
+                    self.f_shp = None
+                    self.hasShp = False
+                print(self.hasShp)
             else:
                 imgInput = loadImgWeb(pathImg)
         elif isinstance(pathImg, np.ndarray):

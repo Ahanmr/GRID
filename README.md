@@ -25,6 +25,9 @@
 
 ## Update Log
 
+### Jun 17, 2020 (1.1)
+    * The shapefile can be used for the same field taken from different season
+
 ### Jun 10, 2020 (1.0.2)
     * The shapefile can match the coordinate system in GeoTiff now
    

@@ -1,47 +1,141 @@
-import os
-# os.chdir("/Users/jameschen")
-# os.chdir("/Users/jameschen/Dropbox/photo_grid")
-from PyQt5.QtWidgets import QApplication
-os.chdir("..")
+# === === === === === command-line test === === === === ===
+
+# import os, sys
+# from PyQt5.QtWidgets import QApplication
+# import numpy as np
+# import cv2
+# import matplotlib.pyplot as plt
+# import grid as gd
+# from .gridGUI import *
+
+# os.getcwd()
+
+# app = QApplication(sys.argv)
+# grid = gd.GRID()
+# grid.loadData(
+#     pathImg="/Users/jameschen/Dropbox/photo_grid/test/zhou/GRID_raw.png")
+
+# # grid.binarizeImg(k=5, lsSelect=[0, 1], features=[0, 1, 2], valShad=0, valSmth=0)
+# # grid.findPlots(nRow=4, nCol=13)
+# # grid.cpuSeg()
+
+# g = GRID_GUI(grid, 1)  # 0:input, 1:crop, 2:kmean, 3:anchor, 4:output
+# app.exec_()
+
+# === === === === === command-line test === === === === ===
+
+
+# === === === === === recover shapefile === === === === ===
+
+import os, sys
 sys.path
-sys.path.remove("/Users/jameschen/Dropbox/photo_grid/grid")
+# sys.path.remove("/Users/jameschen/Dropbox/photo_grid/grid")
+from PyQt5.QtWidgets import QApplication
 import numpy as np
 import cv2
 import matplotlib.pyplot as plt
+os.chdir("/Users/jameschen/Dropbox/photo_grid/")
 import grid as gd
+from .gridGUI import *
+import shapefile
+import numpy as np
+import pandas as pd
+import rasterio
+import rasterio.mask
+
 os.getcwd()
 
 app = QApplication(sys.argv)
-# === === === === === === DEBUG === === === === === ===
-
 grid = gd.GRID()
-grid.loadData(pathImg = "/Users/jameschen/Dropbox/photo_grid/test/Jacob/RGB-integer.tif")
-grid.cropImg(pts=[[4446.843373493975, 5406.265060240964],
-                  [3685.3975903614455, 2192.9638554216867],
-                  [1218.313253012048, 2725.975903614458],
-                  [1949.301204819277, 5984.963855421686]])
+os.chdir("/Users/jameschen/Dropbox/photo_grid/test/zhou")
+grid.loadData(
+    pathImg="20190613_mosaic_group2.tif",
+    pathShp="GRID.shp")
+    # pathImg="/Users/jameschen/Dropbox/photo_grid/test/Jacob/RGB-integer.tif")
 
-grid.binarizeImg(k=5, lsSelect=[0, 1], features=[0, 1, 2], valShad=0, valSmth=0)
-grid.findPlots(nRow=4, nCol=13)
-grid.cpuSeg()
-grid.save(path="/Users/jameschen/Dropbox/photo_grid/test/Jacob/", prefix="jacob", h5=True)
+grid.cropImg(pts=[[704.3102766798419, 4031.569169960474],
+                  [5925.9209486166, 2428.6561264822135],
+                  [7674.553359683794, 8767.44861660079],
+                  [2428.6561264822135, 10176.069169960474]])
+grid.binarizeImg(k=9, lsSelect=[0, 1, 2, 4, 5], valShad=36, valSmth=5)
+grid.imgs.readyForSeg()
+grid.agents.setup(gmap=grid.map, gimg=grid.imgs)
+# grid.save(path=os.getcwd(), prefix="test")
+
+ag = grid.agents.get(0, 0)
+
+ag.getQRect()
+
+# ag.name
+# ag.__dict__
+
+# dt = grid.map.dt
+# dt
 
 
-g = GRID_GUI(grid, 3)  # 0:input, 1:crop, 2:kmean, 3:anchor, 4:output
+grid.map.nCol
+
+# grid.imgs.__dict__
+
+# grid.imgs.get("crop").shape
+
+# agents = grid.imgs.f_shp.shapeRecords()
+# agent = agents[0].record
+
+# grid.map.dt
+
+# ag = grid.agents.get(0, 0)
+# ag.__dict__
+# ag.name
+
+
+
+# from grid.dir import Dir
+# gd.saveDT(grid, os.getcwd(), "test2")
+
+
+
+g = GRID_GUI(grid, 4)  # 0:input, 1:crop, 2:kmean, 3:anchor, 4:output
+
+# widget = g.pnMain.currentWidget().wgImg
+# widget.pts = np.array(pts_crop, dtype=np.float32)
+# widget.hasDrag = 1
+# widget.repaint()
+
 app.exec_()
 
+
+
+
+# === === === === === recover shapefile === === === === ===
+
+
+# === === === === === === DEBUG === === === === === ===
+# import os
+# from PyQt5.QtWidgets import QApplication
+# os.chdir("..")
+# sys.path
+# sys.path.remove("/Users/jameschen/Dropbox/photo_grid/grid")
+# import numpy as np
+# import cv2
+# import matplotlib.pyplot as plt
+# import grid as gd
+# os.getcwd()
+
+# grid = gd.GRID()
+# grid.loadData(pathImg = "/Users/jameschen/Dropbox/photo_grid/test/Jacob/RGB-integer.tif")
+# grid.cropImg(pts=[[4446.843373493975, 5406.265060240964],
+#                   [3685.3975903614455, 2192.9638554216867],
+#                   [1218.313253012048, 2725.975903614458],
+#                   [1949.301204819277, 5984.963855421686]])
+
+# grid.binarizeImg(k=5, lsSelect=[0, 1], features=[0, 1, 2], valShad=0, valSmth=0)
+# grid.findPlots(nRow=4, nCol=13)
+# grid.cpuSeg()
+# grid.save(path="/Users/jameschen/Dropbox/photo_grid/test/Jacob/", prefix="jacob", h5=True)
+
 # === === === === === === DEBUG === === === === === ===
 
-
-n = "gce"
-try:
-    float(n)   # Type-casting the string to `float`.
-                   # If string is not a valid `float`,
-                   # it'll raise `ValueError` exception
-except ValueError:
-    print("False")
-
-print(True)
 # ### recover scale
 # import pandas as pd
 # import shapefile
@@ -539,4 +633,5 @@ print(True)
 # app.exec_()
 
 #
+# 
 # 

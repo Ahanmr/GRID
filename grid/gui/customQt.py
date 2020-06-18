@@ -115,7 +115,7 @@ def magnifying_glass(widget, pos, area=200, zoom=4):
     pixmap = widget.grab(
         QRect(QPoint(pos.x()-int(size/2), pos.y()-int(size/2)), QSize(size, size)))
     try:
-        rate_screen = size/pixmap.width()
+        rate_screen = size / pixmap.width()
         pixmap = pixmap.scaled(int(area/rate_screen), int(area/rate_screen))
         painter = QPainter(pixmap)
         'Rect'
@@ -128,18 +128,30 @@ def magnifying_glass(widget, pos, area=200, zoom=4):
         # draw rect
         painter.drawRect(rect)
         '''Cursor'''
-        pen.setWidth(3)
+        pen.setWidth(2)
         pen.setColor(Qt.red)
         painter.setPen(pen)
         size_m = 10
+        space = 4
         # define lines
-        line1 = QLine(QPoint(size_m, 0), QPoint(-size_m, 0))
-        line2 = QLine(QPoint(0, size_m), QPoint(0, -size_m))
-        line1.translate(pixmap.rect().center()*rate_screen-QPoint(0, 0))
-        line2.translate(pixmap.rect().center()*rate_screen-QPoint(0, 0))
+        line1 = QLine(QPoint(size_m, 0), QPoint(space, 0))
+        line2 = QLine(QPoint(0, size_m), QPoint(0, space))
+        line3 = QLine(QPoint(0, -space), QPoint(0, -size_m))
+        line4 = QLine(QPoint(-size_m, 0), QPoint(-space, 0))
+        line1.translate(pixmap.rect().center() * rate_screen - QPoint(0, 0))
+        line2.translate(pixmap.rect().center() * rate_screen - QPoint(0, 0))
+        line3.translate(pixmap.rect().center() * rate_screen - QPoint(0, 0))
+        line4.translate(pixmap.rect().center() * rate_screen - QPoint(0, 0))
         # draw lines
         painter.drawLine(line1)
         painter.drawLine(line2)
+        painter.drawLine(line3)
+        painter.drawLine(line4)
+
+        # # remove central
+        # pt_center = pixmap.rect().center() * rate_screen
+        # x, y = pt_center.x(), pt_center.y()
+        # painter.eraseRect(QRect(x-2, y-2, 4, 4))
         '''finish'''
         painter.end()
         cursor = QCursor(pixmap)

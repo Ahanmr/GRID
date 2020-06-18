@@ -23,8 +23,12 @@ class PnOutputer(QWidget):
         self.setFocus()
         self.update()
         self.grid = grid
-        self.grid.cpuSeg()
-        
+        if self.grid.imgs.hasShp:
+            self.grid.imgs.readyForSeg()
+            self.grid.agents.setup(gmap=grid.map, gimg=grid.imgs)
+        else:
+            self.grid.cpuSeg()
+
         self.layout = QHBoxLayout()
         '''left side'''
         self.wg_img = Widget_Seg(grid)
@@ -76,7 +80,7 @@ class PnOutputer(QWidget):
         self.lb_project = QLabel("Prefix")
         self.fd_project = QLineEdit("GRID")
         self.lb_output = QLabel("Output Path")
-        self.fd_output = QLineEdit(os.path.expanduser("~"))
+        self.fd_output = QLineEdit(self.grid.path_out)
         self.bt_output = QPushButton("Browse")
         self.ck_h5 = QCheckBox("Save shapefile")
         '''ui'''
@@ -328,7 +332,7 @@ class Widget_Seg(Widget_Img):
         self.setMouseTracking(True)
         self.grid = grid
         self.img_raw = grid.imgs.get('visSeg')
-        self.task = 0 # 0 centroid, 1 zoom, 2 panV, 3 panH
+        self.task = 0  # 0 centroid, 1 zoom, 2 panV, 3 panH
         '''attr'''
         # painter
         self.ratio = 0
@@ -338,7 +342,8 @@ class Widget_Seg(Widget_Img):
         # seg
         imgBin = self.grid.imgs.get("bin")
         imgBinTemp = imgBin.reshape(imgBin.shape[0], imgBin.shape[1], 1)
-        self.img_seg = np.multiply(self.grid.imgs.get("crop")[:, :, :3], imgBinTemp).copy()
+        self.img_seg = np.multiply(self.grid.imgs.get("crop")[:, :, :3],
+                                   imgBinTemp).copy()
 
         # ui
         self.initUI()
@@ -362,9 +367,9 @@ class Widget_Seg(Widget_Img):
                     continue
                 rect = agent.getQRect()
                 self.ratio = self.width()/self.qimg.width() if self.isFitWidth else self.height() / self.qimg.height()
-                rec_agent = QRect(rect.x()*self.ratio+self.rgX[0], 
-                                  rect.y()*self.ratio+self.rgY[0], 
-                                  rect.width()*self.ratio, 
+                rec_agent = QRect(rect.x()*self.ratio+self.rgX[0],
+                                  rect.y()*self.ratio+self.rgY[0],
+                                  rect.width()*self.ratio,
                                   rect.height()*self.ratio)
                 # if contain cursor
                 if rec_agent.contains(pos):
@@ -447,8 +452,8 @@ class Widget_Seg(Widget_Img):
         pen.setColor(Qt.red)
         painter.setPen(pen)
         painter.setBrush(Qt.transparent)
-        for row in range(self.grid.map.nRow):
-            for col in range(self.grid.map.nCol):
+        for row in range(self.grid.agents.nRow):
+            for col in range(self.grid.agents.nCol):
                 agent = self.grid.agents.get(row, col)
                 if not agent or agent.isFake():
                     continue
@@ -464,7 +469,6 @@ class Widget_Seg(Widget_Img):
                 painter.drawRect(rec_agent)
         painter.end()
 
-        
     def switch_imgVis(self):
         super().make_rgb_img(self.grid.imgs.get('crop'))
         self.repaint()

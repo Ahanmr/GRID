@@ -112,7 +112,7 @@ class GRID():
 
     # === === === === === === MAJOR WORKFLOW === === === === === ===
 
-    def loadData(self, pathImg=None, pathMap=None, outplot=False):
+    def loadData(self, pathImg=None, pathMap=None, pathShp=None, outplot=False):
         """
         ----------
         Parameters
@@ -124,8 +124,10 @@ class GRID():
             self.map.load(
                 pathMap=os.path.join(self.user.dirGrid, "demo/seg_map.csv"))
         else:
-            self.imgs.load(pathImg=pathImg)
+            self.imgs.load(pathImg=pathImg, pathShp=pathShp)
             self.map.load(pathMap=pathMap)
+            self.path_out = os.path.abspath(
+                os.path.join(os.path.dirname(pathImg)))
 
         if outplot:
             pltImShow(self.imgs.get("raw")[:, :, :3])
@@ -136,6 +138,7 @@ class GRID():
         Parameters
         ----------
         """
+        print("--- cropped ---")
         print(pts)
         self.imgs.crop(pts)
 
@@ -207,7 +210,7 @@ class GRID():
                            imgBin=self.imgs.get("binSeg"),
                            nRow=nRow, nCol=nCol, nSmooth=nSmooth)
 
-        self.agents.setup(gmap=self.map, img=self.imgs.get('binSeg'))
+        self.agents.setup(gmap=self.map, gimg=self.imgs)
 
         if outplot:
             pltLinesPlot(gmap=self.map, agents=self.agents.agents,
@@ -244,7 +247,6 @@ class GRID():
         if nPeaks != 0:
             self.map.nAxs[idx] = nPeaks
         self.map.locateCenters()
-        # self.map.nAxs[idx] = 0
 
     # === === === === === === AGENTS === === === === === ===
 

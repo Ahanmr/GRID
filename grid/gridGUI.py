@@ -116,7 +116,7 @@ class GRID_GUI(QMainWindow):
 
     def showCropper(self, isNew=True):
         bugmsg("crop")
-        self.prog.set(n=1, name="Click on the image to specify FOUR cornors of the area of interest (AOI)")
+        self.prog.set(n=1, name="Right-click to zoom. Left-drag to define AOI. After initialize AOI:\nDrag at AOI's corner/side to adjust the border. Drag at AOI's center to move the whole AOI. Drag at the area further away from AOI to rotate")
         self.assembleNavigation()
         self.btPrev.clicked.connect(
             lambda: self.showInputer(isNew=False))
@@ -131,8 +131,12 @@ class GRID_GUI(QMainWindow):
         self.assembleNavigation()
         self.btPrev.clicked.connect(
             lambda: self.showCropper(isNew=False))
-        self.btNext.clicked.connect(
-            lambda: self.showAnchor())
+        if self.grid.imgs.hasShp:
+            self.btNext.clicked.connect(
+                lambda: self.showOutputer())
+        else:
+            self.btNext.clicked.connect(
+                lambda: self.showAnchor())
         self.updateMainPn(panel=Panels.KMEANER, isNew=isNew)
 
     def showAnchor(self, isNew=True):
@@ -151,8 +155,12 @@ class GRID_GUI(QMainWindow):
         self.prog.set(
             n=4, name="Finalize the segmentation and export results: Drag to adjust borders")
         self.assembleNavigation(nameNext="Finish")
-        self.btPrev.clicked.connect(
-            lambda: self.showAnchor(isNew=False))
+        if self.grid.imgs.hasShp:
+            self.btPrev.clicked.connect(
+                lambda: self.showKMeaner(isNew=False))
+        else:
+            self.btPrev.clicked.connect(
+                lambda: self.showAnchor(isNew=False))
         self.btNext.clicked.connect(lambda: self.finalize())
         self.updateMainPn(panel=Panels.OUTPUTER, isNew=isNew)
 
@@ -207,7 +215,7 @@ class GRID_GUI(QMainWindow):
         msgBox.setInformativeText("Save and start another job?")
         msgBox.setStandardButtons(
             QMessageBox.Yes | QMessageBox.No| QMessageBox.Discard)
-        
+
         msgBox.button(QMessageBox.Yes).setText("Save and stay in current work")
         msgBox.button(QMessageBox.No).setText("Save and start new job")
         msgBox.button(QMessageBox.Discard).setText("Cancel")
@@ -221,7 +229,6 @@ class GRID_GUI(QMainWindow):
         elif returnValue == QMessageBox.No:
             self.grid.save(path=path, prefix=prefix, h5=isH5)
             self.startover()
-
 
     def centerWindow(self):
         """

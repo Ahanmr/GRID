@@ -311,7 +311,6 @@ def saveH5(grid, path, prefix="GRID"):
 
 
 def saveShape(grid, path, prefix="GRID"):
-    print("save")
     pathDT = os.path.join(path, prefix+"_data.csv")
     pathSp = os.path.join(path, prefix)
 

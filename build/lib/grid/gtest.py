@@ -33,70 +33,79 @@ app.exec_()
 # === === === === === === DEBUG === === === === === ===
 
 
-### recover scale
-import pandas as pd
-import shapefile
-
-path = "/Users/jameschen/Dropbox/photo_grid/test/Jacob/"
-prefix = "jacob"
-h5 = True
-pathDT = os.path.join(path, prefix+"_data.csv")
-pathSp = os.path.join(path, prefix)
-
-# info
-imgH = grid.map.imgH
-dt = pd.read_csv(pathDT)
-mat_H = grid.imgs.mat_H
-tiff_transform = grid.imgs.tiff_transform
-pts_crop = grid.imgs.pts_crop
-n_rot = grid.imgs.n_rot
-org = (int(grid.imgs.widthRs / 2), int(grid.imgs.heightRs / 2))
-
-f = shapefile.Writer(pathSp)
-# define fields
-cols = dt.columns
-
-for col in cols:
-    instance = dt[col][0]
-
-    if isinstance(instance, object):
-        # characters
-        mode = "C"
-        arg1, arg2 = 20, 20
-    else:
-        # integer, floating
-        mode = "N"
-        arg1, arg2 = 10, 10
-
-    f.field(col, mode, arg1, arg2)
-
-# for idx, entry in dt.iterrows():
-entry = dt.iloc[0]
-# get agents
-row = entry["row"]
-col = entry["col"]
-agent = grid.agents.get(row, col)
-
-pts_crop = [[agent.border["WEST"], agent.border["NORTH"]],
-            [agent.border["EAST"], agent.border["NORTH"]],
-            [agent.border["EAST"], agent.border["SOUTH"]],
-            [agent.border["WEST"], agent.border["SOUTH"]]]
-
-# recover
-pts_rec = recover_scale(pts_crop, mat_H)
-
-# try remapping to Tiff coordinate if applicable
+n = "gce"
 try:
-    pts_rec = [list(tiff_transform * pts_rec[i]) for i in range(4)]
-except Exception as e:
-    print(e)
+    float(n)   # Type-casting the string to `float`.
+                   # If string is not a valid `float`,
+                   # it'll raise `ValueError` exception
+except ValueError:
+    print("False")
 
-# input shape file
-f.poly([pts_rec])
+print(True)
+# ### recover scale
+# import pandas as pd
+# import shapefile
 
-# attributes
-dc = {c: entry[c] for c in dt.columns}
-f.record(**dict(dc))
+# path = "/Users/jameschen/Dropbox/photo_grid/test/Jacob/"
+# prefix = "jacob"
+# h5 = True
+# pathDT = os.path.join(path, prefix+"_data.csv")
+# pathSp = os.path.join(path, prefix)
+
+# # info
+# imgH = grid.map.imgH
+# dt = pd.read_csv(pathDT)
+# mat_H = grid.imgs.mat_H
+# tiff_transform = grid.imgs.tiff_transform
+# pts_crop = grid.imgs.pts_crop
+# n_rot = grid.imgs.n_rot
+# org = (int(grid.imgs.widthRs / 2), int(grid.imgs.heightRs / 2))
+
+# f = shapefile.Writer(pathSp)
+# # define fields
+# cols = dt.columns
+
+# for col in cols:
+#     instance = dt[col][0]
+
+#     if isinstance(instance, object):
+#         # characters
+#         mode = "C"
+#         arg1, arg2 = 20, 20
+#     else:
+#         # integer, floating
+#         mode = "N"
+#         arg1, arg2 = 10, 10
+
+#     f.field(col, mode, arg1, arg2)
+
+# # for idx, entry in dt.iterrows():
+# entry = dt.iloc[0]
+# # get agents
+# row = entry["row"]
+# col = entry["col"]
+# agent = grid.agents.get(row, col)
+
+# pts_crop = [[agent.border["WEST"], agent.border["NORTH"]],
+#             [agent.border["EAST"], agent.border["NORTH"]],
+#             [agent.border["EAST"], agent.border["SOUTH"]],
+#             [agent.border["WEST"], agent.border["SOUTH"]]]
+
+# # recover
+# pts_rec = recover_scale(pts_crop, mat_H)
+
+# # try remapping to Tiff coordinate if applicable
+# try:
+#     pts_rec = [list(tiff_transform * pts_rec[i]) for i in range(4)]
+# except Exception as e:
+#     print(e)
+
+# # input shape file
+# f.poly([pts_rec])
+
+# # attributes
+# dc = {c: entry[c] for c in dt.columns}
+# f.record(**dict(dc))
 
 
 ###### ###### ###### ###### ###### ###### ###### ######
