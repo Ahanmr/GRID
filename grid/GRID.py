@@ -123,6 +123,7 @@ class GRID():
                 pathImg=os.path.join(self.user.dirGrid, "demo/seg_img.jpg"))
             self.map.load(
                 pathMap=os.path.join(self.user.dirGrid, "demo/seg_map.csv"))
+            self.path_out = os.path.expanduser("~")
         else:
             self.imgs.load(pathImg=pathImg, pathShp=pathShp)
             self.map.load(pathMap=pathMap)

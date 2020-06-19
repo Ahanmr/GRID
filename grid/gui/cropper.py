@@ -91,15 +91,30 @@ class Widget_ViewCrop(Widget_Img):
         painter = QPainter(self)
         super().paintImage(painter)
 
-        painter.setPen(QPen(Qt.red, .5, Qt.SolidLine))
+        painter.setPen(QPen(Qt.red, 1, Qt.SolidLine))
         # painter.setBrush(QBrush(Qt.red, Qt.SolidPattern))
-        painter.setBrush(QBrush(Qt.red, Qt.Dense5Pattern))
+        painter.setBrush(QBrush(Qt.red, Qt.Dense7Pattern))
 
         if self.hasDrag:
             # has drawn points
             points = QPolygon([QPoint(self.pts[i][0], self.pts[i][1])
                               for i in range(4)])
             painter.drawPolygon(points)
+        else:
+            if len(self.pts) == 1:
+                painter.drawLine(QPoint(self.pts[0][0], self.pts[0][1]),
+                                 QPoint(self.pos_move[0], self.pos_move[1]))
+            elif len(self.pts) == 2:
+                points = QPolygon([QPoint(self.pts[0][0], self.pts[0][1]),
+                                   QPoint(self.pts[1][0], self.pts[1][1]), 
+                                   QPoint(self.pos_move[0], self.pos_move[1])])
+                painter.drawPolygon(points)
+            elif len(self.pts) == 3:
+                points = QPolygon([QPoint(self.pts[0][0], self.pts[0][1]),
+                                   QPoint(self.pts[1][0], self.pts[1][1]),
+                                   QPoint(self.pts[2][0], self.pts[2][1]),
+                                   QPoint(self.pos_move[0], self.pos_move[1])])
+                painter.drawPolygon(points)
 
         painter.end()
 
@@ -110,7 +125,14 @@ class Widget_ViewCrop(Widget_Img):
             self.pos_move_prev = self.pos_press
 
             if self.whichState == -1:
-                self.isDragDefine = 1
+                # define AOI
+                if len(self.pts) < 4:
+                    # insert point to incomplete AOI
+                    self.pts.append(self.pos_press)
+                else:
+                    # create new AOI
+                    self.pts = [self.pos_press]
+                self.hasDrag = 1 if len(self.pts) == 4 else 0
             else:
                 self.isDragSize = 1
         elif event.button() == Qt.RightButton:
@@ -121,18 +143,7 @@ class Widget_ViewCrop(Widget_Img):
     def mouseMoveEvent(self, event):
         self.pos_move = (event.pos().x(), event.pos().y())
 
-        if self.isDragDefine:
-            '''
-            drag empty space to define rectangle
-            '''
-
-            self.pts = [(self.pos_press[0], self.pos_press[1]),
-                        (self.pos_press[0], self.pos_move[1]),
-                        (self.pos_move[0], self.pos_move[1]),
-                        (self.pos_move[0], self.pos_press[1])]
-            self.hasDrag = 1
-
-        elif not self.isDragSize and self.hasDrag:
+        if not self.isDragSize and self.hasDrag and len(self.pts) == 4:
             '''
             hover around when the rectangle exists
             '''
@@ -228,7 +239,7 @@ class Widget_ViewCrop(Widget_Img):
 
         # cursor
         magArea = int(min(self.rgX[1] - self.rgX[0], self.rgY[1] - self.rgY[0]) / 5)
-        if self.whichState < 8 and self.whichState >= 0:
+        if self.whichState < 8:
             if self.zoom != 0:
                 magnifying_glass(self, event.pos(),
                                 area=magArea, zoom=self.zoom * 2.5)
@@ -241,8 +252,6 @@ class Widget_ViewCrop(Widget_Img):
             pixmap = QPixmap(os.path.join(
                 self.grid.user.dirGrid, "res/rotate.png")).scaled(size, size)
             self.setCursor(QCursor(pixmap))
-        elif self.whichState == -1:
-            self.setCursor(QCursor(Qt.ArrowCursor))
 
         self.pos_move_prev = self.pos_move
         self.repaint()

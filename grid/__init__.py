@@ -1,6 +1,6 @@
 __author__ = "Chunpeng James Chen"
-__version__ = "1.1.1"
-__update__ = "Jun 17, 2020"
+__version__ = "1.1.4"
+__update__ = "Jun 18, 2020"
 
 # imports
 import subprocess
@@ -14,7 +14,7 @@ from pkg_resources import parse_version
 print("~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~")
 print("                 Welcome to GRID Ver.%s    " % __version__)
 print("~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~")
-print("Author      : James Chen <chun-peng.chen@wsu.edu>    " )
+print("Author      : James Chen <chun-peng.chen@wsu.edu>    ")
 print("Last update : %s              " % __update__)
 
 if "-m" not in sys.argv[0]:
@@ -49,8 +49,8 @@ try:
 
         if bol_ans:
             subprocess.check_call([sys.executable,
-                                '-m', 'pip', 'install',
-                                'photo_grid==%s' % new_version, '--upgrade'])
+                                   '-m', 'pip', 'install',
+                                   'photo_grid==%s' % new_version, '--upgrade'])
             print("\n")
             print("~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~")
             print("          Please re-launch GRID to finish the update")

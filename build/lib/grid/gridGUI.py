@@ -116,7 +116,7 @@ class GRID_GUI(QMainWindow):
 
     def showCropper(self, isNew=True):
         bugmsg("crop")
-        self.prog.set(n=1, name="Right-click to zoom. Left-drag to define AOI. After initialize AOI:\nDrag at AOI's corner/side to adjust the border. Drag at AOI's center to move the whole AOI. Drag at the area further away from AOI to rotate")
+        self.prog.set(n=1, name="Left-click to define AOI. Right-click to change zoom-in rate. After initialize AOI:\nDrag at AOI's corner/side to adjust the border. Drag at AOI's center to move the whole AOI. Drag at the area further away from AOI to rotate")
         self.assembleNavigation()
         self.btPrev.clicked.connect(
             lambda: self.showInputer(isNew=False))
