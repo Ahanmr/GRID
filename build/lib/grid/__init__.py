@@ -1,6 +1,6 @@
 __author__ = "Chunpeng James Chen"
-__version__ = "1.1.4"
-__update__ = "Jun 18, 2020"
+__version__ = "1.1.5"
+__update__ = "Jul 1, 2020"
 
 # imports
 import subprocess
@@ -70,6 +70,10 @@ from .grid import *
 
 """
 Update Log
+
+- Jul 1, 2020 (1.1.5)
+    * Improve the stability and flexibility in the step to segmentation
+    * Bug fixes in the searching centroids step
 
 - Jun 17, 2020 (1.1)
     * The shapefile can be used for the same field taken from different season

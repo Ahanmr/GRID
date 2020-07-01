@@ -72,7 +72,7 @@ def smoothImg(image, n):
     kernel = np.array((
             [1, 4, 1],
             [4, 9, 4],
-            [1, 4, 1]), dtype='int')/29
+            [1, 4, 1]), dtype='int') / 29
 
     for _ in range(n):
         image = convolve2d(image, kernel, mode='same')
@@ -122,7 +122,7 @@ def sortPts(pts):
     return np.array(pts)[order]
 
 
-def cropImg(img, pts, resize=1600):
+def cropImg(img, pts, resize=2048):
     """
     Perspectively project assigned area (pts) to a rectangle image
     -----
@@ -144,8 +144,8 @@ def cropImg(img, pts, resize=1600):
     img_H = (euclidean(pt_SE, pt_NE) + euclidean(pt_SW, pt_NW))/2
 
     # resize output dimension
-    rate = .7
-    while (img_W > resize):
+    rate = .95
+    while (max(img_W, img_H) > resize):
         img_W *= rate
         img_H *= rate
 
@@ -511,25 +511,30 @@ def pltImShow(img, path=None, prefix="GRID", filename=".png"):
 
 
 def pltSegPlot(agents, plotBase, isRect=False, isCenter=False, path=None, prefix="GRID", filename=".png"):
-    if path is None:    
+    if path is None:
+        # CLI
         ax = plt.subplot(111)
         ax.imshow(plotBase)
         for row in range(agents.nRow):
             for col in range(agents.nCol):
-                agent = agents.get(row=row, col=col)
-                if not agent:
-                    continue
-                recAg = agent.getQRect()
-                line1, line2 = pltCross(agent.x, agent.y, width=1)
-                ax.add_line(line1)
-                ax.add_line(line2)
-                if isRect:
-                    rect = patches.Rectangle(
-                        (recAg.x(), recAg.y()), recAg.width(), recAg.height(),
-                        linewidth=1, edgecolor='r', facecolor='none')
-                    ax.add_patch(rect)
+                try:
+                    agent = agents.get(row=row, col=col)
+                    if not agent:
+                        continue
+                    recAg = agent.getQRect()
+                    line1, line2 = pltCross(agent.x, agent.y, width=1)
+                    ax.add_line(line1)
+                    ax.add_line(line2)
+                    if isRect:
+                        rect = patches.Rectangle(
+                            (recAg.x(), recAg.y()), recAg.width(), recAg.height(),
+                            linewidth=1, edgecolor='r', facecolor='none')
+                        ax.add_patch(rect)
+                except Exception:
+                    print("The plot is out of the borders")
         plt.show()
     else:
+        # GUI
         file = os.path.join(path, prefix+filename)
         if plotBase.max() == 1:
             qimg = getBinQImg(plotBase)
@@ -546,13 +551,16 @@ def pltSegPlot(agents, plotBase, isRect=False, isCenter=False, path=None, prefix
         painter.setBrush(Qt.transparent)
         for row in range(agents.nRow):
             for col in range(agents.nCol):
-                agent = agents.get(row, col)
-                center = agent.getCoordinate()
-                rect = agent.getQRect()
-                if isRect:
-                    painter.drawRect(rect)
-                if isCenter:
-                    qCross(center[0], center[1], painter, size=3)
+                try:
+                    agent = agents.get(row, col)
+                    center = agent.getCoordinate()
+                    rect = agent.getQRect()
+                    if isRect:
+                        painter.drawRect(rect)
+                    if isCenter:
+                        qCross(center[0], center[1], painter, size=3)
+                except Exception:
+                    print("The plot is out of the borders")
         painter.end()
         qimg.save(file, "PNG")
 

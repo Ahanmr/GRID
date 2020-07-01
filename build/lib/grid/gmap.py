@@ -115,7 +115,7 @@ class GMap():
         return angles
 
     def locateCenters(self, nSmooth=100):
-        self.slps = [1/np.tan(np.pi/180*angle) for angle in self.angles]
+        self.slps = [1 / np.tan(np.pi / 180 * angle) for angle in self.angles]
 
         # progress bar
         prog = None
@@ -211,6 +211,10 @@ class GMap():
                     pMin += 1
             pMaj += 1
 
+        # col order would be flipped if the angle is greater than zero
+        if angles[1] > 0 and angles[1] < 90 and angles[0] != 0:
+            plotsMin = plotsMin[::-1]
+
         if idxCol == idxMaj:
             dataframe = pd.DataFrame(
                 {"row": plotsMin, "col": plotsMaj, "pt": pts})
@@ -293,7 +297,7 @@ class GMap():
 
         # signal
         new_signal = getSigFromItc(itc, angle, self.imgH)
-        
+
         temp = self.sigs
         try:
             temp[1].append(new_signal)

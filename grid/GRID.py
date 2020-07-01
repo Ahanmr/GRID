@@ -97,7 +97,7 @@ class GRID():
             os.mkdir(path_f)
         except OSError:
             path_f = path
-            print("Failed to create a new directory" % path)
+            print("Failed to create a new directory")
 
         self.savePlotAndDT(path=path_f, prefix=prefix, h5=h5)
 

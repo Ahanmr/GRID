@@ -413,10 +413,10 @@ class Widget_Seg(Widget_Img):
 
         # change cursor
         if self.task == 0:
-            self.setCursor(QCursor(Qt.ArrowCursor))
-            magnifying_glass(self, event.pos(), area=int(
-                self.width() / 7), zoom=1.2)
+            # moving centroid
+            self.setCursor(QCursor(Qt.SizeAllCursor))
         elif self.task == 1:
+            # adjust borders
             magnifying_glass(self, event.pos(), area=int(
                 self.width() / 7), zoom=1.5)
         elif self.task == 2:

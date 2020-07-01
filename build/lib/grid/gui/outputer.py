@@ -23,11 +23,7 @@ class PnOutputer(QWidget):
         self.setFocus()
         self.update()
         self.grid = grid
-        if self.grid.imgs.hasShp:
-            self.grid.imgs.readyForSeg()
-            self.grid.agents.setup(gmap=grid.map, gimg=grid.imgs)
-        else:
-            self.grid.cpuSeg()
+        self.runDefaultSeg()
 
         self.layout = QHBoxLayout()
         '''left side'''
@@ -147,7 +143,6 @@ class PnOutputer(QWidget):
         self.lo_fix.addWidget(self.cb_alignY)
         self.lo_fix.addWidget(self.ck_evenH)
         self.lo_fix.addWidget(self.ck_evenV)
-        self.lo_fix.addWidget(self.bt_reset)
         self.gr_fix.setLayout(self.lo_fix)
         '''seg (right)'''
         # layout
@@ -197,6 +192,7 @@ class PnOutputer(QWidget):
         # right
         self.lo_right.addWidget(self.gr_seg)
         self.lo_right.addWidget(self.gr_tol)
+        self.lo_right.addWidget(self.bt_reset)
         self.lo_right.addWidget(self.gr_dis)
         self.lo_right.addWidget(self.gr_out)
         self.pn_right.setLayout(self.lo_right)
@@ -227,7 +223,6 @@ class PnOutputer(QWidget):
         self.cb_alignY.setVisible(not isAuto)
         self.ck_evenH.setVisible(not isAuto)
         self.ck_evenV.setVisible(not isAuto)
-        self.bt_reset.setVisible(not isAuto)
 
     def auto_seg(self):
         '''
@@ -302,6 +297,7 @@ class PnOutputer(QWidget):
         self.cb_alignX.setCurrentIndex(0)
         self.cb_alignY.setCurrentIndex(0)
         self.grid.agents.resetCoordinate()
+        self.runDefaultSeg()
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_A:
@@ -322,6 +318,13 @@ class PnOutputer(QWidget):
             self.rb_vp.setChecked(True)
         else:
             self.rb_hp.setChecked(True)
+
+    def runDefaultSeg(self):
+        if self.grid.imgs.hasShp:
+            self.grid.imgs.readyForSeg()
+            self.grid.agents.setup(gmap=self.grid.map, gimg=self.grid.imgs)
+        else:
+            self.grid.cpuSeg()
 
 
 class Widget_Seg(Widget_Img):
@@ -356,7 +359,8 @@ class Widget_Seg(Widget_Img):
         self.agent_click = False
 
     def mousePressEvent(self, event):
-        pos = event.pos()
+        self.pos_press = (event.pos().x(), event.pos().y())
+        self.pos_move_prev = self.pos_press
 
         # to figure out what border has benn selected
         for row in range(self.grid.map.nRow):
@@ -366,13 +370,17 @@ class Widget_Seg(Widget_Img):
                 if not agent or agent.isFake():
                     continue
                 rect = agent.getQRect()
-                self.ratio = self.width()/self.qimg.width() if self.isFitWidth else self.height() / self.qimg.height()
-                rec_agent = QRect(rect.x()*self.ratio+self.rgX[0],
-                                  rect.y()*self.ratio+self.rgY[0],
-                                  rect.width()*self.ratio,
-                                  rect.height()*self.ratio)
+                if self.isFitWidth:
+                    self.ratio = self.width() / self.qimg.width()
+                else:
+                    self.ratio = self.height() / self.qimg.height()
+
+                rec_agent = QRect(rect.x() * self.ratio + self.rgX[0],
+                                  rect.y() * self.ratio + self.rgY[0],
+                                  rect.width() * self.ratio,
+                                  rect.height() * self.ratio)
                 # if contain cursor
-                if rec_agent.contains(pos):
+                if rec_agent.contains(event.pos()):
                     self.agent_click = agent
                     if self.task == 1:
                         # zoom and mod border
@@ -380,10 +388,10 @@ class Widget_Seg(Widget_Img):
                         bd_N = rec_agent.y()
                         bd_E = bd_W + rec_agent.width()
                         bd_S = bd_N + rec_agent.height()
-                        dis_W = abs(pos.x()-bd_W)
-                        dis_N = abs(pos.y()-bd_N)
-                        dis_E = abs(pos.x()-bd_E)
-                        dis_S = abs(pos.y()-bd_S)
+                        dis_W = abs(self.pos_press[0] - bd_W)
+                        dis_N = abs(self.pos_press[1] - bd_N)
+                        dis_E = abs(self.pos_press[0] - bd_E)
+                        dis_S = abs(self.pos_press[1] - bd_S)
                         dir_idx = np.argmin(np.array([dis_N, dis_W, dis_S, dis_E]))
                         if dir_idx == 0:
                             self.dir = Dir.NORTH
@@ -401,48 +409,55 @@ class Widget_Seg(Widget_Img):
             self.mouseMoveEvent(event)
 
     def mouseMoveEvent(self, event):
-        pos = event.pos()
+        self.pos_move = (event.pos().x(), event.pos().y())
+
         # change cursor
-        if self.task==0:
+        if self.task == 0:
             self.setCursor(QCursor(Qt.ArrowCursor))
-            magnifying_glass(self, pos, area=int(self.width()/7), zoom=1.2)
-        elif self.task==1:
-            magnifying_glass(self, pos, area=int(self.width()/7), zoom=1.5)
-        elif self.task==2:
+            magnifying_glass(self, event.pos(), area=int(
+                self.width() / 7), zoom=1.2)
+        elif self.task == 1:
+            magnifying_glass(self, event.pos(), area=int(
+                self.width() / 7), zoom=1.5)
+        elif self.task == 2:
             self.setCursor(QCursor(Qt.SizeVerCursor))
-        elif self.task==3:
+        elif self.task == 3:
             self.setCursor(QCursor(Qt.SizeHorCursor))
         # pan
-        if (event.button()==Qt.LeftButton)&(self.agent_click!=False):
-            posX = (pos.x()-self.rgX[0])/self.ratio
-            posY = (pos.y()-self.rgY[0])/self.ratio
+        if (event.button() == Qt.LeftButton) & (self.agent_click != False):
+            # convert GUI to image coordinate
+            x_move, y_move = self.convertGUI2XY(self.pos_move)
+            x_move_prev, y_move_prev = self.convertGUI2XY(self.pos_move_prev)
+            dx = x_move - x_move_prev
+            dy = y_move - y_move_prev
 
-            if self.task==0:
+            if self.task == 0:
                 # adjust centroid
-                cur_x = self.agent_click.x
-                cur_y = self.agent_click.y
-                adj_x = posX - cur_x
-                adj_y = posY - cur_y
-                self.agent_click.updateCoordinate(value=adj_y, axis=0)
-                self.agent_click.updateCoordinate(value=adj_x, axis=1)
-            elif self.task==1:
+                self.agent_click.updateCoordinate(value=dy, axis=0)
+                self.agent_click.updateCoordinate(value=dx, axis=1)
+            elif self.task == 1:
                 # adjust border
-                if self.dir==Dir.NORTH or self.dir==Dir.SOUTH:
-                    value = posY
-                elif self.dir==Dir.WEST or self.dir==Dir.EAST:
-                    value = posX
+                if self.dir == Dir.NORTH or self.dir == Dir.SOUTH:
+                    value = y_move
+                elif self.dir == Dir.WEST or self.dir == Dir.EAST:
+                    value = x_move
                 self.grid.agents.setBorder(self.agent_click, self.dir, value)
-            elif self.task==2:
+            elif self.task == 2:
                 # V pan
-                value = posY
                 row = self.agent_click.row
-                self.grid.agents.pan(axis=0, target=row, value=value)
-            elif self.task==3:
+                self.grid.agents.pan(axis=0, target=row, value=dy)
+            elif self.task == 3:
                 # H pan
-                value = posX
                 col = self.agent_click.col
-                self.grid.agents.pan(axis=1, target=col, value=value)
+                self.grid.agents.pan(axis=1, target=col, value=dx)
+
+        self.pos_move_prev = self.pos_move
         self.repaint()
+
+    def convertGUI2XY(self, pt):
+        posX = (pt[0] - self.rgX[0]) / self.ratio
+        posY = (pt[1] - self.rgY[0]) / self.ratio
+        return (posX, posY)
 
     def paintEvent(self, paint_event):
         painter = QPainter(self)

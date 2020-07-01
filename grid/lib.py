@@ -510,7 +510,7 @@ def pltImShow(img, path=None, prefix="GRID", filename=".png"):
         qimg.save(file, "PNG")
 
 
-def pltSegPlot(agents, plotBase, isRect=False, isCenter=False, path=None, prefix="GRID", filename=".png"):
+def pltSegPlot(agents, plotBase, isName=False, isRect=False, isCenter=False, path=None, prefix="GRID", filename=".png"):
     if path is None:
         # CLI
         ax = plt.subplot(111)
@@ -555,6 +555,9 @@ def pltSegPlot(agents, plotBase, isRect=False, isCenter=False, path=None, prefix
                     agent = agents.get(row, col)
                     center = agent.getCoordinate()
                     rect = agent.getQRect()
+                    if isName:
+                        text = "%s\n(%d, %d)" % (agent.name, row, col)
+                        painter.drawText(rect, Qt.AlignCenter, text)
                     if isRect:
                         painter.drawRect(rect)
                     if isCenter:
