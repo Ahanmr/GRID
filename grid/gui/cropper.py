@@ -271,8 +271,8 @@ class Widget_ViewCrop(Widget_Img):
         pts = [[(pt[0] - self.rgX[0]) * (self.ratio),
                 (pt[1] - self.rgY[0]) * (self.ratio)] for pt in self.pts]
         if len(pts) < 4:
-            pts = [[0, 0], [0, self.imgH],
-                   [self.imgW, self.imgH], [self.imgW, 0]]
+            pts = [[0, 0], [self.imgW, 0],
+                   [self.imgW, self.imgH], [0, self.imgH]]
         return pts
 
     def resetStatus(self):

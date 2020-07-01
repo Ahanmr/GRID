@@ -225,6 +225,7 @@ class GAgent():
         Parameters
         ----------
         """
+        self.isWork = True
 
         # prog = initProgress(self.nRow, name="Estimating dimentions")
         for row in range(self.nRow):
@@ -237,11 +238,11 @@ class GAgent():
                 rgTemp = dict()
                 for axis in [0, 1]:
                     # extract direction info and 1dImg
-                    dir1 = Dir(axis) # axis:0, return N(0) and S(2)
-                    dir2 = Dir(axis+2) # axis:1, return W(1) and E(3)
-                    axisRev = (not axis)*1
-                    img1d = self.img[agentSelf.y,
-                                     :] if axis else self.img[:, agentSelf.x]
+                    dir1 = Dir(axis)  # axis:0, return N(0) and S(2)
+                    dir2 = Dir(axis + 2)  # axis:1, return W(1) and E(3)
+                    axisRev = (not axis) * 1
+                    # img1d = self.img[agentSelf.y,
+                    #                  :] if axis else self.img[:, agentSelf.x]
                     # extract agents info
                     ptSelf = agentSelf.getCoordinate()[axisRev]
                     agentNeig1 = self.getNeib(row, col, dir1)
@@ -250,27 +251,31 @@ class GAgent():
                     if (agentNeig1 != 0) and (agentNeig2 != 0) and (not agentNeig1.isFake()) and (not agentNeig2.isFake()):
                         ptNeig1 = agentNeig1.getCoordinate()[axisRev]
                         ptNeig2 = agentNeig2.getCoordinate()[axisRev]
-                        ptMid = int((ptNeig1+ptNeig2)/2)
-                        ptBd1 = int((ptNeig1+ptMid)/2)
-                        ptBd2 = int((ptNeig2+ptMid)/2)
+                        ptMid = int((ptNeig1 + ptNeig2) / 2)
+                        ptBd1 = int((ptNeig1 + ptMid) / 2)
+                        ptBd2 = int((ptNeig2 + ptMid) / 2)
                     # if only left/up side exist
                     elif agentNeig1:
                         ptNeig1 = agentNeig1.getCoordinate()[axisRev]
-                        ptBd1 = int((ptSelf+ptNeig1)/2)
+                        ptBd1 = int((ptSelf + ptNeig1) / 2)
                         ptBd2 = self.img.shape[axis]
                         self.setBorder(agentSelf, dir2, ptBd2)
                     # if only right/down side exist
                     elif agentNeig2:
                         ptNeig2 = agentNeig2.getCoordinate()[axisRev]
                         ptBd1 = 0
-                        ptBd2 = int((ptSelf+ptNeig2)/2)
+                        ptBd2 = int((ptSelf + ptNeig2) / 2)
                         self.setBorder(agentSelf, dir1, ptBd1)
                     # if neither side exist
-                    elif self.nRow==1 or self.nCol==1:
+                    elif self.nRow == 1 or self.nCol == 1:
                         ptBd1 = 0
                         ptBd2 = self.img.shape[axis]
                         self.setBorder(agentSelf, dir1, ptBd1)
                         self.setBorder(agentSelf, dir2, ptBd2)
+
+                    # check if invade to its neigbor
+                    # new_centroid = (ptBd1 + ptBd2) / 2
+                    # if new_centroid >=
 
                     # # get predim
                     # # negative side (neighber 1)
@@ -320,7 +325,7 @@ class GAgent():
 
         # loop over rows and cols
         for row in range(self.nRow):
-            updateProgress(prog, flag= self.subflag)
+            updateProgress(prog, flag=self.subflag)
             for col in range(self.nCol):
                 agentSelf = self.get(row, col)
                 for dir in list([Dir.EAST, Dir.SOUTH]):
@@ -333,22 +338,24 @@ class GAgent():
                     agentSelf.border[dir.name] = agentSelf.border_reset[dir.name]
                     agentNeib.border[dirNeib.name] = agentNeib.border_reset[dirNeib.name]
                     # calculate border
-                    dist_agents = abs(
-                        agentSelf.x-agentNeib.x) if dir == Dir.EAST else abs(agentSelf.y-agentNeib.y)
-                    
+                    if dir == Dir.EAST:
+                        dist_agents = abs(agentSelf.x - agentNeib.x)
+                    else:
+                        dist_agents = abs(agentSelf.y-agentNeib.y)
+
                     while (agentNeib.getBorder(dirNeib) - agentSelf.getBorder(dir)) > 1:
                         scASelf = agentSelf.getScoreArea(
                             dir, self.img)
                         scGSelf = agentSelf.getScoreGrid(
-                            dir)/dist_agents
+                            dir) / dist_agents
                         scANeib = agentNeib.getScoreArea(
                             dirNeib, self.img)
                         scGNeib = agentNeib.getScoreGrid(
-                            dirNeib)/dist_agents
+                            dirNeib) / dist_agents
                         # except Exception as e:
-                        scoreSelf = scASelf - (scGSelf*coefGrid)
-                        scoreNeib = scANeib - (scGNeib*coefGrid)
-                        if scoreSelf > scoreNeib:                            
+                        scoreSelf = scASelf - (scGSelf * coefGrid)
+                        scoreNeib = scANeib - (scGNeib * coefGrid)
+                        if scoreSelf > scoreNeib:
                             self.updateBorder(agentSelf, dir, 1)
                         elif scoreSelf < scoreNeib:
                             self.updateBorder(agentNeib, dirNeib, -1)
@@ -376,10 +383,10 @@ class GAgent():
                     agent.setBorder(Dir.NORTH, agentNeig.getBorder(Dir.SOUTH))
 
     def fixSeg(self, width, length):
-        w_unit = (self.imgW/self.nCol)/100
-        l_unit = (self.imgH/self.nRow)/100
-        w_side = round(width/2*w_unit)
-        l_side = round(length/2*l_unit)
+        w_unit = (self.imgW / self.nCol) / 100
+        l_unit = (self.imgH / self.nRow) / 100
+        w_side = round(width / 2 * w_unit)
+        l_side = round(length / 2 * l_unit)
         for row in range(self.nRow):
             for col in range(self.nCol):
                 agent = self.get(row, col)
@@ -562,21 +569,22 @@ class GAgent():
         if axis == 0:
             for col in range(self.nCol):
                 agent = self.get(row=target, col=col)
-                dist = value - agent.y
-                self.updateCoordinate(agent, dist, axis=axis)
+                # dist = value - agent.y
+                self.updateCoordinate(agent, value, axis=axis)
         elif axis == 1:
             for row in range(self.nRow):
                 agent = self.get(row=row, col=target)
-                dist = value - agent.x
-                self.updateCoordinate(agent, dist, axis=axis)
+                # dist = value - agent.x
+                self.updateCoordinate(agent, value, axis=axis)
 
     def distributed(self, axis, isEven):
         if isEven:
-            if axis == 0: # row
+            if axis == 0:
+                # row
                 y_North = self.get(row=0, col=0).y
-                y_South = self.get(row=self.nRow-1, col=0).y
-                dist = y_South-y_North
-                pos_new = np.arange(y_North, y_South, dist/(self.nRow-1))
+                y_South = self.get(row=self.nRow - 1, col=0).y
+                dist = y_South - y_North
+                pos_new = np.arange(y_North, y_South, dist / (self.nRow - 1))
                 pos_new = np.append(pos_new, y_South)
                 for row in range(self.nRow):
                     for col in range(self.nCol):
@@ -585,11 +593,12 @@ class GAgent():
                             continue
                         dist = pos_new[row] - agent.y
                         self.updateCoordinate(agent=agent, value=dist, axis=0)
-            else:       # col
+            else:
+                # col
                 x_West = self.get(row=0, col=0).x
-                x_East = self.get(row=0, col=self.nCol-1).x
+                x_East = self.get(row=0, col=self.nCol - 1).x
                 dist = x_East-x_West
-                pos_new = np.arange(x_West, x_East, dist/(self.nCol-1))
+                pos_new = np.arange(x_West, x_East, dist / (self.nCol - 1))
                 pos_new = np.append(pos_new, x_East)
                 for col in range(self.nCol):
                     for row in range(self.nRow):
@@ -618,6 +627,7 @@ class Agent():
         self.name = name
         self.row, self.col = row, col
         self.y, self.x = 0, 0
+        self.y_float, self.x_float = 0.0, 0.0  # range from 0 to 0.9999
         self.y_reset, self.x_reset = 0, 0
         self.pre_rg_W, self.pre_rg_H = range(0), range(0)
         self.border, self.border_reset = dict(), dict()
@@ -651,7 +661,7 @@ class Agent():
         '''
         Will ragne from 0 to 1
         '''
-        isWE = dir.value%2 # is W, E or N, S
+        isWE = dir.value % 2 # is W, E or N, S
         pt_center = self.x if isWE else self.y
         pt_cur = self.getBorder(dir)
         return abs(pt_cur-pt_center)
@@ -671,9 +681,9 @@ class Agent():
         '''
         self.pre_rg_W = range(rg['WEST'], rg['EAST'])
         self.pre_rg_H = range(rg['NORTH'], rg['SOUTH'])
-        self.x = int((rg['EAST']+rg['WEST'])/2)
-        self.y = int((rg['NORTH']+rg['SOUTH'])/2)
-        self.x_reset, self.y_reset = self.x, self.y
+        # self.x = int((rg['EAST']+rg['WEST'])/2)
+        # self.y = int((rg['NORTH']+rg['SOUTH'])/2)
+        # self.x_reset, self.y_reset = self.x, self.y
         for dir in list([Dir.NORTH, Dir.WEST, Dir.SOUTH, Dir.EAST]):
             self.border_reset[dir.name] = self.border[dir.name]
 
@@ -689,16 +699,20 @@ class Agent():
 
     def updateCoordinate(self, value, axis=0):
         '''
+        decompose value to integer and floating parts
         '''
-        value = int(value)
-        if axis==0:
-            self.y += value
-            self.border[Dir.NORTH.name] += value
-            self.border[Dir.SOUTH.name] += value
-        elif axis==1:
-            self.x += value
-            self.border[Dir.WEST.name] += value
-            self.border[Dir.EAST.name] += value
+        if axis == 0:
+            self.y_float += value
+            dy, self.y_float = self.y_float // 1, self.y_float % 1
+            self.y += dy
+            self.border[Dir.NORTH.name] += dy
+            self.border[Dir.SOUTH.name] += dy
+        elif axis == 1:
+            self.x_float += value
+            dx, self.x_float = self.x_float // 1, self.x_float % 1
+            self.x += dx
+            self.border[Dir.WEST.name] += dx
+            self.border[Dir.EAST.name] += dx
 
     def getQRect(self):
         """
@@ -726,4 +740,4 @@ class Agent():
         self.setBorder(Dir.SOUTH, self.y)
 
     def isFake(self):
-        return self.name=="_FAKE"
+        return self.name == "_FAKE"

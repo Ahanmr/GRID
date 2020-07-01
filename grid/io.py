@@ -200,31 +200,34 @@ def saveDT(grid, path, prefix="GRID"):
             agent = grid.agents.get(row, col)
             if not agent or agent.isFake():
                 continue
-            entry = dict(var=agent.name, row=row, col=col)
+            try:
+                entry = dict(var=agent.name, row=row, col=col)
 
-            # get ROI region
-            rg_row = range(agent.getBorder(Dir.NORTH),
-                           agent.getBorder(Dir.SOUTH))
-            rg_col = range(agent.getBorder(Dir.WEST),
-                           agent.getBorder(Dir.EAST))
+                # get ROI region
+                rg_row = range(agent.getBorder(Dir.NORTH),
+                            agent.getBorder(Dir.SOUTH))
+                rg_col = range(agent.getBorder(Dir.WEST),
+                            agent.getBorder(Dir.EAST))
 
-            # get selected pixels info
-            imgBinAgent = grid.imgs.get('bin')[rg_row, :][:, rg_col]
-            n_veg = imgBinAgent.sum()
+                # get selected pixels info
+                imgBinAgent = grid.imgs.get('bin')[rg_row, :][:, rg_col]
+                n_veg = imgBinAgent.sum()
 
-            # load area info
-            entry["area_all"] = len(rg_row)*len(rg_col)
-            entry["area_veg"] = n_veg
+                # load area info
+                entry["area_all"] = len(rg_row)*len(rg_col)
+                entry["area_veg"] = n_veg
 
-            # append temp entry
-            for key, imgIdx in dicIdx.items():
-                imgIdxAgent = imgIdx[rg_row, :][:, rg_col]
-                img_out = np.multiply(imgBinAgent, imgIdxAgent)
-                vec_out = img_out[img_out != 0].flatten()
-                entry[key] = vec_out.mean()
-                entry[key + "_std"] = vec_out.std()
+                # append temp entry
+                for key, imgIdx in dicIdx.items():
+                    imgIdxAgent = imgIdx[rg_row, :][:, rg_col]
+                    img_out = np.multiply(imgBinAgent, imgIdxAgent)
+                    vec_out = img_out[img_out != 0].flatten()
+                    entry[key] = vec_out.mean()
+                    entry[key + "_std"] = vec_out.std()
 
-            df.loc[len(df)] = entry
+                df.loc[len(df)] = entry
+            except Exception:
+                print("The plot is out of the borders")
 
     df = df[~df['var'].isnull()]
 
@@ -235,11 +238,11 @@ def saveDT(grid, path, prefix="GRID"):
 def savePlot(grid, path, prefix="GRID"):
     # raw-none
     pltSegPlot(grid.agents, grid.imgs.get("crop")[:, :, :3],
-              path=path, prefix=prefix, filename="_raw.png")
+               path=path, prefix=prefix, filename="_raw.png")
     # raw-center
     pltSegPlot(grid.agents, grid.imgs.get("crop")[:, :, :3],
-              isCenter=True,
-              path=path, prefix=prefix, filename="_raw_center.png")
+               isCenter=True,
+               path=path, prefix=prefix, filename="_raw_centroid.png")
     # raw-frame
     pltSegPlot(grid.agents, grid.imgs.get("crop")[:, :, :3],
                isRect=True,
@@ -251,7 +254,19 @@ def savePlot(grid, path, prefix="GRID"):
 
     # cluster-none
     pltSegPlot(grid.agents, grid.imgs.get("kmean"),
-              path=path, prefix=prefix, filename="_kmeans.png")
+               path=path, prefix=prefix, filename="_kmeans.png")
+    # cluster-center
+    pltSegPlot(grid.agents, grid.imgs.get("kmean"),
+               isCenter=True,
+               path=path, prefix=prefix, filename="_kmeans_centroid.png")
+    # cluster-frame
+    pltSegPlot(grid.agents, grid.imgs.get("kmean"),
+               isRect=True,
+               path=path, prefix=prefix, filename="_kmeans_border.png")
+    # cluster-both
+    pltSegPlot(grid.agents, grid.imgs.get("kmean"),
+               isCenter=True, isRect=True,
+               path=path, prefix=prefix, filename="_kmeans_both.png")
 
     # binary-none
     pltSegPlot(grid.agents, grid.imgs.get("bin"),
@@ -259,19 +274,31 @@ def savePlot(grid, path, prefix="GRID"):
     # binary-center
     pltSegPlot(grid.agents, grid.imgs.get("bin"),
                isCenter=True,
-               path=path, prefix=prefix, filename="_bin.png")
+               path=path, prefix=prefix, filename="_bin_centroid.png")
     # binary-frame
     pltSegPlot(grid.agents, grid.imgs.get("bin"),
                isRect=True,
                path=path, prefix=prefix, filename="_bin_border.png")
+    # binary-both
+    pltSegPlot(grid.agents, grid.imgs.get("bin"),
+               isCenter=True, isRect=True,
+               path=path, prefix=prefix, filename="_bin_both.png")
 
     # extraction-none
     pltSegPlot(grid.agents, grid.imgs.get("visSeg"),
                path=path, prefix=prefix, filename="_seg.png")
+    # extraction-center
+    pltSegPlot(grid.agents, grid.imgs.get("visSeg"),
+               isCenter=True,
+               path=path, prefix=prefix, filename="_seg_centroid.png")
     # extraction-frame
     pltSegPlot(grid.agents, grid.imgs.get("visSeg"),
                isRect=True,
                path=path, prefix=prefix, filename="_seg_border.png")
+    # extraction-frame
+    pltSegPlot(grid.agents, grid.imgs.get("visSeg"),
+               isCenter=True, isRect=True,
+               path=path, prefix=prefix, filename="_seg_both.png")
 
 
 def saveH5(grid, path, prefix="GRID"):
@@ -286,21 +313,24 @@ def saveH5(grid, path, prefix="GRID"):
     img = grid.imgs.get("crop").copy()
     for row in range(grid.agents.nRow):
         for col in range(grid.agents.nCol):
-            agent = grid.agents.get(row, col)
-            if not agent or agent.isFake():
-                continue
-            key = agent.name
+            try:
+                agent = grid.agents.get(row, col)
+                if not agent or agent.isFake():
+                    continue
+                key = agent.name
 
-            # get ROI region
-            rgY = range(agent.getBorder(Dir.NORTH),
-                        agent.getBorder(Dir.SOUTH))
-            rgX = range(agent.getBorder(Dir.WEST),
-                        agent.getBorder(Dir.EAST))
+                # get ROI region
+                rgY = range(agent.getBorder(Dir.NORTH),
+                            agent.getBorder(Dir.SOUTH))
+                rgX = range(agent.getBorder(Dir.WEST),
+                            agent.getBorder(Dir.EAST))
 
-            # compute kernel
-            imgAll = img[:, rgX, :][rgY, :, :]
-            imgBin = grid.imgs.get("bin")[:, rgX][rgY, :]
-            imgFin = np.multiply(imgAll, np.expand_dims(imgBin, 2))
+                # compute kernel
+                imgAll = img[:, rgX, :][rgY, :, :]
+                imgBin = grid.imgs.get("bin")[:, rgX][rgY, :]
+                imgFin = np.multiply(imgAll, np.expand_dims(imgBin, 2))
+            except Exception:
+                print("The plot is out of the borders")
 
             # export image
             try:
@@ -340,26 +370,29 @@ def saveShape(grid, path, prefix="GRID"):
                 mode = "C"
                 arg1, arg2 = 20, 20
 
+            if col == cols[0]:
+                mode = "C"
+                arg1, arg2 = 20, 20
+
             f.field(col, mode, arg1, arg2)
 
         for idx, entry in dt.iterrows():
-            # get agents
-            row = entry["row"]
-            col = entry["col"]
-            agent = grid.agents.get(row, col)
+            try:
+                # get agents
+                row = entry["row"]
+                col = entry["col"]
+                agent = grid.agents.get(row, col)
 
-            # polygon
-            # bN = imgH - agent.border["NORTH"]
-            # bW = agent.border["WEST"]
-            # bS = imgH - agent.border["SOUTH"]
-            # bE = agent.border["EAST"]
-            pts_crop = [[agent.border["WEST"], agent.border["NORTH"]],
-                        [agent.border["EAST"], agent.border["NORTH"]],
-                        [agent.border["EAST"], agent.border["SOUTH"]],
-                        [agent.border["WEST"], agent.border["SOUTH"]]]
-            
-            # recover
-            pts_rec = recover_scale(pts_crop, mat_H)
+                # polygon
+                pts_crop = [[agent.border["WEST"], agent.border["NORTH"]],
+                            [agent.border["EAST"], agent.border["NORTH"]],
+                            [agent.border["EAST"], agent.border["SOUTH"]],
+                            [agent.border["WEST"], agent.border["SOUTH"]]]
+
+                # recover
+                pts_rec = recover_scale(pts_crop, mat_H)
+            except Exception:
+                print("The plot is out of the borders")
 
             # try remapping to Tiff coordinate
             try:

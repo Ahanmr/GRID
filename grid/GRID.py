@@ -87,7 +87,19 @@ class GRID():
         if "__main__.py" not in sys.argv[0]:
             app = QApplication(sys.argv)
 
-        self.savePlotAndDT(path=path, prefix=prefix, h5=h5)
+        # check if the path is valid
+        if path is None or not os.path.exists(path):
+            path = self.user.dirHome
+
+        # put everything in a folder
+        path_f = os.path.join(path, prefix)
+        try:
+            os.mkdir(path_f)
+        except OSError:
+            path_f = path
+            print("Failed to create a new directory" % path)
+
+        self.savePlotAndDT(path=path_f, prefix=prefix, h5=h5)
 
         if "__main__.py" not in sys.argv[0]:
             app.quit()
@@ -104,11 +116,10 @@ class GRID():
         }
 
         try:
-            pathOut = os.path.join(path, prefix) + ".grid"
+            pathOut = os.path.join(path_f, prefix) + ".grid"
             pickleGRID(params, pathOut)
         except Exception:
-            pathOut = os.path.join(self.user.dirHome, prefix) + ".grid"
-            pickleGRID(params, pathOut)
+            None
 
     # === === === === === === MAJOR WORKFLOW === === === === === ===
 
@@ -261,15 +272,12 @@ class GRID():
 
     # === === === === === === OUTPUT === === === === === ===
 
-    def savePlotAndDT(self, path=None, prefix="GRID", h5=False):
+    def savePlotAndDT(self, path, prefix="GRID", h5=False):
         """
         ----------
         Parameters
         ----------
         """
-        if path is None or not os.path.exists(path):
-            path = self.user.dirHome
-
         proh5 = 1 if h5 else 0
         # progress bar
         prog = initProgress(2 + proh5, "Exporting Dataframe")

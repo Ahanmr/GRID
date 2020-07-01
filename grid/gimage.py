@@ -153,24 +153,20 @@ class GImage():
         """
 
         if pts is None:
-            self.set(key='crop',
-                     value=self.imgs['raw'])
-            self.set(key='mean',
-                     value=self.get('crop')[:, :, :3].mean(axis=2))
-            self.setShape(shape=self.get(key='crop').shape)
-            self.pts_crop = np.float32([[0, 0],
-                                        [self.shape[0], 0],
-                                        [0, self.shape[1]],
-                                        [self.shape[0], self.shape[1]]])
-        else:
-            imgCrop, M = cropImg(self.imgs['raw'], pts)
-            self.set(key='crop',
-                     value=imgCrop)
-            self.set(key='mean',
-                     value=self.get('crop')[:, :, :3].mean(axis=2))
-            self.setShape(shape=self.get(key='crop').shape)
-            self.mat_H = M
-            self.pts_crop = pts
+            # (x, y) = (W, H)
+            pts = np.float32([[0, 0],
+                             [self.shape[1], 0],
+                             [self.shape[1], self.shape[0]],
+                             [0, self.shape[0]]])
+
+        imgCrop, M = cropImg(self.imgs['raw'], pts)
+        self.set(key='crop',
+                 value=imgCrop)
+        self.set(key='mean',
+                 value=self.get('crop')[:, :, :3].mean(axis=2))
+        self.setShape(shape=self.get(key='crop').shape)
+        self.mat_H = M
+        self.pts_crop = pts.copy()
 
         self.resetParam()
 

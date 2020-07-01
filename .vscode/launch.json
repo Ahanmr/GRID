@@ -18,7 +18,7 @@
             "env": {},
             "envFile": "${workspaceRoot}/.env",
             "console": "integratedTerminal",
-            "pythonPath": "${config:python.interpreterPath}"
+            "pythonPath": "${command:python.interpreterPath}"
             // "pythonPath": "/usr/local/bin/python3"
             // "pythonPath": "${workspaceRoot}"
         }
