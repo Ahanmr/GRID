@@ -8,8 +8,10 @@ from PyQt5.QtGui import *
 
 # self imports
 from .grid import *
-from .gui import * 
+from .gui import *
 from .lib import *
+from .__init__ import __version__
+
 
 class GRID_GUI(QMainWindow):
     """
@@ -60,7 +62,7 @@ class GRID_GUI(QMainWindow):
         self.idxPn = idxPn
 
         # UI
-        self.initUI()    
+        self.initUI()
 
     def startover(self):
         while self.pnMain.count()!=0:
@@ -82,7 +84,7 @@ class GRID_GUI(QMainWindow):
         """
 
         # window setup
-        self.setWindowTitle("GRID")
+        self.setWindowTitle("GRID (%s)" % __version__)
         self.resize(1280, 700)
         self.centerWindow()
 

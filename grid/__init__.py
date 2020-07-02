@@ -1,5 +1,5 @@
 __author__ = "Chunpeng James Chen"
-__version__ = "1.1.7"
+__version__ = "1.1.8"
 __update__ = "Jul 1, 2020"
 
 # imports
