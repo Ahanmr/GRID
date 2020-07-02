@@ -395,17 +395,15 @@ def saveShape(grid, path, prefix="GRID"):
 
                 # recover
                 pts_rec = recover_scale(pts_crop, mat_H)
-            except Exception:
-                print("The plot is out of the borders")
 
-            # try remapping to Tiff coordinate
-            try:
+                # try remapping to Tiff coordinate
                 pts_rec = [list(tiff_transform * pts_rec[i]) for i in range(4)]
-            except Exception as e:
-                print(e)
 
-            # input shape file
-            f.poly([pts_rec])
+                # input shape file
+                f.poly([pts_rec])
+            except Exception as e:
+                print("The plot is out of the borders")
+                print(e)
 
             # attributes
             dc = {c: entry[c] for c in dt.columns}

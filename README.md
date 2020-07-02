@@ -25,7 +25,7 @@
 
 ## Update Log
 
-### Jul 1, 2020 (1.1.6)
+### Jul 1, 2020 (1.1.7)
     * Add a output image "Seg_ID.png" to show plot's ID
     * Improve the stability and flexibility in the step to segmentation
     * Bug fixes in the searching centroids step

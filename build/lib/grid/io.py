@@ -299,6 +299,10 @@ def savePlot(grid, path, prefix="GRID"):
     pltSegPlot(grid.agents, grid.imgs.get("visSeg"),
                isCenter=True, isRect=True,
                path=path, prefix=prefix, filename="_seg_both.png")
+    # extraction-ID
+    pltSegPlot(grid.agents, grid.imgs.get("visSeg"),
+               isName=True, isRect=True,
+               path=path, prefix=prefix, filename="_seg_ID.png")
 
 
 def saveH5(grid, path, prefix="GRID"):
