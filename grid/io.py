@@ -144,9 +144,10 @@ def saveQImg(qimg, path):
     qfile.close()
 
 
-def saveDT(grid, path, prefix="GRID"):
+def saveDT(grid, path, prefix="GRID", simple=True):
     # save npy
-    np.save(os.path.join(path, prefix+".npy"), grid.imgs.get("crop"))
+    if not simple:
+        np.save(os.path.join(path, prefix+"_image.npy"), grid.imgs.get("crop"))
 
     # get path
     pathDT = os.path.join(path, prefix+"_data.csv")
@@ -201,7 +202,7 @@ def saveDT(grid, path, prefix="GRID"):
             if not agent or agent.isFake():
                 continue
             try:
-                entry = dict(var=agent.name, row=int(row), col=int(col))
+                entry = dict(var=str(agent.name), row=int(row), col=int(col))
 
                 # get ROI region
                 rg_row = range(agent.getBorder(Dir.NORTH),
@@ -235,70 +236,75 @@ def saveDT(grid, path, prefix="GRID"):
     df.to_csv(pathDT, index=False)
 
 
-def savePlot(grid, path, prefix="GRID"):
+def savePlot(grid, path, prefix="GRID", simple=True):
     # raw-none
     pltSegPlot(grid.agents, grid.imgs.get("crop")[:, :, :3],
                path=path, prefix=prefix, filename="_raw.png")
-    # raw-center
-    pltSegPlot(grid.agents, grid.imgs.get("crop")[:, :, :3],
-               isCenter=True,
-               path=path, prefix=prefix, filename="_raw_centroid.png")
-    # raw-frame
-    pltSegPlot(grid.agents, grid.imgs.get("crop")[:, :, :3],
-               isRect=True,
-               path=path, prefix=prefix, filename="_raw_border.png")
-    # raw-both
-    pltSegPlot(grid.agents, grid.imgs.get("crop")[:, :, :3],
-               isCenter=True, isRect=True,
-               path=path, prefix=prefix, filename="_raw_both.png")
+    if not simple:
+        # raw-center
+        pltSegPlot(grid.agents, grid.imgs.get("crop")[:, :, :3],
+                isCenter=True,
+                path=path, prefix=prefix, filename="_raw_centroid.png")
+        # raw-frame
+        pltSegPlot(grid.agents, grid.imgs.get("crop")[:, :, :3],
+                isRect=True,
+                path=path, prefix=prefix, filename="_raw_border.png")
+        # raw-both
+        pltSegPlot(grid.agents, grid.imgs.get("crop")[:, :, :3],
+                isCenter=True, isRect=True,
+                path=path, prefix=prefix, filename="_raw_both.png")
 
     # cluster-none
     pltSegPlot(grid.agents, grid.imgs.get("kmean"),
                path=path, prefix=prefix, filename="_kmeans.png")
-    # cluster-center
-    pltSegPlot(grid.agents, grid.imgs.get("kmean"),
-               isCenter=True,
-               path=path, prefix=prefix, filename="_kmeans_centroid.png")
-    # cluster-frame
-    pltSegPlot(grid.agents, grid.imgs.get("kmean"),
-               isRect=True,
-               path=path, prefix=prefix, filename="_kmeans_border.png")
-    # cluster-both
-    pltSegPlot(grid.agents, grid.imgs.get("kmean"),
-               isCenter=True, isRect=True,
-               path=path, prefix=prefix, filename="_kmeans_both.png")
+    if not simple:
+        # cluster-center
+        pltSegPlot(grid.agents, grid.imgs.get("kmean"),
+                  isCenter=True,
+                  path=path, prefix=prefix, filename="_kmeans_centroid.png")
+        # cluster-frame
+        pltSegPlot(grid.agents, grid.imgs.get("kmean"),
+                  isRect=True,
+                  path=path, prefix=prefix, filename="_kmeans_border.png")
+        # cluster-both
+        pltSegPlot(grid.agents, grid.imgs.get("kmean"),
+                  isCenter=True, isRect=True,
+                  path=path, prefix=prefix, filename="_kmeans_both.png")
 
     # binary-none
     pltSegPlot(grid.agents, grid.imgs.get("bin"),
                path=path, prefix=prefix, filename="_bin.png")
-    # binary-center
-    pltSegPlot(grid.agents, grid.imgs.get("bin"),
-               isCenter=True,
-               path=path, prefix=prefix, filename="_bin_centroid.png")
-    # binary-frame
-    pltSegPlot(grid.agents, grid.imgs.get("bin"),
-               isRect=True,
-               path=path, prefix=prefix, filename="_bin_border.png")
-    # binary-both
-    pltSegPlot(grid.agents, grid.imgs.get("bin"),
-               isCenter=True, isRect=True,
-               path=path, prefix=prefix, filename="_bin_both.png")
+    if not simple:
+        # binary-center
+        pltSegPlot(grid.agents, grid.imgs.get("bin"),
+                  isCenter=True,
+                  path=path, prefix=prefix, filename="_bin_centroid.png")
+        # binary-frame
+        pltSegPlot(grid.agents, grid.imgs.get("bin"),
+                  isRect=True,
+                  path=path, prefix=prefix, filename="_bin_border.png")
+        # binary-both
+        pltSegPlot(grid.agents, grid.imgs.get("bin"),
+                  isCenter=True, isRect=True,
+                  path=path, prefix=prefix, filename="_bin_both.png")
 
-    # extraction-none
-    pltSegPlot(grid.agents, grid.imgs.get("visSeg"),
-               path=path, prefix=prefix, filename="_seg.png")
-    # extraction-center
-    pltSegPlot(grid.agents, grid.imgs.get("visSeg"),
-               isCenter=True,
-               path=path, prefix=prefix, filename="_seg_centroid.png")
+    if not simple:
+        # extraction-none
+        pltSegPlot(grid.agents, grid.imgs.get("visSeg"),
+                   path=path, prefix=prefix, filename="_seg.png")
+        # extraction-center
+        pltSegPlot(grid.agents, grid.imgs.get("visSeg"),
+                  isCenter=True,
+                  path=path, prefix=prefix, filename="_seg_centroid.png")
+        # extraction-frame
+        pltSegPlot(grid.agents, grid.imgs.get("visSeg"),
+                  isCenter=True, isRect=True,
+                  path=path, prefix=prefix, filename="_seg_both.png")
+
     # extraction-frame
     pltSegPlot(grid.agents, grid.imgs.get("visSeg"),
                isRect=True,
                path=path, prefix=prefix, filename="_seg_border.png")
-    # extraction-frame
-    pltSegPlot(grid.agents, grid.imgs.get("visSeg"),
-               isCenter=True, isRect=True,
-               path=path, prefix=prefix, filename="_seg_both.png")
     # extraction-ID
     pltSegPlot(grid.agents, grid.imgs.get("visSeg"),
                isName=True, isRect=True,

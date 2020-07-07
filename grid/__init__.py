@@ -1,5 +1,5 @@
 __author__ = "Chunpeng James Chen"
-__version__ = "1.1.91"
+__version__ = "1.1.92"
 __update__ = "Jul 7, 2020"
 
 # imports
@@ -9,23 +9,23 @@ import sys
 from urllib import request
 from pkg_resources import parse_version
 
+if "__main__" not in sys.argv[0]:
+    # prevent from re-show welcome message in gridGUI
+    # welcome message
+    print("~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~")
+    print("                 Welcome to GRID Ver.%s    " % __version__)
+    print("~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~")
+    print("Author      : James Chen <chun-peng.chen@wsu.edu>    ")
+    print("Last update : %s              " % __update__)
 
-# welcome message
-print("~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~")
-print("                 Welcome to GRID Ver.%s    " % __version__)
-print("~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~")
-print("Author      : James Chen <chun-peng.chen@wsu.edu>    ")
-print("Last update : %s              " % __update__)
-
-if "-m" not in sys.argv[0]:
-    # if in the command-line environment
-    print("    Try 'python -m grid' in Terminel to launch GRID GUI,")
-    print("         as command-line version is not ready yet.")
-print("~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~")
-print("Recent update: ")
-print("         support ESRI shapefile compatible in QGIS    ")
-print("~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~")
-
+    if "-m" not in sys.argv[0]:
+        # if in the command-line environment
+        print("    Try 'python -m grid' in Terminel to launch GRID GUI,")
+        print("         as command-line version is not ready yet.")
+    print("~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~")
+    print("Recent update: ")
+    print("         support ESRI shapefile compatible in QGIS    ")
+    print("~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~")
 
 # self update
 try:

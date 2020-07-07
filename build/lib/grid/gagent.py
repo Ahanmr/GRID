@@ -164,7 +164,7 @@ class GAgent():
             return False
         else:
             try:
-                return self.agents[row][col]
+                return self.agents[int(row)][int(col)]
             except Exception:
                 # outside frame
                 return False
@@ -422,7 +422,7 @@ class GAgent():
     def setBorder(self, agent, dir, value):
         agent.setBorder(dir, value)
         self.checkBorder(agent)
-    
+
     def updateBorder(self, agent, dir, value):
         agent.updateBorder(dir, value)
         self.checkBorder(agent)

@@ -201,13 +201,13 @@ def saveDT(grid, path, prefix="GRID"):
             if not agent or agent.isFake():
                 continue
             try:
-                entry = dict(var=agent.name, row=row, col=col)
+                entry = dict(var=agent.name, row=int(row), col=int(col))
 
                 # get ROI region
                 rg_row = range(agent.getBorder(Dir.NORTH),
-                            agent.getBorder(Dir.SOUTH))
+                               agent.getBorder(Dir.SOUTH))
                 rg_col = range(agent.getBorder(Dir.WEST),
-                            agent.getBorder(Dir.EAST))
+                               agent.getBorder(Dir.EAST))
 
                 # get selected pixels info
                 imgBinAgent = grid.imgs.get('bin')[rg_row, :][:, rg_col]
@@ -321,7 +321,7 @@ def saveH5(grid, path, prefix="GRID"):
                 agent = grid.agents.get(row, col)
                 if not agent or agent.isFake():
                     continue
-                key = agent.name
+                key = str(agent.name)
 
                 # get ROI region
                 rgY = range(agent.getBorder(Dir.NORTH),
@@ -340,7 +340,8 @@ def saveH5(grid, path, prefix="GRID"):
             try:
                 with h5py.File(pathH5, "a") as f:
                     f.create_dataset(key, data=imgFin, compression="gzip")
-            except Exception:
+            except Exception as e:
+                print(e)
                 print("Failed to save %s" % key)
 
 
