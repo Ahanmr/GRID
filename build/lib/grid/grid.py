@@ -20,7 +20,6 @@ class GRID():
         Parameters
         ----------
         """
-
         # self-defined class
         self.user = GUser()
         self.imgs = GImage()

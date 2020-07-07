@@ -1,6 +1,6 @@
 __author__ = "Chunpeng James Chen"
-__version__ = "1.1.8"
-__update__ = "Jul 1, 2020"
+__version__ = "1.1.9"
+__update__ = "Jul 6, 2020"
 
 # imports
 import subprocess
@@ -70,6 +70,9 @@ from .grid import *
 
 """
 Update Log
+
+- Jul 6, 2020 (1.1.9)
+    * Fix crash when add/delete anchors
 
 - Jul 1, 2020 (1.1.6)
     * Add a output image "Seg_ID.png" to show plot's ID

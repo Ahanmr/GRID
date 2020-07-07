@@ -25,6 +25,9 @@
 
 ## Update Log
 
+### Jul 6, 2020 (1.1.9)
+    * Fix crash when add/delete anchors
+
 ### Jul 1, 2020 (1.1.7)
     * Add a output image "Seg_ID.png" to show plot's ID
     * Improve the stability and flexibility in the step to segmentation
