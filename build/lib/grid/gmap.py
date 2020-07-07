@@ -259,88 +259,89 @@ class GMap():
         return dt[(dt.row == row) & (dt.col == col)]['var'].values[0]
 
     def delAnchor(self, axis, index):
-        # since numpy array required elements in same length if they were
-        # temp = self.sigs.tolist()
-        temp = self.sigs
-        try:
-            temp[axis].remove(temp[axis][index])
-        except Exception:
-            temp[axis] = np.delete(temp[axis], index)
-        self.sigs = np.array(temp)
-        # temp = self.itcs.tolist()
-        temp = self.itcs
-        temp[axis] = getCardIntercept(
-            self.sigs[axis], self.angles[axis], self.imgH)
-        self.itcs = np.array(temp)
+        # signals and interecepts
+        sigMaj = np.array(self.sigs[0])
+        sigMin = np.array(self.sigs[1])
+
+        # handle error (and I don't know why)
+        if index >= len(self.sigs[axis]):
+            index = len(self.sigs[axis]) - 1
+ 
+        if axis == 0:
+            sigMaj = np.delete(sigMaj, index)
+            itcMaj = getCardIntercept(
+                self.sigs[axis], self.angles[axis], self.imgH)
+            itcMin = self.itcs[1]
+        else:
+            sigMin = np.delete(sigMin, index)
+            itcMaj = self.itcs[0]
+            itcMin = getCardIntercept(
+                self.sigs[axis], self.angles[axis], self.imgH)
+        self.sigs = np.array([sigMaj, sigMin])
+        self.itcs = np.array([itcMaj, itcMin])
+
+        # update dataframe
         self.dt = self.getDfCoordinate(self.angles, self.slps, self.itcs)
 
     def addMajAnchor(self, value):
-        # signals
-        temp = self.sigs
-        try:
-            temp[0].append(value)
-        except Exception:
-            temp[0] = np.append(temp[0], value)
-        self.sigs = np.array(temp)
+        # update signals on major axis
+        sigMaj = np.array(self.sigs[0])
+        sigMaj = np.append(sigMaj, value)
+        sigMin = np.array(self.sigs[1])
+        self.sigs = np.array([sigMaj, sigMin])
 
-        # intercepts (derived from signals)
-        temp = self.itcs
-        temp[0] = getCardIntercept(
-            self.sigs[0], self.angles[0], self.imgH)
-        self.itcs = np.array(temp)
+        # update intercept on major axis
+        itcMaj = getCardIntercept(self.sigs[0], self.angles[0], self.imgH)
+        itcMin = np.array(self.itcs[1])
+        self.itcs = np.array([itcMaj, itcMin])
 
         # update dataframe
         self.dt = self.getDfCoordinate(self.angles, self.slps, self.itcs)
 
     def addMinAnchor(self, itc):
-        angle = self.angles[1]
-
         # signal
-        new_signal = getSigFromItc(itc, angle, self.imgH)
-
-        temp = self.sigs
-        try:
-            temp[1].append(new_signal)
-        except Exception:
-            temp[1] = np.append(temp[1], new_signal)
-        self.sigs = np.array(temp)
+        new_signal = getSigFromItc(itc, self.angles[1], self.imgH)
+        sigMaj = np.array(self.sigs[0])
+        sigMin = np.array(self.sigs[1])
+        sigMin = np.append(sigMin, new_signal)
+        self.sigs = np.array([sigMaj, sigMin])
 
         # intercepts
-        temp = self.itcs
-        try:
-            temp[1].append(itc)
-        except Exception:
-            temp[1] = np.append(temp[1], itc)
-        self.itcs = np.array(temp)
+        itcMaj = np.array(self.itcs[0])
+        itcMin = np.array(self.itcs[1])
+        itcMin = np.append(itcMin, itc)
+        self.itcs = np.array([itcMaj, itcMin])
 
         # update dataframe
         self.dt = self.getDfCoordinate(self.angles, self.slps, self.itcs)
 
     def modMajAnchor(self, index, value):
+        # signals
         self.sigs[0][index] = value
-        self.itcs[0] = getCardIntercept(
+
+        # intercepts
+        itcMaj = getCardIntercept(
             self.sigs[0], self.angles[0], self.imgH)
+        itcMin = np.array(self.itcs[1])
+        self.itcs = np.array([itcMaj, itcMin])
+
+        # dataframe
         self.dt = self.getDfCoordinate(self.angles, self.slps, self.itcs)
 
     def modMinAnchor(self, index, itc):
+        # angles
         angle = self.angles[1]
 
+        # signals
         self.sigs[1][index] = getSigFromItc(itc, angle, self.imgH)
 
-        # print("")
-        # print("before")
-        # print(self.itcs[1][index])
-        # print("after")
-        # print(itc)
-
-        # self.itcs[1][index] = itc
-        self.itcs[1] = getCardIntercept(
+        # intercept
+        itcMaj = np.array(self.itcs[0])
+        itcMin = getCardIntercept(
             self.sigs[1], self.angles[1], self.imgH)
+        self.itcs = np.array([itcMaj, itcMin])
 
-        # print("=== itcs")
-        # print(self.itcs[1])
-        # print("=== sigs")
-        # print(self.sigs[1])
+        # dataframe
         self.dt = self.getDfCoordinate(self.angles, self.slps, self.itcs)
 
 

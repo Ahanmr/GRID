@@ -38,12 +38,15 @@ grid = gd.GRID()
 os.chdir("/Users/jameschen/Dropbox/photo_grid/test/map_match")
 
 grid.loadData(
-    pathMap="demo.csv",
-    pathImg="demo.jpg")
+    pathMap="demo2.csv",
+    pathImg="demo3.png")
 grid.binarizeImg()
-# grid.findPlots()
+grid.findPlots()
+grid.cpuSeg()
 
-g = GRID_GUI(grid, 3)
+
+
+g = GRID_GUI(grid, 4)  # 0:input, 1:crop, 2:kmean, 3:anchor, 4:output
 app.exec_()
 # ========= 20200706 improve map flexibility =========
 

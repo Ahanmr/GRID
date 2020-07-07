@@ -17,7 +17,7 @@
 
 # === === === === === command-line test === === === === ===
 
-# ========= 20200630 improve flexibility of border defining =========
+# ========= 20200706 improve map flexibility =========
 import os, sys
 from PyQt5.QtWidgets import QApplication
 import numpy as np
@@ -35,23 +35,52 @@ os.getcwd()
 
 app = QApplication(sys.argv)
 grid = gd.GRID()
-os.chdir("/Users/jameschen/Dropbox/UAV/James/Chickpea/")
+os.chdir("/Users/jameschen/Dropbox/photo_grid/test/map_match")
 
 grid.loadData(
-    # pathImg="70ft_20200624_5binds.tif")
-    pathImg="temp.png")
-# grid.cropImg(pts=[[704.3102766798419, 4031.569169960474],
-#                   [5925.9209486166, 2428.6561264822135],
-#                   [7674.553359683794, 8767.44861660079],
-#                   [2428.6561264822135, 10176.069169960474]])
-grid.binarizeImg(k=5, lsSelect=[0, 1], valShad=0, valSmth=5)
-grid.findPlots()
-grid.agents.setup(gmap=grid.map,
-                  gimg=grid.imgs)
-grid.
+    pathMap="demo.csv",
+    pathImg="demo.jpg")
+grid.binarizeImg()
+# grid.findPlots()
 
-g = GRID_GUI(grid, 3)  # 0:input, 1:crop, 2:kmean, 3:anchor, 4:output
+g = GRID_GUI(grid, 3)
 app.exec_()
+# ========= 20200706 improve map flexibility =========
+
+# ========= 20200630 improve flexibility of border defining =========
+# import os, sys
+# from PyQt5.QtWidgets import QApplication
+# import numpy as np
+# import cv2
+# import matplotlib.pyplot as plt
+# import grid as gd
+# from .gridGUI import *
+# import shapefile
+# import numpy as np
+# import pandas as pd
+# import rasterio
+# import rasterio.mask
+
+# os.getcwd()
+
+# app = QApplication(sys.argv)
+# grid = gd.GRID()
+# os.chdir("/Users/jameschen/Dropbox/UAV/James/Chickpea/")
+
+# grid.loadData(
+#     # pathImg="70ft_20200624_5binds.tif")
+#     pathImg="temp.png")
+# # grid.cropImg(pts=[[704.3102766798419, 4031.569169960474],
+# #                   [5925.9209486166, 2428.6561264822135],
+# #                   [7674.553359683794, 8767.44861660079],
+# #                   [2428.6561264822135, 10176.069169960474]])
+# grid.binarizeImg(k=5, lsSelect=[0, 1], valShad=0, valSmth=5)
+# grid.findPlots()
+# grid.agents.setup(gmap=grid.map,
+#                   gimg=grid.imgs)
+
+# g = GRID_GUI(grid, 3)  # 0:input, 1:crop, 2:kmean, 3:anchor, 4:output
+# app.exec_()
 
 # ========= 20200630 improve flexibility of border defining =========
 

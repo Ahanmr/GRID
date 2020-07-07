@@ -410,7 +410,10 @@ class PnAnchor(QWidget):
                     pt = 0
                 elif ptPos >= rg_wgImg[1]:
                     pt = size_img - 1
-                objMap.modMajAnchor(self.idxAnc, pt)  # self.ptX
+                try:
+                    objMap.modMajAnchor(self.idxAnc, pt)  # self.ptX
+                except Exception:
+                    None
             else:
                 # minor axis
                 if pos.y() > self.wgImg.rgY[0] and pos.y() < self.wgImg.rgY[1]:
@@ -426,16 +429,10 @@ class PnAnchor(QWidget):
                     self.itc_new = ptX
                 else:
                     self.itc_new = ptY - ptX * objMap.slps[1]
-        
-                # print("")
-                # print("======")
-                # print("move ptY");print(ptY)
-                # print("move ptX");print(ptX)
-                # print("move slope");print(slope)
-                # print("move itc");print(self.itc_new)
-
-                objMap.modMinAnchor(self.idxAnc, self.itc_new)  # self.ptY
-
+                try:
+                    objMap.modMinAnchor(self.idxAnc, self.itc_new)  # self.ptY
+                except Exception:
+                    None
             self.update()
 
     def mouseReleaseEvent(self, event):
@@ -461,10 +458,10 @@ class PnAnchor(QWidget):
                 ptPress = self.ptXpress if self.idxMaj == 0 else self.ptYpress
                 if ptPress == pt and abs(sig-pt).min() > sig.std() / 20:
                     objMap.addMajAnchor(pt)
-                    self.switch = True
                     value = self.spbTk[self.idx_tool].value() + 1
                     self.switch = False
                     self.spbTk[self.idx_tool].setValue(value)
+                    self.switch = True
             else:
                 # add tick minor
                 # check if angle is 0 or not:
@@ -475,10 +472,10 @@ class PnAnchor(QWidget):
                 # pass itc
                 if self.ptYpress == ptY and abs(itc-new_itc).min() > itc.std() / 20:
                     objMap.addMinAnchor(new_itc)
-                    self.switch = True
                     value = self.spbTk[self.idx_tool].value() + 1
                     self.switch = False
                     self.spbTk[self.idx_tool].setValue(value)
+                    self.switch = True
 
         self.update()
         self.ptX = -1
