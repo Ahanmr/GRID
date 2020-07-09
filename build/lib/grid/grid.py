@@ -77,7 +77,7 @@ class GRID():
             self.save(path=path, prefix=prefix)
             prog = updateProgress(prog, 1, "done!")
 
-    def save(self, path=None, prefix="GRID", h5=False):
+    def save(self, path=None, prefix="GRID", simple=True):
         """
         ----------
         Parameters
@@ -98,7 +98,7 @@ class GRID():
             path_f = path
             print("Failed to create a new directory")
 
-        self.savePlotAndDT(path=path_f, prefix=prefix, h5=h5)
+        self.savePlotAndDT(path=path_f, prefix=prefix, simple=simple)
 
         if "__main__.py" not in sys.argv[0]:
             app.quit()
@@ -271,23 +271,24 @@ class GRID():
 
     # === === === === === === OUTPUT === === === === === ===
 
-    def savePlotAndDT(self, path, prefix="GRID", h5=False):
+    def savePlotAndDT(self, path, prefix="GRID", simple=True):
         """
         ----------
         Parameters
         ----------
         """
-        proh5 = 1 if h5 else 0
+        progExtra = 1 if simple else 0
         # progress bar
-        prog = initProgress(2 + proh5, "Exporting Dataframe")
+        prog = initProgress(2 + progExtra, "Exporting Dataframe")
 
-        saveDT(self, path, prefix)
+        saveDT(self, path, prefix, simple=simple)
         updateProgress(prog, name="Exporting Figures")
-        savePlot(self, path, prefix)
+        savePlot(self, path, prefix, simple=simple)
+        updateProgress(prog, name="Exporting shapefile")
+        saveShape(self, path, prefix)
 
-        if h5:
-            updateProgress(prog, name="Exporting shapefile")
-            saveShape(self, path, prefix)
+        if not simple:
+            updateProgress(prog, name="Exporting h5 files")
             saveH5(self, path, prefix)
 
         updateProgress(prog, name="Done")

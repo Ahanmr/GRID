@@ -78,7 +78,7 @@ class PnOutputer(QWidget):
         self.lb_output = QLabel("Output Path")
         self.fd_output = QLineEdit(self.grid.path_out)
         self.bt_output = QPushButton("Browse")
-        self.ck_h5 = QCheckBox("Save shapefile")
+        self.ck_simple = QCheckBox("Simple output")
         '''ui'''
         self.initUI()
 
@@ -177,14 +177,14 @@ class PnOutputer(QWidget):
         self.fd_project.setFixedHeight(fm.height())
         self.fd_output.setFixedHeight(fm.height())
         self.bt_output.clicked.connect(self.assign_PathOut)
-        self.ck_h5.setChecked(True)
+        self.ck_simple.setChecked(True)
         # layout
         self.lo_out.addWidget(self.lb_project, 0, 0)
         self.lo_out.addWidget(self.fd_project, 0, 1)
         self.lo_out.addWidget(self.lb_output, 1, 0)
         self.lo_out.addWidget(self.fd_output, 1, 1)
         self.lo_out.addWidget(self.bt_output, 1, 2)
-        self.lo_out.addWidget(self.ck_h5, 2, 0, 1, 3)
+        self.lo_out.addWidget(self.ck_simple, 2, 0, 1, 3)
         self.gr_out.setLayout(self.lo_out)
         '''layout'''
         # left

@@ -12,7 +12,6 @@ from .gui import *
 from .lib import *
 from .__init__ import __version__
 
-
 class GRID_GUI(QMainWindow):
     """
     """
@@ -225,11 +224,11 @@ class GRID_GUI(QMainWindow):
         returnValue = msgBox.exec()
         path = self.pnMain.currentWidget().fd_output.text()
         prefix = self.pnMain.currentWidget().fd_project.text()
-        isH5 = self.pnMain.currentWidget().ck_h5.isChecked()
+        isSimple = self.pnMain.currentWidget().ck_simple.isChecked()
         if returnValue == QMessageBox.Yes:
-            self.grid.save(path=path, prefix=prefix, h5=isH5)
+            self.grid.save(path=path, prefix=prefix, simple=isSimple)
         elif returnValue == QMessageBox.No:
-            self.grid.save(path=path, prefix=prefix, h5=isH5)
+            self.grid.save(path=path, prefix=prefix, simple=isSimple)
             self.startover()
 
     def centerWindow(self):
