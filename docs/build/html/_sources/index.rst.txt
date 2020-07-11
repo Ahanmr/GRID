@@ -137,7 +137,7 @@ Advanced usages
    /ch4_adv/arbitrary
    /ch4_adv/seasons
 
-Citation
+How to cite GRID
 -------------------
 To cite GRID, import the following BibTeX into reference managers:
 
