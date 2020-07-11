@@ -7,11 +7,11 @@ Tabular results
 Images for validations
 ----------------------
 
-Shape files
------------
+Shapefiles (outputs)
+----------------------
 
-NumPy form of AOI
------------------
+NumPy format of AOI
+-------------------
 
 H5 dataset
 ----------

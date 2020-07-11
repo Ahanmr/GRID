@@ -20,7 +20,7 @@ Getting started
   
 * **First-time users**:
   :ref:`Demo mode` |
-  :ref:`Work with your images <Work on your images>` |
+  :ref:`Work with your images` |
 
 .. toctree::
    :maxdepth: 2
@@ -34,7 +34,7 @@ Interface
 ---------
 
 * **File loading**:
-  :ref:`Inputs` |
+  :ref:`Input files` |
   :ref:`Drag and drop`
 
 * **Area of interest**:
@@ -44,15 +44,15 @@ Interface
 * **K-means clustering**:
   :ref:`Clustering` |
   :ref:`Binarization` |
-  :ref:`Refine clustering` |
+  :ref:`Refining <Refine clustering>` |
   :ref:`Display/Zoom` |
-  :ref:`Rotate images`
+  :ref:`Rotation <Rotate images>`
 
 * **Centroids searching**:
   :ref:`Major axis` |
   :ref:`Minor axis` |
   :ref:`Switch between axes` |
-  :ref:`Move/add/delete centroids`
+  :ref:`Adjust centroids <Move/add/delete centroids>`
 
 * **Segmentation**:
   :ref:`Dynamic` |
@@ -79,13 +79,13 @@ Inputs/Outputs
 * **Inputs**:
   :ref:`Images` |
   :ref:`Maps` |
-  :ref:`Shape files`
+  :ref:`Shapefiles <Shapefiles (intputs)>`
 
 * **Outputs**:
   :ref:`Tabular results` |
-  :ref:`Images for validations` |
-  :ref:`Shape files` |
-  :ref:`NumPy form of AOI` |
+  :ref:`Validation <Images for validations>` |
+  :ref:`Shapefiles <Shapefiles (outputs)>` |
+  :ref:`NumPy format of AOI` |
   :ref:`H5 dataset`
 
 .. toctree::
@@ -99,44 +99,43 @@ Inputs/Outputs
 Advanced usages
 -----------------
 
-* **Images from multiple seasons**:
-  :ref:`Run GRID for the 1st season` |
-  :ref:`Apply shapefiles to another season` |
-  :ref:`Compare different seasons`
+* **Generate datasets for deep learning**:
+  :ref:`H5 datasets <Obtain h5 datasets>` |
+  :ref:`Preprocessing <Process h5 files>` |
+  :ref:`DL model <Train a DL model>` |
+  :ref:`Evaluation`
 
 * **Work with QGIS**:
-  :ref:`Obtain shapefiles from GRID` |
-  :ref:`Load shapefiles to QGIS`
+  :ref:`Shapefiles <Obtain shapefiles from GRID>` |
+  :ref:`QGIS <Load shapefiles to QGIS>`
 
 * **Customize vegetation indices**:
-  :ref:`Obtain tabular outputs` |
+  :ref:`Tabular outputs <Obtain tabular outputs>` |
   :ref:`Derive indices` |
-  :ref:`Visualize indices`
+  :ref:`Visualization <Visualize indices>`
 
 * **Adapt to an arbitrary field layout**:
-  :ref:`What's an arbitrary layout` |
-  :ref:`Define centroids in GRID` |
-  :ref:`Intepretate results`
+  :ref:`Arbitrary layout <What's an arbitrary layout>` |
+  :ref:`Centroids <Define centroids in GRID>` |
+  :ref:`Intepretation <Intepretate results>`
 
-* **Generate datasets for deep learning**:
-  :ref:`Obtain h5 datasets` |
-  :ref:`Process h5 files` |
-  :ref:`Construct a DL model` |
-  :ref:`Train & Evaluate`
-
+* **Images from multiple seasons**:
+  :ref:`The 1st season <Run GRID for the 1st season>` |
+  :ref:`Shapefiles <Apply shapefiles to another season>` |
+  :ref:`Evaluation <Compare results from different seasons>`
 
 .. toctree::
    :maxdepth: 2
    :hidden:
    :caption: ADVANCED USAGES
 
-   /ch4_adv/seasons
+   /ch4_adv/dl
    /ch4_adv/qgis
    /ch4_adv/indices
    /ch4_adv/arbitrary
-   /ch4_adv/dl
+   /ch4_adv/seasons
 
-Citation
+How to cite GRID
 -------------------
 To cite GRID, import the following BibTeX into reference managers:
 

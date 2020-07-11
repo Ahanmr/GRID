@@ -7,5 +7,5 @@ Run GRID for the 1st season
 Apply shapefiles to another season
 -----------------------------------
 
-Compare different seasons
--------------------------
+Compare results from different seasons
+----------------------------------------------

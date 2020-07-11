@@ -5,8 +5,8 @@ Demo mode
 ---------
 
 
-Work on your images
--------------------
+Work with your images
+---------------------
 
 * Images:
 

@@ -1,8 +1,8 @@
 Load Files
 ==========
 
-Inputs
-----------
+Input files
+-----------
 
 Drag and drop
 -------------

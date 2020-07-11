@@ -7,5 +7,5 @@ Images
 Maps
 ----
 
-Shape files
------------
+Shapefiles (intputs)
+----------------------
