@@ -1,7 +1,4 @@
-<img src = "res/GRID_logo.png" width = 100>
-
-
-# GRID
+<img src = "res/GRID_banner.png" width = 100>
 
 [![](https://img.shields.io/pypi/pyversions/photo_grid.svg?logo=python&logoColor=white)](https://pypi.org/project/photo-grid/)
 [![](https://img.shields.io/pypi/dm/photo_grid.svg?label=pypi%20downloads&logo=python&logoColor=white)](https://pypi.org/project/photo-grid/)
