@@ -3,39 +3,142 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-GRID: A Friendly GUI designed to deal with field segmentations
-================================================================
+GRID: Deal with Field Segmentations Elegantly
+==========================================================
 
 Core features
 --------------
 
 
-Table of content
+Getting started
 ----------------
-* **Getting started**:
-    :doc:`</ch1_started/envirnoment>` |
-    :doc:`</ch1_started/inputs>` 
 
-* **Interface**:
-    :doc:`</ch2_interface/inputs>` |
-    :doc:`</ch2_interface/aoi>` |
-    :doc:`</ch2_interface/kmeans>` |
-    :doc:`</ch2_interface/anchors>` |
-    :doc:`</ch2_interface/segmentation>`
+* **Installation**: 
+  :ref:`Python 3` |
+  :ref:`Dependencies` |
+  :ref:`PyPI` |
+  
+* **First-time users**:
+  :ref:`Demo mode` |
+  :ref:`Work with your images <Work on your images>` |
 
-* **Input/Output**:
-    :doc:`</ch3_io/Inputs>`
-    :doc:`</ch3_io/Outputs>`
+.. toctree::
+   :maxdepth: 2
+   :hidden:
+   :caption: GATTING STARTED
 
-* **Advanced features**:
-    :doc:`</ch4_sbs/seasons>` |
-    :doc:`</ch4_sbs/indices>` |
-    :doc:`</ch4_sbs/h5>` |
-    
+   /ch1_started/installation
+   /ch1_started/firsttime
 
+Interface
+---------
+
+* **File loading**:
+  :ref:`Inputs` |
+  :ref:`Drag and drop`
+
+* **Area of interest**:
+  :ref:`Define AOI` |
+  :ref:`Adjust AOI`
+
+* **K-means clustering**:
+  :ref:`Clustering` |
+  :ref:`Binarization` |
+  :ref:`Refine clustering` |
+  :ref:`Display/Zoom` |
+  :ref:`Rotate images`
+
+* **Centroids searching**:
+  :ref:`Major axis` |
+  :ref:`Minor axis` |
+  :ref:`Switch between axes` |
+  :ref:`Move/add/delete centroids`
+
+* **Segmentation**:
+  :ref:`Dynamic` |
+  :ref:`Fixed` |
+  :ref:`Fine-tune results` |
+  :ref:`Reset` |
+  :ref:`Display` |
+  :ref:`Export results` |
+
+.. toctree::
+   :maxdepth: 2
+   :hidden:
+   :caption: INTERFACE
+
+   /ch2_interface/load
+   /ch2_interface/aoi
+   /ch2_interface/kmeans
+   /ch2_interface/centroids
+   /ch2_interface/segmentation
+
+Inputs/Outputs
+--------------
+
+* **Inputs**:
+  :ref:`Images` |
+  :ref:`Maps` |
+  :ref:`Shape files`
+
+* **Outputs**:
+  :ref:`Tabular results` |
+  :ref:`Images for validations` |
+  :ref:`Shape files` |
+  :ref:`NumPy form of AOI` |
+  :ref:`H5 dataset`
+
+.. toctree::
+   :maxdepth: 2
+   :hidden:
+   :caption: INPUTS/OUTPUTS
+
+   /ch3_io/inputs
+   /ch3_io/outputs
+
+Advanced usages
+-----------------
+
+* **Images from multiple seasons**:
+  :ref:`Run GRID for the 1st season` |
+  :ref:`Apply shapefiles to another season` |
+  :ref:`Compare different seasons`
+
+* **Work with QGIS**:
+  :ref:`Obtain shapefiles from GRID` |
+  :ref:`Load shapefiles to QGIS`
+
+* **Customize vegetation indices**:
+  :ref:`Obtain tabular outputs` |
+  :ref:`Derive indices` |
+  :ref:`Visualize indices`
+
+* **Adapt to an arbitrary field layout**:
+  :ref:`What's an arbitrary layout` |
+  :ref:`Define centroids in GRID` |
+  :ref:`Intepretate results`
+
+* **Generate datasets for deep learning**:
+  :ref:`Obtain h5 datasets` |
+  :ref:`Process h5 files` |
+  :ref:`Construct a DL model` |
+  :ref:`Train & Evaluate`
+
+
+.. toctree::
+   :maxdepth: 2
+   :hidden:
+   :caption: ADVANCED USAGES
+
+   /ch4_adv/seasons
+   /ch4_adv/qgis
+   /ch4_adv/indices
+   /ch4_adv/arbitrary
+   /ch4_adv/dl
 
 Citation
 -------------------
+To cite GRID, import the following BibTeX into reference managers:
 
 .. code-block:: none
 
@@ -52,27 +155,9 @@ Citation
     url          = {https://doi.org/10.3390/rs12111697}
    }
 
+or add the bibliography directly:
 
-.. toctree::
-   :maxdepth: 2
-   :hidden:
-   :caption: Test
+.. code-block:: none
 
-   /test
+    Chen, C.J.; Zhang, Z. GRID: A Python Package for Field Plot Phenotyping Using Aerial Images. Remote Sensing 2020, 12, 1697, doi:10.3390/rs12111697.
 
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
-
-1. Chen, C.J.; Zhang, Z. GRID: A Python Package for Field Plot Phenotyping Using Aerial Images. Remote Sensing 2020, 12, 1697, doi:10.3390/rs12111697.
-
-.. figure:: ../_static/images/first-steps/sphinx-hello-world.png
-    :figwidth: 500px
-    :target: ../_static/images/first-steps/sphinx-hello-world.png
-
-    Your Sphinx project is built
