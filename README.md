@@ -1,4 +1,4 @@
-<img src = "res/GRID_banner.png" width = 300>
+<p align="center"><img src = "res/GRID_banner.png" width = 300></p>
 
 [![](https://img.shields.io/pypi/pyversions/photo_grid.svg?logo=python&logoColor=white)](https://pypi.org/project/photo-grid/)
 [![](https://img.shields.io/pypi/dm/photo_grid.svg?label=pypi%20downloads&logo=python&logoColor=white)](https://pypi.org/project/photo-grid/)
