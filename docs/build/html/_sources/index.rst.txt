@@ -124,8 +124,6 @@ Advanced usages
   :ref:`Shapefiles <Apply shapefiles to another season>` |
   :ref:`Evaluation <Compare results from different seasons>`
 
-
-
 .. toctree::
    :maxdepth: 2
    :hidden:
