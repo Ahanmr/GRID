@@ -1,0 +1,20 @@
+Segmentation
+============
+
+Dynamic
+-------
+
+Fixed
+-----
+
+Fine-tune results
+-----------------
+
+Reset
+-----
+
+Display
+-------
+
+Export results
+--------------
