@@ -10,7 +10,7 @@ Images for validations
 Shape files
 -----------
 
-NumPy form of AOI
+NumPy format of AOI
 -----------------
 
 H5 dataset

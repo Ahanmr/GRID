@@ -103,22 +103,22 @@ class GRID():
         if "__main__.py" not in sys.argv[0]:
             app.quit()
 
-        params = {
-            "k": self.imgs.paramKMs["k"],
-            "features": self.imgs.paramKMs["features"],
-            "lsSelect": self.imgs.paramKMs["lsSelect"],
-            "valShad":  self.imgs.paramKMs["valShad"],
-            "valSmth":  self.imgs.paramKMs["valSmth"],
-            "nRow": self.agents.nRow,
-            "nCol": self.agents.nCol,
-            "coefGrid": self.agents.coef
-        }
+        # params = {
+        #     "k": self.imgs.paramKMs["k"],
+        #     "features": self.imgs.paramKMs["features"],
+        #     "lsSelect": self.imgs.paramKMs["lsSelect"],
+        #     "valShad":  self.imgs.paramKMs["valShad"],
+        #     "valSmth":  self.imgs.paramKMs["valSmth"],
+        #     "nRow": self.agents.nRow,
+        #     "nCol": self.agents.nCol,
+        #     "coefGrid": self.agents.coef
+        # }
 
-        try:
-            pathOut = os.path.join(path_f, prefix) + ".grid"
-            pickleGRID(params, pathOut)
-        except Exception:
-            None
+        # try:
+        #     pathOut = os.path.join(path_f, prefix) + ".grid"
+        #     pickleGRID(params, pathOut)
+        # except Exception:
+        #     None
 
     # === === === === === === MAJOR WORKFLOW === === === === === ===
 

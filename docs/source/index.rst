@@ -44,15 +44,15 @@ Interface
 * **K-means clustering**:
   :ref:`Clustering` |
   :ref:`Binarization` |
-  :ref:`Refine clustering` |
+  :ref:`Refining <Refine clustering>` |
   :ref:`Display/Zoom` |
-  :ref:`Rotate images`
+  :ref:`Rotation <Rotate images>`
 
 * **Centroids searching**:
   :ref:`Major axis` |
   :ref:`Minor axis` |
   :ref:`Switch between axes` |
-  :ref:`Move/add/delete centroids`
+  :ref:`Adjust centroids <Move/add/delete centroids>`
 
 * **Segmentation**:
   :ref:`Dynamic` |
@@ -83,9 +83,9 @@ Inputs/Outputs
 
 * **Outputs**:
   :ref:`Tabular results` |
-  :ref:`Images for validations` |
+  :ref:`Validation <Images for validations>` |
   :ref:`Shape files` |
-  :ref:`NumPy form of AOI` |
+  :ref:`NumPy format of AOI` |
   :ref:`H5 dataset`
 
 .. toctree::
@@ -100,28 +100,28 @@ Advanced usages
 -----------------
 
 * **Images from multiple seasons**:
-  :ref:`Run GRID for the 1st season` |
-  :ref:`Apply shapefiles to another season` |
-  :ref:`Compare different seasons`
+  :ref:`The 1st season <Run GRID for the 1st season>` |
+  :ref:`Shapefiles <Apply shapefiles to another season>` |
+  :ref:`Evaluation <Compare different seasons>`
 
 * **Work with QGIS**:
-  :ref:`Obtain shapefiles from GRID` |
-  :ref:`Load shapefiles to QGIS`
+  :ref:`Shapefiles <Obtain shapefiles from GRID>` |
+  :ref:`QGIS <Load shapefiles to QGIS>`
 
 * **Customize vegetation indices**:
-  :ref:`Obtain tabular outputs` |
+  :ref:`Tabular outputs <Obtain tabular outputs>` |
   :ref:`Derive indices` |
-  :ref:`Visualize indices`
+  :ref:`Visualization <Visualize indices>`
 
 * **Adapt to an arbitrary field layout**:
-  :ref:`What's an arbitrary layout` |
-  :ref:`Define centroids in GRID` |
-  :ref:`Intepretate results`
+  :ref:`Arbitrary layout <What's an arbitrary layout>` |
+  :ref:`Centroids <Define centroids in GRID>` |
+  :ref:`Intepretation <Intepretate results>`
 
 * **Generate datasets for deep learning**:
-  :ref:`Obtain h5 datasets` |
-  :ref:`Process h5 files` |
-  :ref:`Construct a DL model` |
+  :ref:`H5 datasets <Obtain h5 datasets>` |
+  :ref:`Preprocessing <Process h5 files>` |
+  :ref:`DL model <Construct a DL model>` |
   :ref:`Train & Evaluate`
 
 
