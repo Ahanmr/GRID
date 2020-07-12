@@ -12,30 +12,53 @@ Define AOI
 To define area of interest (AOI), 
 left-click on the image **four times** to assign 
 four corners of the AOI rectangle.
-The red shaded region will be AOI used in the following analysis.
+The red shaded region will be AOI used in the analysis.
 
-.. figure:: aoi_create.gif
+.. raw:: html
 
+   <video width="700" autoplay loop muted>
+    <source src="../_static/aoi_create.mp4"/>
+   </video>
 
 Adjust AOI
 ----------
 
 * **Move the entire AOI**:
 
-.. figure:: aoi_entire.gif
+.. raw:: html
+
+   <video width="700" autoplay loop muted>
+    <source src="../_static/aoi_entire.mp4"/>
+   </video>
 
 * **Move one corner of the AOI**:
 
-.. figure:: aoi_corner.gif
+.. raw:: html
+
+   <video width="700" autoplay loop muted>
+    <source src="../_static/aoi_corner.mp4"/>
+   </video>
 
 * **Move one side of the AOI**:
 
-.. figure:: aoi_side.gif
+.. raw:: html
+
+   <video width="700" autoplay loop muted>
+    <source src="../_static/aoi_side.mp4"/>
+   </video>
 
 * **Rotate the AOI**:
 
-.. figure:: aoi_rotate.gif
+.. raw:: html
+
+   <video width="700" autoplay loop muted>
+    <source src="../_static/aoi_rotate.mp4"/>
+   </video>
 
 * **Create a new AOI**:
 
-.. figure:: aoi_new.gif
+.. raw:: html
+
+   <video width="700" autoplay loop muted>
+    <source src="../_static/aoi_new.mp4"/>
+   </video>
