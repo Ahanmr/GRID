@@ -20,6 +20,8 @@ The red shaded region will be AOI used in the analysis.
     <source src="../_static/aoi_create.mp4"/>
    </video>
 
+|
+
 Adjust AOI
 ----------
 
@@ -31,6 +33,8 @@ Adjust AOI
     <source src="../_static/aoi_entire.mp4"/>
    </video>
 
+|
+
 * **Move one corner of the AOI**:
 
 .. raw:: html
@@ -38,6 +42,8 @@ Adjust AOI
    <video width="700" autoplay loop muted>
     <source src="../_static/aoi_corner.mp4"/>
    </video>
+
+|
 
 * **Move one side of the AOI**:
 
@@ -47,6 +53,8 @@ Adjust AOI
     <source src="../_static/aoi_side.mp4"/>
    </video>
 
+|
+
 * **Rotate the AOI**:
 
 .. raw:: html
@@ -55,6 +63,8 @@ Adjust AOI
     <source src="../_static/aoi_rotate.mp4"/>
    </video>
 
+|
+
 * **Create a new AOI**:
 
 .. raw:: html
@@ -62,3 +72,4 @@ Adjust AOI
    <video width="700" autoplay loop muted>
     <source src="../_static/aoi_new.mp4"/>
    </video>
+
