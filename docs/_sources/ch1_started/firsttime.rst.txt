@@ -7,6 +7,15 @@ GRID aims to provide a smooth envirnoment
 for users to perform image segmentation, 
 with no experience required!
 
+Launch GRID
+-----------
+
+In the terminal:
+
+.. prompt:: bash $
+
+    python3 -m grid
+
 Demo mode
 ---------
 
@@ -14,12 +23,12 @@ For the first-time users, it's recommended to use demo files. Users can start
 GRID in the demo mode by choosing the option "Demo" in the
 :ref:`welcome panel <Load Files>`. 
 
-.. figure:: demo_option.png
+.. figure:: res/demo_option.png
 
    GRID provides two ways to start the analysis, 
    the bottom one will use the demo image to proceed.
    
-.. figure:: demo_image.png
+.. figure:: res/demo_image.png
 
    **Demo image**. It's recommended to define AOI over the highlighted area.
 

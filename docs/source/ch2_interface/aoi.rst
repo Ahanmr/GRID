@@ -1,7 +1,7 @@
 Area of Interest
 ================
 
-.. figure:: panel_aoi.png
+.. figure:: res/aoi_pn.png
 
     Left-click on the image to define the AOI, which is shaded in red.
 
@@ -25,7 +25,9 @@ The red shaded region will be AOI used in the analysis.
 Adjust AOI
 ----------
 
-* **Move the entire AOI**:
+* **Move the entire AOI**
+    Drag from the central area to move the AOI. 
+    The cursor should become a "move" icon.
 
 .. raw:: html
 
@@ -35,7 +37,9 @@ Adjust AOI
 
 |
 
-* **Move one corner of the AOI**:
+* **Move one corner of the AOI**
+    Left-click near the **corner** and drag it to adjust its position.
+    The cursor should become a magnifying glass to help increasing the precision.
 
 .. raw:: html
 
@@ -45,7 +49,9 @@ Adjust AOI
 
 |
 
-* **Move one side of the AOI**:
+* **Move one side of the AOI**
+    Left-click near the AOI **edge** and drag it to adjust its position.
+    The cursor should become a magnifying glass to help increasing the precision.
 
 .. raw:: html
 
@@ -55,7 +61,9 @@ Adjust AOI
 
 |
 
-* **Rotate the AOI**:
+* **Rotate the AOI**
+    Left-click and drag at the surrounding area of the AOI to rotate.
+    The cursor should become a "rotation" icon indicating the AOI can be rotated.
 
 .. raw:: html
 
@@ -65,7 +73,10 @@ Adjust AOI
 
 |
 
-* **Create a new AOI**:
+* **Create a new AOI**
+    When move the cursor far away from the exisitng AOI, 
+    the cursor should become a magnifying glass again. 
+    It indicates that users can assign new set of coorindates to create a new AOI.
 
 .. raw:: html
 

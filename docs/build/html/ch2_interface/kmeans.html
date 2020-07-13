@@ -1,0 +1,316 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>K-Means Clustering &mdash; GRID 0.0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Centroids Searching" href="centroids.html" />
+    <link rel="prev" title="Area of Interest" href="aoi.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html">
+          
+
+          
+            
+            <img src="../_static/GRID_banner.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">GATTING STARTED</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../ch1_started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ch1_started/firsttime.html">First-Time Users</a></li>
+</ul>
+<p class="caption"><span class="caption-text">INTERFACE</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="load.html">Load Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aoi.html">Area of Interest</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">K-Means Clustering</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#clustering">Clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#binarization">Binarization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#refine-poi">Refine POI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#display-zoom">Display/Zoom</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="centroids.html">Centroids Searching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="segmentation.html">Segmentation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">INPUTS/OUTPUTS</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../ch3_io/inputs.html">Inputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ch3_io/outputs.html">Outputs</a></li>
+</ul>
+<p class="caption"><span class="caption-text">ADVANCED USAGES</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../ch4_adv/dl.html">Generate Datasets for Deep Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ch4_adv/qgis.html">Work with QGIS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ch4_adv/indices.html">Customize Vegetation Indices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ch4_adv/arbitrary.html">Adapt to an Arbitrary Field Layout</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ch4_adv/seasons.html">Images from Multiple Seasons</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GRID</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>K-Means Clustering</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/ch2_interface/kmeans.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="k-means-clustering">
+<h1>K-Means Clustering<a class="headerlink" href="#k-means-clustering" title="Permalink to this headline">¶</a></h1>
+<p>In this step,
+GRID will help users to extract pixel of interest (POI) from the AOI.
+POI is colored in yellow, whereas the remaining areas are shown as black pixels.
+Pixels contain soil, non-vegetation objects,
+and field residuals can be excluded in this step.
+There’re also refining tools avaialble to remove shadow and image noise</p>
+<div class="figure align-default" id="id1">
+<img alt="../_images/km_pn.png" src="../_images/km_pn.png" />
+<p class="caption"><span class="caption-text">A panel for defining pixel of interest (POI)</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+<div class="section" id="clustering">
+<h2>Clustering<a class="headerlink" href="#clustering" title="Permalink to this headline">¶</a></h2>
+<p>GRID uses K-means clustering algorithm to cluster imagery pixels.
+2 parameters are available to be tuned:</p>
+<div class="figure align-center" id="id2">
+<a class="reference internal image-reference" href="../_images/km_alg.png"><img alt="../_images/km_alg.png" src="../_images/km_alg.png" style="width: 450px;" /></a>
+<p class="caption"><span class="caption-text">The interface of K-means clustering algorithm</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>Channels used for clustering</strong></dt><dd><p>By checking the box, the corresponding channel will be included
+in the feature space for clustering.
+The checkable boxes are imagery channels found from the inputs.
+For example, in a JPEG image, “1” is the red channel,
+which should also be the first channel of a JPEG image.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>K</strong></dt><dd><p>It’s how many clusters expected to exist in the image.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<div class="figure align-default" id="id3">
+<img alt="../_images/km_k.png" src="../_images/km_k.png" />
+<p class="caption"><span class="caption-text">Comparison between the raw image, 3-cluster image, and 5-cluster image.</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="binarization">
+<h2>Binarization<a class="headerlink" href="#binarization" title="Permalink to this headline">¶</a></h2>
+<p>This section allows you to assign which clusters belong to POI.
+The image will then be binarized into a yellow/black image
+showing POI and non-POI, respectively.</p>
+<div class="figure align-center" id="id4">
+<a class="reference internal image-reference" href="../_images/km_bin.png"><img alt="../_images/km_bin.png" src="../_images/km_bin.png" style="width: 450px;" /></a>
+<p class="caption"><span class="caption-text">The interface of binarization</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</div>
+<p>2 ways to do the binarization:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>Auto cutoff</strong></dt><dd><p>GRID will rank clusters based on the possibility of being POI.
+When auto cutoff = <strong>m</strong>,
+the first <strong>m</strong> cluters will be assigned to AOI (yellow).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Custom</strong></dt><dd><p>You can also assign POI in the original order of clusters
+(which usually is arbitrary from K-means clustering algorithm).
+The checked box will be assign to POI.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="refine-poi">
+<h2>Refine POI<a class="headerlink" href="#refine-poi" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="display-zoom">
+<h2>Display/Zoom<a class="headerlink" href="#display-zoom" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="centroids.html" class="btn btn-neutral float-right" title="Centroids Searching" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="aoi.html" class="btn btn-neutral float-left" title="Area of Interest" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Chunpeng James Chen
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

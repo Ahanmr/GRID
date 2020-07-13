@@ -4,5 +4,5 @@ Work with QGIS
 Obtain shapefiles from GRID
 ---------------------------
 
-Load shapefiles to QGIS
------------------------
+Import shapefiles to QGIS
+-------------------------

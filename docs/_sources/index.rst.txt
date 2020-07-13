@@ -13,12 +13,13 @@ Core features
 Getting started
 ----------------
 
-* **Installation**: 
-  :ref:`Python 3` |
-  :ref:`Dependencies` |
-  :ref:`PyPI` |
+* **Installation**:
+  :ref:`Python 3 <Step 1\: Python>` |
+  :ref:`Rasterio <Step 2\: Rasterio>` |
+  :ref:`PyPI <Step 3\: Install GRID via PyPI>` |
   
 * **First-time users**:
+  :ref:`Launch GRID` |
   :ref:`Demo mode` |
   :ref:`Work with your images` |
 
@@ -44,9 +45,8 @@ Interface
 * **K-means clustering**:
   :ref:`Clustering` |
   :ref:`Binarization` |
-  :ref:`Refining <Refine clustering>` |
-  :ref:`Display/Zoom` |
-  :ref:`Rotation <Rotate images>`
+  :ref:`Refining <Refine POI>` |
+  :ref:`Display/Zoom`
 
 * **Centroids searching**:
   :ref:`Major axis` |
@@ -60,7 +60,7 @@ Interface
   :ref:`Fine-tune results` |
   :ref:`Reset` |
   :ref:`Display` |
-  :ref:`Export results` |
+  :ref:`Export results`
 
 .. toctree::
    :maxdepth: 2
@@ -107,7 +107,7 @@ Advanced usages
 
 * **Work with QGIS**:
   :ref:`Shapefiles <Obtain shapefiles from GRID>` |
-  :ref:`QGIS <Load shapefiles to QGIS>`
+  :ref:`QGIS <Import shapefiles to QGIS>`
 
 * **Customize vegetation indices**:
   :ref:`Tabular outputs <Obtain tabular outputs>` |
