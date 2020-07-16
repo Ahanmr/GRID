@@ -39,7 +39,7 @@ Finally, to install GRID, in the prompt
 
     python3 -m pip install photo_grid
 
-If you see no error during the installation, you should be good to go.
+After finishing this step, you should be good to go.
 Otherwise, check what dependencies you miss or report any issue to
 the `GitHub repository <https://github.com/Poissonfish/GRID/issues>`_ .
 

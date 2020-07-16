@@ -7,7 +7,7 @@ And the bottom option will load an example image for you to explore GRID.
 
 .. figure:: res/ld_pn.png
 
-   A panel for loading data or choosing to continue in the demo mode
+    Screenshot of GRID taking inputs
 
 Input files
 -----------

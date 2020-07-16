@@ -6,9 +6,11 @@
 GRID: Deal with Field Segmentations Elegantly
 ==========================================================
 
-Core features
---------------
+.. figure:: https://img.shields.io/pypi/dm/photo_grid.svg?label=pypi%20downloads&logo=python&logoColor=white
 
+.. figure:: https://img.shields.io/pypi/v/photo_grid.svg?label=pypi%20version&logo=python&logoColor=white
+
+.. figure:: res/abstract.png
 
 Getting started
 ----------------
@@ -36,31 +38,28 @@ Interface
 
 * **File loading**:
   :ref:`Input files` |
-  :ref:`Drag and drop`
+  :ref:`Drag and drop` |
 
-* **Area of interest**:
-  :ref:`Define AOI` |
-  :ref:`Adjust AOI`
+* **Define AOI**:
+  :ref:`Draw AOI` |
+  :ref:`Adjust AOI` |
 
-* **K-means clustering**:
-  :ref:`Clustering` |
+* **Define POI**:
+  :ref:`K-Means clustering algorithm` |
   :ref:`Binarization` |
-  :ref:`Refining <Refine POI>` |
-  :ref:`Display/Zoom`
+  :ref:`Refine POI` |
+  :ref:`Display/Zoom` |
 
-* **Centroids searching**:
+* **Detect centroids**:
   :ref:`Major axis` |
   :ref:`Minor axis` |
-  :ref:`Switch between axes` |
-  :ref:`Adjust centroids <Move/add/delete centroids>`
+  :ref:`Centroid adjustment` |
 
 * **Segmentation**:
   :ref:`Dynamic` |
   :ref:`Fixed` |
   :ref:`Fine-tune results` |
-  :ref:`Reset` |
-  :ref:`Display` |
-  :ref:`Export results`
+  :ref:`Export results` |
 
 .. toctree::
    :maxdepth: 2
@@ -79,14 +78,14 @@ Inputs/Outputs
 * **Inputs**:
   :ref:`Images` |
   :ref:`Maps` |
-  :ref:`Shapefiles <Shapefiles (intputs)>`
+  :ref:`Shapefiles <Shapefiles (inputs)>` |
 
 * **Outputs**:
   :ref:`Tabular results` |
   :ref:`Validation <Images for validations>` |
   :ref:`Shapefiles <Shapefiles (outputs)>` |
   :ref:`NumPy format of AOI` |
-  :ref:`H5 dataset`
+  :ref:`H5 dataset` |
 
 .. toctree::
    :maxdepth: 2
@@ -96,38 +95,23 @@ Inputs/Outputs
    /ch3_io/inputs
    /ch3_io/outputs
 
-Advanced usages
------------------
+Advanced usage (Jupyter notebook)
+----------------------------------
 
-* **Generate datasets for deep learning**:
-  :ref:`H5 datasets <Obtain h5 datasets>` |
-  :ref:`Preprocessing <Process h5 files>` |
-  :ref:`DL model <Train a DL model>` |
-  :ref:`Evaluation`
+* :ref:`Generate datasets for deep learning`
 
-* **Work with QGIS**:
-  :ref:`Shapefiles <Obtain shapefiles from GRID>` |
-  :ref:`QGIS <Import shapefiles to QGIS>`
+* :ref:`Work with QGIS`
 
-* **Customize vegetation indices**:
-  :ref:`Tabular outputs <Obtain tabular outputs>` |
-  :ref:`Derive indices` |
-  :ref:`Visualization <Visualize indices>`
+* :ref:`Customize vegetation indices`
 
-* **Adapt to an arbitrary field layout**:
-  :ref:`Arbitrary layout <What's an arbitrary layout>` |
-  :ref:`Centroids <Define centroids in GRID>` |
-  :ref:`Intepretation <Intepretate results>`
+* :ref:`Adapt to an arbitrary field layout`
 
-* **Images from multiple seasons**:
-  :ref:`The 1st season <Run GRID for the 1st season>` |
-  :ref:`Shapefiles <Apply shapefiles to another season>` |
-  :ref:`Evaluation <Compare results from different seasons>`
+* :ref:`Images from multiple seasons`
 
 .. toctree::
    :maxdepth: 2
    :hidden:
-   :caption: ADVANCED USAGES
+   :caption: ADVANCED USAGE
 
    /ch4_adv/dl
    /ch4_adv/qgis

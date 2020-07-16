@@ -1,14 +1,4 @@
 Generate Datasets for Deep Learning
 ===================================
 
-Obtain h5 datasets
------------------------
-
-Process h5 files
------------------------
-
-Train a DL model
------------------------
-
-Evaluation
------------------------
+Will be done by the end of July 2020.

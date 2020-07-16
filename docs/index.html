@@ -30,6 +30,9 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -92,9 +95,9 @@
 <p class="caption"><span class="caption-text">INTERFACE</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="ch2_interface/load.html">Load Files</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ch2_interface/aoi.html">Area of Interest</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ch2_interface/kmeans.html">K-Means Clustering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ch2_interface/centroids.html">Centroids Searching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ch2_interface/aoi.html">Define AOI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ch2_interface/kmeans.html">Define POI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ch2_interface/centroids.html">Detect Centroids</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ch2_interface/segmentation.html">Segmentation</a></li>
 </ul>
 <p class="caption"><span class="caption-text">INPUTS/OUTPUTS</span></p>
@@ -102,7 +105,7 @@
 <li class="toctree-l1"><a class="reference internal" href="ch3_io/inputs.html">Inputs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ch3_io/outputs.html">Outputs</a></li>
 </ul>
-<p class="caption"><span class="caption-text">ADVANCED USAGES</span></p>
+<p class="caption"><span class="caption-text">ADVANCED USAGE</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="ch4_adv/dl.html">Generate Datasets for Deep Learning</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ch4_adv/qgis.html">Work with QGIS</a></li>
@@ -174,10 +177,40 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="grid-deal-with-field-segmentations-elegantly">
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="grid-deal-with-field-segmentations-elegantly">
 <h1>GRID: Deal with Field Segmentations Elegantly<a class="headerlink" href="#grid-deal-with-field-segmentations-elegantly" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="core-features">
-<h2>Core features<a class="headerlink" href="#core-features" title="Permalink to this headline">¶</a></h2>
+<div class="figure align-default">
+<img alt="https://img.shields.io/pypi/dm/photo_grid.svg?label=pypi%20downloads&amp;logo=python&amp;logoColor=white" src="https://img.shields.io/pypi/dm/photo_grid.svg?label=pypi%20downloads&amp;logo=python&amp;logoColor=white" />
+</div>
+<div class="figure align-default">
+<img alt="https://img.shields.io/pypi/v/photo_grid.svg?label=pypi%20version&amp;logo=python&amp;logoColor=white" src="https://img.shields.io/pypi/v/photo_grid.svg?label=pypi%20version&amp;logo=python&amp;logoColor=white" />
+</div>
+<div class="figure align-default">
+<img alt="_images/abstract.png" src="_images/abstract.png" />
 </div>
 <div class="section" id="getting-started">
 <h2>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
@@ -199,27 +232,24 @@
 <ul class="simple">
 <li><p><strong>File loading</strong>:
 <a class="reference internal" href="ch2_interface/load.html#input-files"><span class="std std-ref">Input files</span></a> |
-<a class="reference internal" href="ch2_interface/load.html#drag-and-drop"><span class="std std-ref">Drag and drop</span></a></p></li>
-<li><p><strong>Area of interest</strong>:
-<a class="reference internal" href="ch2_interface/aoi.html#define-aoi"><span class="std std-ref">Define AOI</span></a> |
-<a class="reference internal" href="ch2_interface/aoi.html#adjust-aoi"><span class="std std-ref">Adjust AOI</span></a></p></li>
-<li><p><strong>K-means clustering</strong>:
-<a class="reference internal" href="ch2_interface/kmeans.html#clustering"><span class="std std-ref">Clustering</span></a> |
+<a class="reference internal" href="ch2_interface/load.html#drag-and-drop"><span class="std std-ref">Drag and drop</span></a> |</p></li>
+<li><p><strong>Define AOI</strong>:
+<a class="reference internal" href="ch2_interface/aoi.html#draw-aoi"><span class="std std-ref">Draw AOI</span></a> |
+<a class="reference internal" href="ch2_interface/aoi.html#adjust-aoi"><span class="std std-ref">Adjust AOI</span></a> |</p></li>
+<li><p><strong>Define POI</strong>:
+<a class="reference internal" href="ch2_interface/kmeans.html#k-means-clustering-algorithm"><span class="std std-ref">K-Means clustering algorithm</span></a> |
 <a class="reference internal" href="ch2_interface/kmeans.html#binarization"><span class="std std-ref">Binarization</span></a> |
-<a class="reference internal" href="ch2_interface/kmeans.html#refine-poi"><span class="std std-ref">Refining</span></a> |
-<a class="reference internal" href="ch2_interface/kmeans.html#display-zoom"><span class="std std-ref">Display/Zoom</span></a></p></li>
-<li><p><strong>Centroids searching</strong>:
+<a class="reference internal" href="ch2_interface/kmeans.html#refine-poi"><span class="std std-ref">Refine POI</span></a> |
+<a class="reference internal" href="ch2_interface/kmeans.html#display-zoom"><span class="std std-ref">Display/Zoom</span></a> |</p></li>
+<li><p><strong>Detect centroids</strong>:
 <a class="reference internal" href="ch2_interface/centroids.html#major-axis"><span class="std std-ref">Major axis</span></a> |
 <a class="reference internal" href="ch2_interface/centroids.html#minor-axis"><span class="std std-ref">Minor axis</span></a> |
-<a class="reference internal" href="ch2_interface/centroids.html#switch-between-axes"><span class="std std-ref">Switch between axes</span></a> |
-<a class="reference internal" href="ch2_interface/centroids.html#move-add-delete-centroids"><span class="std std-ref">Adjust centroids</span></a></p></li>
+<a class="reference internal" href="ch2_interface/centroids.html#centroid-adjustment"><span class="std std-ref">Centroid adjustment</span></a> |</p></li>
 <li><p><strong>Segmentation</strong>:
 <a class="reference internal" href="ch2_interface/segmentation.html#dynamic"><span class="std std-ref">Dynamic</span></a> |
 <a class="reference internal" href="ch2_interface/segmentation.html#fixed"><span class="std std-ref">Fixed</span></a> |
 <a class="reference internal" href="ch2_interface/segmentation.html#fine-tune-results"><span class="std std-ref">Fine-tune results</span></a> |
-<a class="reference internal" href="ch2_interface/segmentation.html#reset"><span class="std std-ref">Reset</span></a> |
-<a class="reference internal" href="ch2_interface/segmentation.html#display"><span class="std std-ref">Display</span></a> |
-<a class="reference internal" href="ch2_interface/segmentation.html#export-results"><span class="std std-ref">Export results</span></a></p></li>
+<a class="reference internal" href="ch2_interface/segmentation.html#export-results"><span class="std std-ref">Export results</span></a> |</p></li>
 </ul>
 <div class="toctree-wrapper compound">
 </div>
@@ -230,40 +260,25 @@
 <li><p><strong>Inputs</strong>:
 <a class="reference internal" href="ch3_io/inputs.html#images"><span class="std std-ref">Images</span></a> |
 <a class="reference internal" href="ch3_io/inputs.html#maps"><span class="std std-ref">Maps</span></a> |
-<a class="reference internal" href="ch3_io/inputs.html#shapefiles-intputs"><span class="std std-ref">Shapefiles</span></a></p></li>
+<a class="reference internal" href="ch3_io/inputs.html#shapefiles-inputs"><span class="std std-ref">Shapefiles</span></a> |</p></li>
 <li><p><strong>Outputs</strong>:
 <a class="reference internal" href="ch3_io/outputs.html#tabular-results"><span class="std std-ref">Tabular results</span></a> |
 <a class="reference internal" href="ch3_io/outputs.html#images-for-validations"><span class="std std-ref">Validation</span></a> |
 <a class="reference internal" href="ch3_io/outputs.html#shapefiles-outputs"><span class="std std-ref">Shapefiles</span></a> |
 <a class="reference internal" href="ch3_io/outputs.html#numpy-format-of-aoi"><span class="std std-ref">NumPy format of AOI</span></a> |
-<a class="reference internal" href="ch3_io/outputs.html#h5-dataset"><span class="std std-ref">H5 dataset</span></a></p></li>
+<a class="reference internal" href="ch3_io/outputs.html#h5-dataset"><span class="std std-ref">H5 dataset</span></a> |</p></li>
 </ul>
 <div class="toctree-wrapper compound">
 </div>
 </div>
-<div class="section" id="advanced-usages">
-<h2>Advanced usages<a class="headerlink" href="#advanced-usages" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="advanced-usage-jupyter-notebook">
+<h2>Advanced usage (Jupyter notebook)<a class="headerlink" href="#advanced-usage-jupyter-notebook" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><p><strong>Generate datasets for deep learning</strong>:
-<a class="reference internal" href="ch4_adv/dl.html#obtain-h5-datasets"><span class="std std-ref">H5 datasets</span></a> |
-<a class="reference internal" href="ch4_adv/dl.html#process-h5-files"><span class="std std-ref">Preprocessing</span></a> |
-<a class="reference internal" href="ch4_adv/dl.html#train-a-dl-model"><span class="std std-ref">DL model</span></a> |
-<a class="reference internal" href="ch4_adv/dl.html#evaluation"><span class="std std-ref">Evaluation</span></a></p></li>
-<li><p><strong>Work with QGIS</strong>:
-<a class="reference internal" href="ch4_adv/qgis.html#obtain-shapefiles-from-grid"><span class="std std-ref">Shapefiles</span></a> |
-<a class="reference internal" href="ch4_adv/qgis.html#import-shapefiles-to-qgis"><span class="std std-ref">QGIS</span></a></p></li>
-<li><p><strong>Customize vegetation indices</strong>:
-<a class="reference internal" href="ch4_adv/indices.html#obtain-tabular-outputs"><span class="std std-ref">Tabular outputs</span></a> |
-<a class="reference internal" href="ch4_adv/indices.html#derive-indices"><span class="std std-ref">Derive indices</span></a> |
-<a class="reference internal" href="ch4_adv/indices.html#visualize-indices"><span class="std std-ref">Visualization</span></a></p></li>
-<li><p><strong>Adapt to an arbitrary field layout</strong>:
-<a class="reference internal" href="ch4_adv/arbitrary.html#what-s-an-arbitrary-layout"><span class="std std-ref">Arbitrary layout</span></a> |
-<a class="reference internal" href="ch4_adv/arbitrary.html#define-centroids-in-grid"><span class="std std-ref">Centroids</span></a> |
-<a class="reference internal" href="ch4_adv/arbitrary.html#intepretate-results"><span class="std std-ref">Intepretation</span></a></p></li>
-<li><p><strong>Images from multiple seasons</strong>:
-<a class="reference internal" href="ch4_adv/seasons.html#run-grid-for-the-1st-season"><span class="std std-ref">The 1st season</span></a> |
-<a class="reference internal" href="ch4_adv/seasons.html#apply-shapefiles-to-another-season"><span class="std std-ref">Shapefiles</span></a> |
-<a class="reference internal" href="ch4_adv/seasons.html#compare-results-from-different-seasons"><span class="std std-ref">Evaluation</span></a></p></li>
+<li><p><a class="reference internal" href="ch4_adv/dl.html#generate-datasets-for-deep-learning"><span class="std std-ref">Generate Datasets for Deep Learning</span></a></p></li>
+<li><p><a class="reference internal" href="ch4_adv/qgis.html#work-with-qgis"><span class="std std-ref">Work with QGIS</span></a></p></li>
+<li><p><a class="reference internal" href="ch4_adv/indices.html#customize-vegetation-indices"><span class="std std-ref">Customize Vegetation Indices</span></a></p></li>
+<li><p><a class="reference internal" href="ch4_adv/arbitrary.html#adapt-to-an-arbitrary-field-layout"><span class="std std-ref">Adapt to an Arbitrary Field Layout</span></a></p></li>
+<li><p><a class="reference internal" href="ch4_adv/seasons.html#images-from-multiple-seasons"><span class="std std-ref">Images from Multiple Seasons</span></a></p></li>
 </ul>
 <div class="toctree-wrapper compound">
 </div>

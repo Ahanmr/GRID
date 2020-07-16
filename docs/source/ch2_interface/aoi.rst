@@ -1,15 +1,19 @@
-Area of Interest
+Define AOI
 ================
 
 .. figure:: res/aoi_pn.png
 
-    Left-click on the image to define the AOI, which is shaded in red.
 
+    Screenshot of GRID defining AOI
+    
+Often time the provided orthoimages contain areas you don't need.
+In this step, you can define an area of interest (AOI) to 
+exclude the redundant parts.
  
-Define AOI
+Draw AOI
 ----------
 
-To define area of interest (AOI), 
+To draw AOI, 
 left-click on the image **four times** to assign 
 four corners of the AOI rectangle.
 The red shaded region will be AOI used in the analysis.

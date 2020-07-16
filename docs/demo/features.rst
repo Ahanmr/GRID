@@ -122,3 +122,10 @@ Here are some external resources to help you learn more about Sphinx.
 .. _Sphinx documentation: http://www.sphinx-doc.org/
 .. _RestructuredText primer: http://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html
 .. _An introduction to Sphinx and Read the Docs for technical writers: https://www.ericholscher.com/blog/2016/jul/1/sphinx-and-rtd-for-writers/
+
+
+
+.. csv-table:: GRID Map file
+   :file: res/demo_map.csv
+   :header-rows: 0
+

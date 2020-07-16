@@ -1,12 +1,4 @@
 Adapt to an Arbitrary Field Layout
 ===================================
 
-What's an arbitrary layout
---------------------------
-
-Define centroids in GRID
-------------------------
-
-Intepretate results
------------------------
-
+Will be done by the end of July 2020.

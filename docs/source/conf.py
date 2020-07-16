@@ -34,7 +34,8 @@ release = '0.0.1'
 extensions = [
     "sphinx_rtd_theme", 
     'sphinx-prompt',
-    'sphinx.ext.autosectionlabel'
+    'sphinx.ext.autosectionlabel',
+    'nbsphinx'
 ]
 
 # Add any paths that contain templates here, relative to this directory.

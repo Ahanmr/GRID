@@ -180,15 +180,15 @@ def saveDT(grid, path, prefix="GRID", simple=True):
 
     # channel values
     for i in range(nD):
-        name = "ch_%d" % i
+        name = "ch_%d" % (i + 1)
         dicIdx[name] = img[:, :, i]
 
-    # ratio of each cluster (k)
-    cluster = 0
-    for k in lsK:
-        name = "cluster_%d" % cluster
-        dicIdx[name] = (np.isin(grid.imgs.get("kmean"), i))*1
-        cluster += 1
+    # # ratio of each cluster (k)
+    # cluster = 0
+    # for k in lsK:
+    #     name = "cluster_%d" % cluster
+    #     dicIdx[name] = (np.isin(grid.imgs.get("kmean"), i))*1
+    #     cluster += 1
 
     # append columns based on the dict
     for key, _ in dicIdx.items():
@@ -202,7 +202,7 @@ def saveDT(grid, path, prefix="GRID", simple=True):
             if not agent or agent.isFake():
                 continue
             try:
-                entry = dict(var=str(agent.name), row=int(row), col=int(col))
+                entry = dict(var=str(agent.name), row=int(row + 1), col=int(col + 1))
 
                 # get ROI region
                 rg_row = range(agent.getBorder(Dir.NORTH),
@@ -389,9 +389,9 @@ def saveShape(grid, path, prefix="GRID"):
 
         for idx, entry in dt.iterrows():
             try:
-                # get agents
-                row = entry["row"]
-                col = entry["col"]
+                # get agents (the table is 1-index)
+                row = entry["row"] - 1
+                col = entry["col"] - 1
                 agent = grid.agents.get(row, col)
 
                 # polygon

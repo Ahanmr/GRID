@@ -23,7 +23,7 @@ class PnKmeaner(QWidget):
         '''attr'''
         self.grid = grid
         # # grid params.
-        self.nFeatures = min(self.grid.imgs.depth, 5)
+        self.nFeatures = min(self.grid.imgs.depth, 9)
         self.features = []
         self.lsSelect = None
 

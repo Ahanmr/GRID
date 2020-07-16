@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>K-Means Clustering &mdash; GRID 0.0.1 documentation</title>
+  <title>Define POI &mdash; GRID 0.0.1 documentation</title>
   
 
   
@@ -30,14 +30,17 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Centroids Searching" href="centroids.html" />
-    <link rel="prev" title="Area of Interest" href="aoi.html" /> 
+    <link rel="next" title="Detect Centroids" href="centroids.html" />
+    <link rel="prev" title="Define AOI" href="aoi.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -93,15 +96,15 @@
 <p class="caption"><span class="caption-text">INTERFACE</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="load.html">Load Files</a></li>
-<li class="toctree-l1"><a class="reference internal" href="aoi.html">Area of Interest</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">K-Means Clustering</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#clustering">Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aoi.html">Define AOI</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Define POI</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#k-means-clustering-algorithm">K-Means clustering algorithm</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#binarization">Binarization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#refine-poi">Refine POI</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#display-zoom">Display/Zoom</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="centroids.html">Centroids Searching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="centroids.html">Detect Centroids</a></li>
 <li class="toctree-l1"><a class="reference internal" href="segmentation.html">Segmentation</a></li>
 </ul>
 <p class="caption"><span class="caption-text">INPUTS/OUTPUTS</span></p>
@@ -109,7 +112,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../ch3_io/inputs.html">Inputs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../ch3_io/outputs.html">Outputs</a></li>
 </ul>
-<p class="caption"><span class="caption-text">ADVANCED USAGES</span></p>
+<p class="caption"><span class="caption-text">ADVANCED USAGE</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../ch4_adv/dl.html">Generate Datasets for Deep Learning</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../ch4_adv/qgis.html">Work with QGIS</a></li>
@@ -162,7 +165,7 @@
     
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
-      <li>K-Means Clustering</li>
+      <li>Define POI</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -181,26 +184,50 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="k-means-clustering">
-<h1>K-Means Clustering<a class="headerlink" href="#k-means-clustering" title="Permalink to this headline">¶</a></h1>
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="define-poi">
+<h1>Define POI<a class="headerlink" href="#define-poi" title="Permalink to this headline">¶</a></h1>
+<div class="figure align-default" id="id1">
+<img alt="../_images/km_pn.png" src="../_images/km_pn.png" />
+<p class="caption"><span class="caption-text">Screenshot of GRID defining POI</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
 <p>In this step,
 GRID will help users to extract pixel of interest (POI) from the AOI.
 POI is colored in yellow, whereas the remaining areas are shown as black pixels.
 Pixels contain soil, non-vegetation objects,
 and field residuals can be excluded in this step.
 There’re also refining tools avaialble to remove shadow and image noise</p>
-<div class="figure align-default" id="id1">
-<img alt="../_images/km_pn.png" src="../_images/km_pn.png" />
-<p class="caption"><span class="caption-text">A panel for defining pixel of interest (POI)</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
-</div>
-<div class="section" id="clustering">
-<h2>Clustering<a class="headerlink" href="#clustering" title="Permalink to this headline">¶</a></h2>
-<p>GRID uses K-means clustering algorithm to cluster imagery pixels.
-2 parameters are available to be tuned:</p>
+<div class="section" id="k-means-clustering-algorithm">
+<h2>K-Means clustering algorithm<a class="headerlink" href="#k-means-clustering-algorithm" title="Permalink to this headline">¶</a></h2>
 <div class="figure align-center" id="id2">
 <a class="reference internal image-reference" href="../_images/km_alg.png"><img alt="../_images/km_alg.png" src="../_images/km_alg.png" style="width: 450px;" /></a>
 <p class="caption"><span class="caption-text">The interface of K-means clustering algorithm</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
 </div>
+<p>GRID uses K-means clustering algorithm to cluster imagery pixels.
+Two parameters are available to be tuned:</p>
 <ul class="simple">
 <li><dl class="simple">
 <dt><strong>Channels used for clustering</strong></dt><dd><p>By checking the box, the corresponding channel will be included
@@ -224,14 +251,14 @@ which should also be the first channel of a JPEG image.</p>
 </div>
 <div class="section" id="binarization">
 <h2>Binarization<a class="headerlink" href="#binarization" title="Permalink to this headline">¶</a></h2>
+<video width="700" autoplay loop muted>
+ <source src="../_static/poi_bin.mp4"/>
+</video><div class="line-block">
+<div class="line"><br /></div>
+</div>
 <p>This section allows you to assign which clusters belong to POI.
 The image will then be binarized into a yellow/black image
-showing POI and non-POI, respectively.</p>
-<div class="figure align-center" id="id4">
-<a class="reference internal image-reference" href="../_images/km_bin.png"><img alt="../_images/km_bin.png" src="../_images/km_bin.png" style="width: 450px;" /></a>
-<p class="caption"><span class="caption-text">The interface of binarization</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
-</div>
-<p>2 ways to do the binarization:</p>
+showing POI and non-POI, respectively. Two ways to do the binarization:</p>
 <ul class="simple">
 <li><dl class="simple">
 <dt><strong>Auto cutoff</strong></dt><dd><p>GRID will rank clusters based on the possibility of being POI.
@@ -251,9 +278,53 @@ The checked box will be assign to POI.</p>
 </div>
 <div class="section" id="refine-poi">
 <h2>Refine POI<a class="headerlink" href="#refine-poi" title="Permalink to this headline">¶</a></h2>
+<video width="700" autoplay loop muted>
+ <source src="../_static/poi_refine.mp4"/>
+</video><div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>De-Shade</strong></dt><dd><p>Even though most orthoimages are taken around noon,
+which is a time that has minimum shaded area,
+there’re still some cases that shaded areas are observed in the image.
+These type of areas usually have lower brightness and spectral reflectance.
+Exclude such areas can improve the quality of the evaluation on each plot.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<div class="figure align-center">
+<img alt="../_images/km_shade.png" src="../_images/km_shade.png" />
+</div>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>De-Noise</strong></dt><dd><p>It’s inevitable to include non-vegetation objects in the image.
+Pipes for irrigation system,
+or field residuals can sometimes look similar to your evaluated subjects.
+To exclude them, GRID provide a gaussian filtering approach
+to remove such noise.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<div class="figure align-center">
+<img alt="../_images/km_noise.png" src="../_images/km_noise.png" />
+</div>
 </div>
 <div class="section" id="display-zoom">
 <h2>Display/Zoom<a class="headerlink" href="#display-zoom" title="Permalink to this headline">¶</a></h2>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../_images/km_misc.png"><img alt="../_images/km_misc.png" src="../_images/km_misc.png" style="width: 450px;" /></a>
+</div>
+<p>Different display modes can help users to validate the result.
+Users can hover the cursor on the image to zoom in certain areas.
+And use the keys <code class="docutils literal notranslate"><span class="pre">A</span></code>, <code class="docutils literal notranslate"><span class="pre">S</span></code>, and <code class="docutils literal notranslate"><span class="pre">D</span></code>
+to switch between different display modes
+in order to evaluate whether the extracted POIs are valid.</p>
+<div class="figure align-center">
+<img alt="../_images/km_dis.png" src="../_images/km_dis.png" />
+</div>
 </div>
 </div>
 
@@ -265,10 +336,10 @@ The checked box will be assign to POI.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="centroids.html" class="btn btn-neutral float-right" title="Centroids Searching" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="centroids.html" class="btn btn-neutral float-right" title="Detect Centroids" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="aoi.html" class="btn btn-neutral float-left" title="Area of Interest" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="aoi.html" class="btn btn-neutral float-left" title="Define AOI" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

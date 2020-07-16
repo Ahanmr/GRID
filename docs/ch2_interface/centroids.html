@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Centroids Searching &mdash; GRID 0.0.1 documentation</title>
+  <title>Detect Centroids &mdash; GRID 0.0.1 documentation</title>
   
 
   
@@ -30,6 +30,9 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -37,7 +40,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Segmentation" href="segmentation.html" />
-    <link rel="prev" title="K-Means Clustering" href="kmeans.html" /> 
+    <link rel="prev" title="Define POI" href="kmeans.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -93,13 +96,12 @@
 <p class="caption"><span class="caption-text">INTERFACE</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="load.html">Load Files</a></li>
-<li class="toctree-l1"><a class="reference internal" href="aoi.html">Area of Interest</a></li>
-<li class="toctree-l1"><a class="reference internal" href="kmeans.html">K-Means Clustering</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Centroids Searching</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="aoi.html">Define AOI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="kmeans.html">Define POI</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Detect Centroids</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#major-axis">Major axis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#minor-axis">Minor axis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#switch-between-axes">Switch between axes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#move-add-delete-centroids">Move/add/delete centroids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#centroid-adjustment">Centroid adjustment</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="segmentation.html">Segmentation</a></li>
@@ -109,7 +111,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../ch3_io/inputs.html">Inputs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../ch3_io/outputs.html">Outputs</a></li>
 </ul>
-<p class="caption"><span class="caption-text">ADVANCED USAGES</span></p>
+<p class="caption"><span class="caption-text">ADVANCED USAGE</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../ch4_adv/dl.html">Generate Datasets for Deep Learning</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../ch4_adv/qgis.html">Work with QGIS</a></li>
@@ -162,7 +164,7 @@
     
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
-      <li>Centroids Searching</li>
+      <li>Detect Centroids</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -181,19 +183,111 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="centroids-searching">
-<h1>Centroids Searching<a class="headerlink" href="#centroids-searching" title="Permalink to this headline">¶</a></h1>
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="detect-centroids">
+<h1>Detect Centroids<a class="headerlink" href="#detect-centroids" title="Permalink to this headline">¶</a></h1>
+<div class="figure align-default" id="id1">
+<img alt="../_images/ct_pn.png" src="../_images/ct_pn.png" />
+<p class="caption"><span class="caption-text">Screenshot of GRID searching centroids</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+<p>After defining POI, GRID will detect the plot centroids automatically by
+fitting a major axis and a minor axis to the field layout.
+The interactions of two axes are the detected centroids.
+Users can furhter adjust the axes or centroids if needed.</p>
 <div class="section" id="major-axis">
 <h2>Major axis<a class="headerlink" href="#major-axis" title="Permalink to this headline">¶</a></h2>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../_images/ct_maj.png"><img alt="../_images/ct_maj.png" src="../_images/ct_maj.png" style="width: 450px;" /></a>
+</div>
+<p>GRID required one axis of the field layout to be
+either vertial (0°) or horizontal (90°).
+And this axis in GRID is defined as the <strong>major axis</strong>.</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>Angle</strong></dt><dd><p>Check 0° to set the major axis in the vertical direction,
+and 90° for the horizontal direction.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong># of ticks</strong></dt><dd><p>Specify how many lines of plots follow the direction of the major axis.</p>
+</dd>
+</dl>
+</li>
+</ul>
 </div>
 <div class="section" id="minor-axis">
 <h2>Minor axis<a class="headerlink" href="#minor-axis" title="Permalink to this headline">¶</a></h2>
+<video width="700" autoplay loop muted>
+ <source src="../_static/ct_min.mp4"/>
+</video><div class="line-block">
+<div class="line"><br /></div>
 </div>
-<div class="section" id="switch-between-axes">
-<h2>Switch between axes<a class="headerlink" href="#switch-between-axes" title="Permalink to this headline">¶</a></h2>
+<p>The other axis to fit the layout is called the <strong>minor axis</strong>.
+This axis can be any angle that can fit the layout the best.</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>Angle</strong></dt><dd><p>Rotate the spinner to specify an angle
+between the minor axis and a vertical line.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong># of ticks</strong></dt><dd><p>Same usage as one in the major axis.</p>
+</dd>
+</dl>
+</li>
+</ul>
 </div>
-<div class="section" id="move-add-delete-centroids">
-<h2>Move/add/delete centroids<a class="headerlink" href="#move-add-delete-centroids" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="centroid-adjustment">
+<h2>Centroid adjustment<a class="headerlink" href="#centroid-adjustment" title="Permalink to this headline">¶</a></h2>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../_images/ct_adj.png"><img alt="../_images/ct_adj.png" src="../_images/ct_adj.png" style="width: 450px;" /></a>
+</div>
+<p>This section allows users to adjust the position of each axis.
+The checked axis will be highlighted by a thicker red line
+compared to the other axis.
+Following actions are available on the highlighted axis:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>Move</strong></dt><dd><p>Left-click and drag on any lines to move.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Add</strong></dt><dd><p>Left-click on an area not occupied by any line.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Delete</strong></dt><dd><p>Right-click on a line you want to delete</p>
+</dd>
+</dl>
+</li>
+</ul>
 </div>
 </div>
 
@@ -208,7 +302,7 @@
         <a href="segmentation.html" class="btn btn-neutral float-right" title="Segmentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="kmeans.html" class="btn btn-neutral float-left" title="K-Means Clustering" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="kmeans.html" class="btn btn-neutral float-left" title="Define POI" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

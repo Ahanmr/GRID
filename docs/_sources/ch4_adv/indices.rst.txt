@@ -1,11 +1,4 @@
 Customize Vegetation Indices
 ============================
 
-Obtain tabular outputs
------------------------
-
-Derive indices
------------------------
-
-Visualize indices
------------------------
+Will be done by the end of July 2020.

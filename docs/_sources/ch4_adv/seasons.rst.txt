@@ -1,11 +1,4 @@
 Images from Multiple Seasons
 =======================================
 
-Run GRID for the 1st season
----------------------------
-
-Apply shapefiles to another season
------------------------------------
-
-Compare results from different seasons
-----------------------------------------------
+Will be done by the end of July 2020.

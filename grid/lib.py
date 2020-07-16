@@ -556,7 +556,7 @@ def pltSegPlot(agents, plotBase, isName=False, isRect=False, isCenter=False, pat
                     center = agent.getCoordinate()
                     rect = agent.getQRect()
                     if isName:
-                        text = "%s\n(%d, %d)" % (agent.name, row, col)
+                        text = "%s\n(%d, %d)" % (agent.name, row+1, col+1)
                         painter.drawText(rect, Qt.AlignCenter, text)
                     if isRect:
                         painter.drawRect(rect)

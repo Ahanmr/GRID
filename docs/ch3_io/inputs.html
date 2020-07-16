@@ -30,6 +30,9 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -93,9 +96,9 @@
 <p class="caption"><span class="caption-text">INTERFACE</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../ch2_interface/load.html">Load Files</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../ch2_interface/aoi.html">Area of Interest</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../ch2_interface/kmeans.html">K-Means Clustering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../ch2_interface/centroids.html">Centroids Searching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ch2_interface/aoi.html">Define AOI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ch2_interface/kmeans.html">Define POI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ch2_interface/centroids.html">Detect Centroids</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../ch2_interface/segmentation.html">Segmentation</a></li>
 </ul>
 <p class="caption"><span class="caption-text">INPUTS/OUTPUTS</span></p>
@@ -103,12 +106,12 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Inputs</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#images">Images</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#maps">Maps</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#shapefiles-intputs">Shapefiles (intputs)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#shapefiles-inputs">Shapefiles (inputs)</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="outputs.html">Outputs</a></li>
 </ul>
-<p class="caption"><span class="caption-text">ADVANCED USAGES</span></p>
+<p class="caption"><span class="caption-text">ADVANCED USAGE</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../ch4_adv/dl.html">Generate Datasets for Deep Learning</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../ch4_adv/qgis.html">Work with QGIS</a></li>
@@ -180,16 +183,59 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="inputs">
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="inputs">
 <h1>Inputs<a class="headerlink" href="#inputs" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="images">
 <h2>Images<a class="headerlink" href="#images" title="Permalink to this headline">¶</a></h2>
+<p>GRID supports most of common formats,
+including <code class="docutils literal notranslate"><span class="pre">.tif</span></code>, <code class="docutils literal notranslate"><span class="pre">.jpg</span></code>, and <code class="docutils literal notranslate"><span class="pre">.png</span></code></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Currently, GRID supports images with up to <strong>9 spectral channels</strong>.
+The exceeded channels would be ignored in the K-means clustering process,
+and it may also affect the performance.</p>
+</div>
 </div>
 <div class="section" id="maps">
 <h2>Maps<a class="headerlink" href="#maps" title="Permalink to this headline">¶</a></h2>
+<div class="figure align-center">
+<img alt="../_images/demo_map.png" src="../_images/demo_map.png" />
 </div>
-<div class="section" id="shapefiles-intputs">
-<h2>Shapefiles (intputs)<a class="headerlink" href="#shapefiles-intputs" title="Permalink to this headline">¶</a></h2>
+<p>This is an optional input to tell what’s the field layout in the image.
+It’s a simple <code class="docutils literal notranslate"><span class="pre">.csv</span></code> file, requiring no header nor row names.
+Simply put the plot names based on how they are grown in the field,
+and GRID can output results along with these given IDs.</p>
+</div>
+<div class="section" id="shapefiles-inputs">
+<h2>Shapefiles (inputs)<a class="headerlink" href="#shapefiles-inputs" title="Permalink to this headline">¶</a></h2>
+<p>The shapefile has to be obtained from GRID to be a valid input.
+It’s an optional file allows GRID to replicate plot boundaries
+rom the previous analysis in GRID.
+You can learn the details in this <a class="reference internal" href="../ch4_adv/seasons.html#images-from-multiple-seasons"><span class="std std-ref">section</span></a>.</p>
 </div>
 </div>
 
