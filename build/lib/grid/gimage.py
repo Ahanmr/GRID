@@ -6,6 +6,7 @@ import shapefile
 from .io import *
 from .lib import *
 
+
 class GImage():
     """
     """
@@ -91,8 +92,6 @@ class GImage():
             if isLocalImg:
                 imgInput, self.tiff_transform = loadImg(pathImg)
                 try:
-                    print("pathShp")
-                    print(pathShp)
                     self.f_shp = shapefile.Reader(pathShp)
                     tmp = self.f_shp.shapeRecords()  # test if it can be read
                     self.hasShp = True

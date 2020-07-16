@@ -30,7 +30,14 @@ class PnInputer(QWidget):
         # demo
         self.gr_demo = QGroupBox("Demo")
         self.lo_demo = QVBoxLayout()
-        self.lb_demo = QLabel("Will use sample files to demo the program")
+        self.lb_demo = QLabel(
+            "Will use sample files to demo the program. Or go to <a href='https://poissonfish.github.io/GRID/'> User Manual </a>")
+        # user manual
+        # self.lb_man = QLabel()
+        # self.lb_man.setText(
+        #     '<a href="https://poissonfish.github.io/GRID/">User Manual</a>')
+        self.lb_demo.setOpenExternalLinks(True)
+
         # self
         self.layout = QVBoxLayout()
 
