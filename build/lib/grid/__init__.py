@@ -1,5 +1,5 @@
 __author__ = "Chunpeng James Chen"
-__version__ = "1.1.94"
+__version__ = "1.1.95"
 __update__ = "Jul 16, 2020"
 
 # imports
@@ -17,14 +17,16 @@ if "__main__" not in sys.argv[0]:
     print("~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~")
     print("Author      : James Chen <chun-peng.chen@wsu.edu>    ")
     print("Last update : %s              " % __update__)
+    print("User manual : https://poissonfish.github.io/GRID/")
 
     if "-m" not in sys.argv[0]:
         # if in the command-line environment
         print("    Try 'python -m grid' in Terminel to launch GRID GUI,")
         print("         as command-line version is not ready yet.")
     print("~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~")
-    print("Recent update: ")
-    print("         support ESRI shapefile compatible in QGIS    ")
+    print("Recent update ")
+    print("    - Update our user manual ")
+    print("    - Support ESRI shapefile compatible in QGIS    ")
     print("~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~")
 
 # self update
