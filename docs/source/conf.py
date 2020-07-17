@@ -66,8 +66,8 @@ html_static_path = ['_static']
 html_logo = 'res/GRID_banner.png'
 
 
-# def setup(app):
-#     app.add_javascript("google_analytics.js")
-#     app.add_javascript(
-#         "https://www.googletagmanager.com/gtag/js?id=UA-151005724-3")
+def setup(app):
+    app.add_javascript("google_analytics.js")
+    app.add_javascript(
+        "https://www.googletagmanager.com/gtag/js?id=UA-151005724-3")
 
