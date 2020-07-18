@@ -19,3 +19,7 @@ git filter-branch --env-filter '
     [ "$GIT_AUTHOR_NAME"="$oldname" ] && GIT_AUTHOR_NAME="$newname"
     [ "$GIT_COMMITTER_NAME"="$oldname" ] && GIT_COMMITTER_NAME="$newname"
     ' HEAD
+
+
+git filter-branch --env-filter 'export GIT_AUTHOR_EMAIL="chun-peng.chen@wsu.edu";GIT_AUTHOR_NAME="Poissonfish"'
+git push -f origin master
