@@ -119,6 +119,7 @@ Advanced usage (Jupyter notebook)
    /ch4_adv/indices
    /ch4_adv/arbitrary
    /ch4_adv/seasons
+   /ch4_adv/custom_index
 
 How to cite GRID
 -------------------
