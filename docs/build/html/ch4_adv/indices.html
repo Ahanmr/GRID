@@ -209,6 +209,20 @@
 <h1>Customize Vegetation Indices<a class="headerlink" href="#customize-vegetation-indices" title="Permalink to this headline">¶</a></h1>
 <p>Will be done by the end of July 2020.</p>
 <p>using a relative path to the local file: <a class="reference internal" href="custom_index.html"><span class="doc">link</span></a>.</p>
+<dl class="simple">
+<dt>git filter-branch –env-filter ‘</dt><dd><p>oldname=”James Chen”
+oldemail=”<a class="reference external" href="mailto:chun-pengc&#46;chen&#37;&#52;&#48;wsu&#46;edu">chun-pengc<span>&#46;</span>chen<span>&#64;</span>wsu<span>&#46;</span>edu</a>”
+newname=”James Chen”
+newemail=”<a class="reference external" href="mailto:chun-peng&#46;chen&#37;&#52;&#48;wsu&#46;edu">chun-peng<span>&#46;</span>chen<span>&#64;</span>wsu<span>&#46;</span>edu</a>”
+[ “$GIT_AUTHOR_EMAIL”=”$oldemail” ] &amp;&amp; GIT_AUTHOR_EMAIL=”$newemail”
+[ “$GIT_COMMITTER_EMAIL”=”$oldemail” ] &amp;&amp; GIT_COMMITTER_EMAIL=”$newemail”
+[ “$GIT_AUTHOR_NAME”=”$oldname” ] &amp;&amp; GIT_AUTHOR_NAME=”$newname”
+[ “$GIT_COMMITTER_NAME”=”$oldname” ] &amp;&amp; GIT_COMMITTER_NAME=”$newname”
+‘ HEAD</p>
+</dd>
+</dl>
+<p>git filter-branch –env-filter ‘export GIT_AUTHOR_EMAIL=”<a class="reference external" href="mailto:chun-peng&#46;chen&#37;&#52;&#48;wsu&#46;edu">chun-peng<span>&#46;</span>chen<span>&#64;</span>wsu<span>&#46;</span>edu</a>”;GIT_AUTHOR_NAME=”Poissonfish”’
+git push -f origin master</p>
 </div>
 
 

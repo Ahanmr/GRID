@@ -1,6 +1,6 @@
 __author__ = "Chunpeng James Chen"
-__version__ = "1.1.95"
-__update__ = "Jul 16, 2020"
+__version__ = "1.1.96"
+__update__ = "Jul 27, 2020"
 
 # imports
 import subprocess
@@ -25,7 +25,8 @@ if "__main__" not in sys.argv[0]:
         print("         as command-line version is not ready yet.")
     print("~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~")
     print("Recent update ")
-    print("    - Update our user manual ")
+    print("    - Add CRS to shapefiles (.prj) ")
+    print("    - Update user manual ")
     print("    - Support ESRI shapefile compatible in QGIS    ")
     print("~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~*~~~~~~~~~")
 
@@ -72,6 +73,10 @@ from .grid import *
 
 """
 Update Log
+
+- Jul 27, 2020 (1.1.96)
+    * Fix the shapefile with imprecise coordinates
+    * Add Coordinate reference system (CRS) to the shapefile (.prj)
 
 - Jul 6, 2020 (1.1.9)
     * Fix crash when add/delete anchors

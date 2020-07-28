@@ -73,8 +73,14 @@ def loadImg(path):
     # try to fetch geo info
     transform = rasObj.transform
 
+    # fetch projection info
+    try:
+        crs = rasObj.crs.wkt
+    except Exception:
+        crs = False
+
     rasObj.close()
-    return npImg, transform
+    return npImg, transform, crs
 
 
 def loadImgWeb(URL):
@@ -360,6 +366,7 @@ def saveShape(grid, path, prefix="GRID"):
     dt = pd.read_csv(pathDT)
     mat_H = grid.imgs.mat_H
     tiff_transform = grid.imgs.tiff_transform
+    crs = grid.imgs.crs
     pts_crop = grid.imgs.pts_crop
     n_rot = grid.imgs.n_rot
     org = (int(grid.imgs.widthRs / 2), int(grid.imgs.heightRs / 2))
@@ -409,9 +416,64 @@ def saveShape(grid, path, prefix="GRID"):
                 # input shape file
                 f.poly([pts_rec])
             except Exception as e:
-                print("The plot is out of the borders")
-                print(e)
+                bugmsg("The plot is out of the borders")
+                bugmsg(e)
 
             # attributes
             dc = {c: entry[c] for c in dt.columns}
             f.record(**dict(dc))
+
+    with open(pathSp + ".prj", "w") as f:
+        f.write(crs)
+
+
+# # create the PRJ file
+# prj = open("%s.prj" % filename, "w")
+# epsg = 'GEOGCS["WGS 84",'
+# epsg += 'DATUM["WGS_1984",'
+# epsg += 'SPHEROID["WGS 84",6378137,298.257223563]]'
+# epsg += ',PRIMEM["Greenwich",0],'
+# epsg += 'UNIT["degree",0.0174532925199433]]'
+# prj.write(epsg)
+# prj.close()
+# WGS84-UTM
+
+
+# PROJCS["WGS 84 / UTM zone 20N",
+# GEOGCS["WGS 84",DATUM["WGS_1984",
+# SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.0174532925199433,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4326"]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-63],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1,AUTHORITY["EPSG","9001"]],AXIS["Easting",EAST],AXIS["Northing",NORTH],AUTHORITY["EPSG","32620"]]'
+
+# PROJCS["WGS 84 / UTM zone 20N", 
+# GEOGCS["WGS 84", 
+# DATUM["WGS_1984", 
+# SPHEROID["WGS 84", 6378137, 298.257223563, 
+# AUTHORITY["EPSG", "7030"]], 
+# AUTHORITY["EPSG", "6326"]], 
+# PRIMEM["Greenwich", 0,
+#  AUTHORITY["EPSG", "8901"]], 
+# UNIT["degree", 0.0174532925199433, 
+# AUTHORITY["EPSG", "9122"]], 
+# AUTHORITY["EPSG", "4326"]],
+#        PROJECTION["Transverse_Mercator"], 
+#        PARAMETER["latitude_of_origin", 0], 
+#        PARAMETER["central_meridian", -63], 
+#        PARAMETER["scale_factor", 0.9996], 
+#        PARAMETER["false_easting", 500000], 
+#        PARAMETER["false_northing", 0], 
+#        UNIT["metre", 1, AUTHORITY["EPSG", "9001"]], 
+#        AXIS["Easting", EAST], AXIS["Northing", NORTH], A
+#        UTHORITY["EPSG", "32620"]]
+
+
+# PROJCS["WGS_1984_UTM_Zone_20N",
+#        GEOGCS["GCS_WGS_1984",
+#               DATUM["D_WGS_1984",
+#                     SPHEROID["WGS_1984", 6378137, 298.257223563]],
+#               PRIMEM["Greenwich", 0],
+#               UNIT["Degree", 0.017453292519943295]],
+#        PROJECTION["Transverse_Mercator"],
+#        PARAMETER["latitude_of_origin", 0],
+#        PARAMETER["central_meridian", -63],
+#        PARAMETER["scale_factor", 0.9996],
+#        PARAMETER["false_easting", 500000],
+#        PARAMETER["false_northing", 0], UNIT["Meter", 1]]

@@ -23,6 +23,10 @@
 
 ## Update Log
 
+### Jul 27, 2020 (1.1.96)
+    * Fix the shapefile with imprecise coordinates
+    * Add Coordinate reference system (CRS) to the shapefile (.prj)
+
 ### Jul 6, 2020 (1.1.9)
     * Fix crash when add/delete anchors
 

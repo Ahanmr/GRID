@@ -17,37 +17,130 @@
 
 # === === === === === command-line test === === === === ===
 
+
+# ========= 20200727 recover shapefile =========
+# import os, sys
+# sys.path
+# # sys.path.remove("/Users/jameschen/Dropbox/photo_grid/grid")
+# from PyQt5.QtWidgets import QApplication
+# import numpy as np
+# import cv2
+# import matplotlib.pyplot as plt
+# os.chdir("/Users/jameschen/Dropbox/photo_grid/")
+# import grid as gd
+# import shapefile
+# import numpy as np
+# import pandas as pd
+# import rasterio
+# import rasterio.mask
+
+# os.getcwd()
+
+# app = QApplication(sys.argv)
+# grid = gd.GRID()
+# os.chdir("/Users/jameschen/Dropbox/photo_grid/test/zhou")
+# grid.loadData(
+#     pathImg="/Users/jameschen/Dropbox/photo_grid/test/Jacob/RGB-integer.tif")
+
+# grid.cropImg(pts=[[1266.6388308977034, 2754.9394572025053],
+#                   [3689.0855949895613, 2200.78496868476],
+#                   [4385.736951983298, 5430.713987473904],
+#                   [1931.6242171189979, 5953.202505219207]], outplot=True)
+# grid.binarizeImg(k=3, lsSelect=[0], valShad=0, valSmth=5)
+# grid.findPlots(nRow=4, nCol=13, outplot=True)
+# grid.cpuSeg(outplot=True)
+
+
+# img = grid.imgs.get("crop")
+# raw = grid.imgs.get("raw")
+
+
+# agent = grid.agents.get(3, 10)
+# pts_crop = [[agent.border["WEST"], agent.border["NORTH"]],
+#             [agent.border["EAST"], agent.border["NORTH"]],
+#             [agent.border["EAST"], agent.border["SOUTH"]],
+#             [agent.border["WEST"], agent.border["SOUTH"]]]
+# pts_crop = [[0, 0], [0, img.shape[0]], [img.shape[1], 0], [img.shape[1], img.shape[0]]]
+
+# plt.imshow(img)
+# for pt in pts_crop:
+#     plt.plot(pt[0], pt[1], "x", color="red")
+
+
+# mat_H = grid.imgs.mat_H
+
+# # pts_rec = recover_scale(pts_crop, mat_H)
+# n_points = len(pts_crop)
+# # conver mat_in into 4 x 3 matrix
+# mat_in = np.array([list(pts_crop[i]) + [1] for i in range(4)])
+
+# # solve recovered matrix
+# mat_recover = np.matmul(np.linalg.inv(mat_H), mat_in.transpose())
+
+# # transpose back to the right dimension (4 x 3)
+# mat_recover = mat_recover.transpose()
+
+# # extract the first 2 elements in each point (4 x 2)
+# mat_recover = [mat_recover[i, :2] / mat_recover[i, 2]
+#                for i in range(n_points)]
+
+# # return
+# pts_rec = np.array(np.matrix(mat_recover)).tolist()
+
+
+# plt.figure(figsize=(12, 8))
+# plt.imshow(raw)
+# for pt in pts_rec:
+#     plt.plot(pt[0], pt[1], "x", color="red")
+
+# tiff_transform = grid.imgs.tiff_transform
+# # try remapping to Tiff coordinate
+# pts_rec = [list(tiff_transform * pts_rec[i])
+#            for i in range(4)]
+
+
+# ========= 20200727 recover shapefile =========
+
+# ========= 20200727 geo ref =========
+# import rasterio
+# import shapefile
+# path = "/Users/jameschen/Dropbox/photo_grid/test/Jacob/RGB-integer.tif"
+# path = "/Users/jameschen/Dropbox/photo_grid/test/Jacob/jacob_kmeans.png"
+# rasObj = rasterio.open(path)
+# rasObj.crs
+# CRS({'init': 'epsg:32618'})
+
+# crs = rasObj.crs.wkt
+
 # ========= 20200706 improve map flexibility =========
-import os, sys
-from PyQt5.QtWidgets import QApplication
-import numpy as np
-import cv2
-import matplotlib.pyplot as plt
-import grid as gd
-from .gridGUI import *
-import shapefile
-import numpy as np
-import pandas as pd
-import rasterio
-import rasterio.mask
+# import os, sys
+# from PyQt5.QtWidgets import QApplication
+# import numpy as np
+# import cv2
+# import matplotlib.pyplot as plt
+# import grid as gd
+# from .gridGUI import *
+# import shapefile
+# import numpy as np
+# import pandas as pd
+# import rasterio
+# import rasterio.mask
 
-os.getcwd()
+# os.getcwd()
 
-app = QApplication(sys.argv)
-grid = gd.GRID()
-os.chdir("/Users/jameschen/Dropbox/photo_grid/test/map_match")
+# app = QApplication(sys.argv)
+# grid = gd.GRID()
+# os.chdir("/Users/jameschen/Dropbox/photo_grid/test/map_match")
 
-grid.loadData(
-    pathMap="demo2.csv",
-    pathImg="demo3.png")
-grid.binarizeImg()
-grid.findPlots()
-grid.cpuSeg()
+# grid.loadData(
+#     pathMap="demo2.csv",
+#     pathImg="demo3.png")
+# grid.binarizeImg()
+# grid.findPlots()
+# grid.cpuSeg()
 
-
-
-g = GRID_GUI(grid, 4)  # 0:input, 1:crop, 2:kmean, 3:anchor, 4:output
-app.exec_()
+# g = GRID_GUI(grid, 4)  # 0:input, 1:crop, 2:kmean, 3:anchor, 4:output
+# app.exec_()
 # ========= 20200706 improve map flexibility =========
 
 # ========= 20200630 improve flexibility of border defining =========
@@ -87,87 +180,6 @@ app.exec_()
 
 # ========= 20200630 improve flexibility of border defining =========
 
-
-
-# === === === === === recover shapefile === === === === ===
-
-# import os, sys
-# sys.path
-# # sys.path.remove("/Users/jameschen/Dropbox/photo_grid/grid")
-# from PyQt5.QtWidgets import QApplication
-# import numpy as np
-# import cv2
-# import matplotlib.pyplot as plt
-# os.chdir("/Users/jameschen/Dropbox/photo_grid/")
-# import grid as gd
-# from .gridGUI import *
-# import shapefile
-# import numpy as np
-# import pandas as pd
-# import rasterio
-# import rasterio.mask
-
-# os.getcwd()
-
-# app = QApplication(sys.argv)
-# grid = gd.GRID()
-# os.chdir("/Users/jameschen/Dropbox/photo_grid/test/zhou")
-# grid.loadData(
-    # pathImg="20190613_mosaic_group2.tif")
-    # pathShp="GRID.shp")
-    # pathImg="/Users/jameschen/Dropbox/photo_grid/test/Jacob/RGB-integer.tif")
-
-# grid.cropImg(pts=[[704.3102766798419, 4031.569169960474],
-#                   [5925.9209486166, 2428.6561264822135],
-#                   [7674.553359683794, 8767.44861660079],
-#                   [2428.6561264822135, 10176.069169960474]])
-# grid.binarizeImg(k=9, lsSelect=[0, 1, 2, 4, 5], valShad=36, valSmth=5)
-# grid.imgs.readyForSeg()
-# grid.agents.setup(gmap=grid.map, gimg=grid.imgs)
-# # grid.save(path=os.getcwd(), prefix="test")
-
-# ag = grid.agents.get(0, 0)
-
-# ag.getQRect()
-
-# # ag.name
-# # ag.__dict__
-
-# # dt = grid.map.dt
-# # dt
-
-
-# grid.map.nCol
-
-# # grid.imgs.__dict__
-
-# # grid.imgs.get("crop").shape
-
-# # agents = grid.imgs.f_shp.shapeRecords()
-# # agent = agents[0].record
-
-# # grid.map.dt
-
-# # ag = grid.agents.get(0, 0)
-# # ag.__dict__
-# # ag.name
-
-
-
-# # from grid.dir import Dir
-# # gd.saveDT(grid, os.getcwd(), "test2")
-
-
-
-# g = GRID_GUI(grid, 2)  # 0:input, 1:crop, 2:kmean, 3:anchor, 4:output
-
-# # widget = g.pnMain.currentWidget().wgImg
-# # widget.pts = np.array(pts_crop, dtype=np.float32)
-# # widget.hasDrag = 1
-# # widget.repaint()
-
-# app.exec_()
-# === === === === === recover shapefile === === === === ===
 
 
 # === === === === === === DEBUG === === === === === ===

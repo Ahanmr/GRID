@@ -173,9 +173,8 @@ class GRID_GUI(QMainWindow):
                 # run computation from the previous panel
                 bugmsg("run")
                 self.pnMain.currentWidget().run()
-            except Exception as e:
+            except Exception:
                 token_err = True
-                print(e)
                 # except the initial one
 
             if token_err and self.nPanel == 0:
