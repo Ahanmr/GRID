@@ -23,7 +23,7 @@ copyright = '2020, Chunpeng James Chen'
 author = 'Chunpeng James Chen'
 
 # The full version, including alpha/beta/rc tags
-release = '0.0.1'
+release = '1.0'
 
 
 # -- General configuration ---------------------------------------------------
@@ -70,4 +70,3 @@ def setup(app):
     app.add_javascript("google_analytics.js")
     app.add_javascript(
         "https://www.googletagmanager.com/gtag/js?id=UA-151005724-3")
-

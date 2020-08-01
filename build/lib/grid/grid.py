@@ -149,8 +149,8 @@ class GRID():
         Parameters
         ----------
         """
-        print("--- cropped ---")
-        print(pts)
+        bugmsg("--- cropped ---")
+        bugmsg(pts)
         self.imgs.crop(pts)
 
         if outplot:

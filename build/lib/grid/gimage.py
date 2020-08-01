@@ -45,6 +45,7 @@ class GImage():
         self.f_shp = None
         self.hasShp = False
         self.tiff_transform = None
+        self.crs = False
         self.pts_crop = []
         self.mat_H = None
 
@@ -90,7 +91,7 @@ class GImage():
 
             # image
             if isLocalImg:
-                imgInput, self.tiff_transform = loadImg(pathImg)
+                imgInput, self.tiff_transform, self.crs = loadImg(pathImg)
                 try:
                     self.f_shp = shapefile.Reader(pathShp)
                     tmp = self.f_shp.shapeRecords()  # test if it can be read
@@ -98,7 +99,6 @@ class GImage():
                 except Exception:
                     self.f_shp = None
                     self.hasShp = False
-                print(self.hasShp)
             else:
                 imgInput = loadImgWeb(pathImg)
         elif isinstance(pathImg, np.ndarray):
@@ -293,7 +293,7 @@ class GImage():
 
     def rankCenters(self, k, center, colorOnly=False):
         scores = []
-       
+
         if colorOnly:
             ratioK = [(center[i, 0]-center[i, 1])/center[i, :].sum()
                     for i in range(center.shape[0])]

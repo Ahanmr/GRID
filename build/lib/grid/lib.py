@@ -358,7 +358,8 @@ def recover_scale(mat_in, mat_H):
     mat_recover = mat_recover.transpose()
 
     # extract the first 2 elements in each point (4 x 2)
-    mat_recover = [mat_recover[i, :2] for i in range(n_points)]
+    mat_recover = [mat_recover[i, :2] / mat_recover[i, 2]
+                   for i in range(n_points)]
 
     # return
     return np.array(np.matrix(mat_recover)).tolist()

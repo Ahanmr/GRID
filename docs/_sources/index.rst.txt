@@ -99,11 +99,11 @@ Inputs/Outputs
 Advanced usage (Jupyter notebook)
 ----------------------------------
 
+* :ref:`Customize Vegetation Indices`
+
 * :ref:`Generate datasets for deep learning`
 
 * :ref:`Work with QGIS`
-
-* :ref:`Customize vegetation indices`
 
 * :ref:`Adapt to an arbitrary field layout`
 
@@ -114,9 +114,9 @@ Advanced usage (Jupyter notebook)
    :hidden:
    :caption: ADVANCED USAGE
 
+   /ch4_adv/custom_index
    /ch4_adv/dl
    /ch4_adv/qgis
-   /ch4_adv/indices
    /ch4_adv/arbitrary
    /ch4_adv/seasons
    /ch4_adv/custom_index
