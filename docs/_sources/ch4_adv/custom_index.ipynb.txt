@@ -713,7 +713,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "### Compute correlation between derived indices and the canopy area"
+    "### Compute correlations between indices and the canopy area"
    ]
   },
   {
