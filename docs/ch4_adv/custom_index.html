@@ -114,10 +114,10 @@
 <li class="toctree-l2"><a class="reference internal" href="#Objectives">Objectives</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#Inspect-output-files">Inspect output files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#Design-index-formulas">Design index formulas</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#Compute-correlations-between-indices-and-the-canopy-area">Compute correlations between indices and the canopy area</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#Heatmap-showing-how-derived-indices-associate-with-canopy-areas">Heatmap showing how derived indices associate with canopy areas</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#Also-we-can-inspect-which-indices-perform-bettern-than-NDVI-in-a-dataframe">Also we can inspect which indices perform bettern than NDVI in a dataframe</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#Visualize-the-best-index">Visualize the best index</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Compute-correlations">Compute correlations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Heatmaps">Heatmaps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Tabular-Results">Tabular Results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Validation">Validation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="dl.html">Generate Datasets for Deep Learning</a></li>
@@ -1039,8 +1039,9 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 </div>
-<div class="section" id="Compute-correlations-between-indices-and-the-canopy-area">
-<h2>Compute correlations between indices and the canopy area<a class="headerlink" href="#Compute-correlations-between-indices-and-the-canopy-area" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="Compute-correlations">
+<h2>Compute correlations<a class="headerlink" href="#Compute-correlations" title="Permalink to this headline">¶</a></h2>
+<p>We can compute Pearson’s correlation coefficients between the canopy areas and our derived indices</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
@@ -1224,8 +1225,9 @@ div.rendered_html tbody tr:hover {
 </div></div>
 </div>
 </div>
-<div class="section" id="Heatmap-showing-how-derived-indices-associate-with-canopy-areas">
-<h2>Heatmap showing how derived indices associate with canopy areas<a class="headerlink" href="#Heatmap-showing-how-derived-indices-associate-with-canopy-areas" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="Heatmaps">
+<h2>Heatmaps<a class="headerlink" href="#Heatmaps" title="Permalink to this headline">¶</a></h2>
+<p>This visualization can show how derived indices associate with canopy areas</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
@@ -1271,8 +1273,9 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 </div>
-<div class="section" id="Also-we-can-inspect-which-indices-perform-bettern-than-NDVI-in-a-dataframe">
-<h2>Also we can inspect which indices perform bettern than NDVI in a dataframe<a class="headerlink" href="#Also-we-can-inspect-which-indices-perform-bettern-than-NDVI-in-a-dataframe" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="Tabular-Results">
+<h2>Tabular Results<a class="headerlink" href="#Tabular-Results" title="Permalink to this headline">¶</a></h2>
+<p>Also we can inspect which indices perform bettern than NDVI in a dataframe</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
@@ -1443,8 +1446,8 @@ div.rendered_html tbody tr:hover {
 </div></div>
 </div>
 </div>
-<div class="section" id="Visualize-the-best-index">
-<h2>Visualize the best index<a class="headerlink" href="#Visualize-the-best-index" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="Validation">
+<h2>Validation<a class="headerlink" href="#Validation" title="Permalink to this headline">¶</a></h2>
 <p>Based on the results shown above, now we know that by dividing the 1st channel by the 5th channel can derive a canopy-tracking index. we can validate this result by visualize the index as an image.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
