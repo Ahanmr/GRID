@@ -6,12 +6,21 @@
 GRID: Deal with Field Segmentations Elegantly
 ==========================================================
 
-.. figure:: https://img.shields.io/pypi/dm/photo_grid.svg?label=pypi%20downloads&logo=python&logoColor=white
+.. figure:: res/abstract.png
 
+.. figure:: https://img.shields.io/pypi/dm/photo_grid.svg?label=pypi%20downloads&logo=python&logoColor=white
 .. figure:: https://img.shields.io/pypi/v/photo_grid.svg?label=pypi%20version&logo=python&logoColor=white
 
+.. raw:: html
 
-.. figure:: res/abstract.png
+    <a class="github-button" href="https://github.com/poissonfish" data-size="large" data-show-count="true" aria-label="Follow @poissonfish on GitHub">Follow @poissonfish</a>
+    <a class="github-button" href="https://github.com/poissonfish/GRID/subscription" data-icon="octicon-eye" data-size="large" data-show-count="true" aria-label="Watch poissonfish/GRID on GitHub">Watch</a>
+    <a class="github-button" href="https://github.com/poissonfish/GRID" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star poissonfish/GRID on GitHub">Star</a>
+    <a class="github-button" href="https://github.com/poissonfish/GRID/fork" data-icon="octicon-repo-forked" data-size="large" data-show-count="true" aria-label="Fork poissonfish/GRID on GitHub">Fork</a>
+    <a class="github-button" href="https://github.com/poissonfish/GRID/issues" data-icon="octicon-issue-opened" data-size="large" data-show-count="true" aria-label="Issue poissonfish/GRID on GitHub">Issue</a>
+
+|
+
 
 Getting started
 ----------------

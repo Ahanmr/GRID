@@ -70,3 +70,6 @@ def setup(app):
     app.add_javascript("google_analytics.js")
     app.add_javascript(
         "https://www.googletagmanager.com/gtag/js?id=UA-151005724-3")
+    app.add_javascript(
+        "https://buttons.github.io/buttons.js")
+
