@@ -352,6 +352,7 @@ def saveH5(grid, path, prefix="GRID"):
             try:
                 with h5py.File(pathH5, "a") as f:
                     f.create_dataset(key, data=imgFin, compression="gzip")
+                    f.create_dataset(key+"_raw", data=imgAll, compression="gzip")
             except Exception as e:
                 print(e)
                 print("Failed to save %s" % key)
@@ -423,9 +424,11 @@ def saveShape(grid, path, prefix="GRID"):
             dc = {c: entry[c] for c in dt.columns}
             f.record(**dict(dc))
 
-    with open(pathSp + ".prj", "w") as f:
-        f.write(crs)
-
+    try:
+        with open(pathSp + ".prj", "w") as f:
+            f.write(crs)
+    except Exception:
+        print("No CRS found to write")
 
 # # create the PRJ file
 # prj = open("%s.prj" % filename, "w")

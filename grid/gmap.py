@@ -147,9 +147,11 @@ class GMap():
 
                 self.sigs[i] = sig
                 self.itcs[i] = intercept
+
                 # update number of peaks
                 self.nAxs[i] = len(intercept)
                 self.nAxsCur[i] = len(intercept)
+
                 # update angles
                 self.anglesCur[i] = self.angles[i]
 
