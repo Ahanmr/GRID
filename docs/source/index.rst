@@ -124,7 +124,7 @@ How to cite GRID
 -------------------
 To cite GRID, you can:
 
-- import `GRID.bib <https://github.com/Poissonfish/GRID/blob/master/docs/grid.bib>`_,
+- Import `GRID.bib <https://zzlab.net/GRID/GRID.bib>`_
 
 - or manually key in the following info:
 
