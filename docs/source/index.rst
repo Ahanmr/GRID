@@ -122,7 +122,11 @@ Advanced usage (Jupyter notebook)
 
 How to cite GRID
 -------------------
-To cite GRID, import the following BibTeX into reference managers:
+To cite GRID, you can:
+
+- import `GRID.bib <https://github.com/Poissonfish/GRID/blob/master/docs/grid.bib>`_,
+
+- or manually key in the following info:
 
 .. code-block:: none
 
@@ -139,9 +143,9 @@ To cite GRID, import the following BibTeX into reference managers:
     url          = {https://doi.org/10.3390/rs12111697}
    }
 
-or add the bibliography directly:
+Support
+--------
 
-.. code-block:: none
-
-    Chen, C.J.; Zhang, Z. GRID: A Python Package for Field Plot Phenotyping Using Aerial Images. Remote Sensing 2020, 12, 1697, doi:10.3390/rs12111697.
-
+Find any issue? Post it on 
+`GitHub <https://github.com/Poissonfish/GRID/issues>`_ 
+or contact `James Chen <mailto:chun-peng.chen@wsu.edu>`_ 
