@@ -74,11 +74,13 @@ class GAgent():
 
                 # find the remap pts
                 pts_xy = [invAffine(pts_ag[i], affine) for i in range(4)]
+
                 pts_crop_temp = np.matmul(
                     mat_H, np.float32(pts_xy).transpose()).transpose()
-                pts_crop = np.array([(pts_crop_temp[i][0]/pts_crop_temp[i][2],
-                                    pts_crop_temp[i][1]/pts_crop_temp[i][2]) for i in range(4)],
-                                    dtype=int)
+
+                pts_crop = np.array([pts_crop_temp[i, :2] / pts_crop_temp[i, 2]
+                                     for i in range(4)], dtype=int)
+                # pts_crop = np.array(pts_crop_temp[:, :2], dtype=int)
 
                 # find the centers
                 pt_ct = np.mean(pts_crop, axis=0, dtype=int)
