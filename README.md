@@ -11,7 +11,7 @@
 
 ### [Software Page (zzlab.net)](https://zzlab.net/GRID)
 
-### [User Manual](https://poissonfish.github.io/GRID)
+### [User Manual](https://poissonfish.github.io/GRID/index.html)
 
 ## Get Started
 ### Installation
