@@ -51,12 +51,13 @@ def loadImg(path):
 
     # return npImg
     rasObj = rasterio.open(path)
+    ls_dtype = rasObj.dtypes
     nCh = rasObj.count
     prog = initProgress(nCh, name="Loading channel 1")
     if nCh < 3:
         npImg = np.zeros((rasObj.height, rasObj.width, 3), dtype="uint8")
         for i in range(3):
-            npImg[:, :, i] = rasObj.read(1)
+            npImg[:, :, i] = getBandUint8(rasObj.read(1), ls_dtype[1])
             if i != nCh-1:
                 updateProgress(prog, name="Loading channel %d" % (i+2))
             else:
@@ -64,7 +65,7 @@ def loadImg(path):
     else:
         npImg = np.zeros((rasObj.height, rasObj.width, nCh), dtype="uint8")
         for i in range(nCh):
-            npImg[:, :, i] = rasObj.read(i + 1)
+            npImg[:, :, i] = getBandUint8(rasObj.read(i + 1), ls_dtype[i])
             if i != nCh-1:
                 updateProgress(prog, name="Loading channel %d" % (i+2))
             else:
@@ -81,6 +82,17 @@ def loadImg(path):
 
     rasObj.close()
     return npImg, transform, crs
+
+
+def getBandUint8(band, dtype):
+    if "float" in dtype:
+        band[band < 0] = 0
+        band_int8 = (band - band.min()) * 255 / \
+            (np.quantile(band, .999) - band.min())
+        band_int8[band_int8 > 255] = 255
+        return band_int8
+    else:
+        return band
 
 
 def loadImgWeb(URL):
@@ -208,13 +220,12 @@ def saveDT(grid, path, prefix="GRID", simple=True):
             if not agent or agent.isFake():
                 continue
             try:
-                entry = dict(var=str(agent.name), row=int(row + 1), col=int(col + 1))
+                entry = dict(var=str(agent.name),
+                             row=int(row + 1),
+                             col=int(col + 1))
 
-                # get ROI region
-                rg_row = range(agent.getBorder(Dir.NORTH),
-                               agent.getBorder(Dir.SOUTH))
-                rg_col = range(agent.getBorder(Dir.WEST),
-                               agent.getBorder(Dir.EAST))
+                # compute valid ranges
+                rg_row, rg_col = get_valid_range(agent, grid.imgs.get('bin'))
 
                 # get selected pixels info
                 imgBinAgent = grid.imgs.get('bin')[rg_row, :][:, rg_col]
@@ -233,7 +244,10 @@ def saveDT(grid, path, prefix="GRID", simple=True):
                     entry[key + "_std"] = vec_out.std()
 
                 df.loc[len(df)] = entry
-            except Exception:
+
+            except Exception as e:
+                print("=====row: %d, col: %d=====" % (row, col))
+                print(e)
                 print("The plot is out of the borders")
 
     df = df[~df['var'].isnull()]
@@ -336,17 +350,15 @@ def saveH5(grid, path, prefix="GRID"):
                 key = str(agent.name)
 
                 # get ROI region
-                rgY = range(agent.getBorder(Dir.NORTH),
-                            agent.getBorder(Dir.SOUTH))
-                rgX = range(agent.getBorder(Dir.WEST),
-                            agent.getBorder(Dir.EAST))
+                rgY, rgX = get_valid_range(agent, grid.imgs.get('bin'))
 
                 # compute kernel
                 imgAll = img[:, rgX, :][rgY, :, :]
                 imgBin = grid.imgs.get("bin")[:, rgX][rgY, :]
                 imgFin = np.multiply(imgAll, np.expand_dims(imgBin, 2))
-            except Exception:
-                print("The plot is out of the borders")
+            except Exception as e:
+                print("%s: The plot is out of the borders" % key)
+                print(e)
 
             # export image
             try:
@@ -354,8 +366,8 @@ def saveH5(grid, path, prefix="GRID"):
                     f.create_dataset(key, data=imgFin, compression="gzip")
                     f.create_dataset(key+"_raw", data=imgAll, compression="gzip")
             except Exception as e:
-                print(e)
                 print("Failed to save %s" % key)
+                print(e)
 
 
 def saveShape(grid, path, prefix="GRID"):
@@ -383,15 +395,15 @@ def saveShape(grid, path, prefix="GRID"):
                 float(instance)
                 # integer, floating
                 mode = "N"
-                arg1, arg2 = 10, 10
+                arg1, arg2 = 50, 50
             except ValueError:
                 # characters
                 mode = "C"
-                arg1, arg2 = 20, 20
+                arg1, arg2 = 50, 50
 
             if col == cols[0]:
                 mode = "C"
-                arg1, arg2 = 20, 20
+                arg1, arg2 = 50, 50
 
             f.field(col, mode, arg1, arg2)
 
@@ -403,10 +415,12 @@ def saveShape(grid, path, prefix="GRID"):
                 agent = grid.agents.get(row, col)
 
                 # polygon
-                pts_crop = [[agent.border["WEST"], agent.border["NORTH"]],
-                            [agent.border["EAST"], agent.border["NORTH"]],
-                            [agent.border["EAST"], agent.border["SOUTH"]],
-                            [agent.border["WEST"], agent.border["SOUTH"]]]
+                bn, bs, bw, be = get_valid_range(
+                    agent, grid.imgs.get('bin'), is_border=True)
+                pts_crop = [[bw, bn],
+                            [be, bn],
+                            [be, bs],
+                            [bw, bs]]
 
                 # recover
                 pts_rec = recover_scale(pts_crop, mat_H)
@@ -417,8 +431,8 @@ def saveShape(grid, path, prefix="GRID"):
                 # input shape file
                 f.poly([pts_rec])
             except Exception as e:
-                bugmsg("The plot is out of the borders")
-                bugmsg(e)
+                print("%s: The plot is out of the borders" % entry["var"])
+                print(e)
 
             # attributes
             dc = {c: entry[c] for c in dt.columns}
@@ -429,6 +443,40 @@ def saveShape(grid, path, prefix="GRID"):
             f.write(crs)
     except Exception:
         print("No CRS found to write")
+
+
+def get_valid_range(agent, img, is_border=False):
+    # get border values
+    bn = int(agent.getBorder(Dir.NORTH))
+    bs = int(agent.getBorder(Dir.SOUTH))
+    bw = int(agent.getBorder(Dir.WEST))
+    be = int(agent.getBorder(Dir.EAST))
+
+    # get image dimension
+    imgH, imgW = img.shape
+
+    # adjust to valid ranges
+    if bn < 0:
+        bn = 0
+    if bw < 0:
+        bw = 0
+    if bs > imgH:
+        # height
+        bs = imgH
+    if be >= imgW:
+        # width
+        be = imgW
+
+    # make ranges
+    rg_row = range(bn, bs)
+    rg_col = range(bw, be)
+
+    # return
+    if is_border:
+        return bn, bs, bw, be
+    else:
+        return rg_row, rg_col
+
 
 # # create the PRJ file
 # prj = open("%s.prj" % filename, "w")

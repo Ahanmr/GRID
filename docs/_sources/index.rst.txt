@@ -9,6 +9,7 @@ GRID: Deal with Field Segmentations Elegantly
 .. figure:: res/abstract.png
 
 .. figure:: https://img.shields.io/pypi/dm/photo_grid.svg?label=pypi%20downloads&logo=python&logoColor=white
+
 .. figure:: https://img.shields.io/pypi/v/photo_grid.svg?label=pypi%20version&logo=python&logoColor=white
 
 .. raw:: html

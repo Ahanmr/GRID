@@ -6,7 +6,7 @@ sklearn
 scipy
 matplotlib
 image
-opencv-python==4.1.1.26
+opencv-python
 rasterio
 PyQt5==5.12
 qdarkstyle

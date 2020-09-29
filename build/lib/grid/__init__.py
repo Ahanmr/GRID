@@ -1,6 +1,6 @@
 __author__ = "Chunpeng James Chen"
-__version__ = "1.1.98"
-__update__ = "Aug 3, 2020"
+__version__ = "1.2.12"
+__update__ = "Sep 2, 2020"
 
 # imports
 import subprocess
@@ -73,6 +73,9 @@ from .grid import *
 
 """
 Update Log
+
+- Aug 27, 2020 (1.1.99)
+    * Bug fixes of showing tabular information
 
 - Jul 27, 2020 (1.1.96)
     * Fix the shapefile with imprecise coordinates

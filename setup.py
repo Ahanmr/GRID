@@ -1,12 +1,13 @@
 import setuptools
 setuptools.setup(name='photo_grid',
-                 version='1.1.98',
+                 version='1.2.13',
                  description='A GUI for field segmentation',
                  url='https://github.com/Poissonfish/GRID',
                  python_requires='>=3.6',
                  classifiers=[
                         "Programming Language :: Python :: 3.6",
                         "Programming Language :: Python :: 3.7",
+                        "Programming Language :: Python :: 3.8",
                         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
                         "Operating System :: MacOS :: MacOS X",
                         "Operating System :: Microsoft :: Windows :: Windows 10"
@@ -22,7 +23,7 @@ setuptools.setup(name='photo_grid',
                                    # math, models
                                    'sklearn', 'scipy', 'matplotlib',
                                    # image processing
-                                   'image', 'opencv-python==4.1.1.26',
+                                   'image', 'opencv-python',
                                    'rasterio',
                                    # GUI
                                    'PyQt5==5.12', 'qdarkstyle',

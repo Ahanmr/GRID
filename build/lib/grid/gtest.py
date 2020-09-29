@@ -40,171 +40,184 @@
 #     pathImg="temp.png",
 #     preset="tttttt.grid")
 
-# === === === === === command-line test === === === === ===
-
-# ========= 20200801 multi seasons =========
-
-import os, sys
-sys.path
-sys.path.remove("/Users/jameschen/Dropbox/photo_grid/grid")
+# ======== 20200827 segmentation ========
+import os
+import sys
 from PyQt5.QtWidgets import QApplication
 import numpy as np
 import cv2
 import matplotlib.pyplot as plt
-os.chdir("/Users/jameschen/Dropbox/photo_grid/")
 import grid as gd
+from .gridGUI import *
 import shapefile
 import numpy as np
 import pandas as pd
 import rasterio
+import rasterio.mask
 
+os.getcwd()
+
+app = QApplication(sys.argv)
 grid = gd.GRID()
-os.chdir("/Users/jameschen/Dropbox/photo_grid/test/zhou")
+
 grid.loadData(
-    pathImg="/Users/jameschen/Dropbox/photo_grid/test/seasons/s2.tif",
-    pathShp="/Users/jameschen/Dropbox/photo_grid/test/seasons/s1/s1.shp")
+    pathImg="/Users/jameschen/Dropbox/photo_grid/test/map_match/demo.jpg",
+    pathMap="/Users/jameschen/Dropbox/photo_grid/test/map_match/demo.csv")
+grid.binarizeImg(k=3, lsSelect=[0, 1], valShad=0, valSmth=0)
+grid.findPlots(nRow=4, nCol=3)
 
-grid.cropImg(pts=[[718.3549060542798, 3950.951983298539],
-                  [5798.1503131524005, 2488.5866388308978],
-                  [7722.315240083507, 8799.847599164927],
-                  [2462.9311064718163, 10185.246346555323]])
-grid.binarizeImg(k=5, lsSelect=[0, 1], valShad=0, valSmth=0, outplot=True)
-
-img = grid.imgs.get("crop")
-raw = grid.imgs.get("raw")
-
-gimg = grid.imgs
-
-affine = gimg.tiff_transform
-pts_crop = gimg.pts_crop
-mat_H = gimg.mat_H
-
-# load agents
-agents = gimg.f_shp.shapeRecords()
-
-n_agents = len(agents)
-print("Test shp")
-i = 0
-# extract agent info
-pts_ag = agents[i].shape.points
-att_ag = agents[i].record
-
-# find the remap pts
-pts_xy = [invAffine(pts_ag[i], affine) for i in range(4)]
+g = GRID_GUI(grid, 4)  # 0:input, 1:crop, 2:kmean, 3:anchor, 4:output
+app.exec_()
 
 
-# get affine old
-grid_old = gd.GRID()
-grid_old.loadData(pathImg="/Users/jameschen/Dropbox/photo_grid/test/seasons/s1.tif")
+# ========= 20200801 multi seasons =========
 
-crs1 = grid.imgs.crs
-crs2 = grid_old.imgs.crs
-crs1 == crs2
+# import os, sys
+# sys.path
+# sys.path.remove("/Users/jameschen/Dropbox/photo_grid/grid")
+# from PyQt5.QtWidgets import QApplication
+# import numpy as np
+# import cv2
+# import matplotlib.pyplot as plt
+# os.chdir("/Users/jameschen/Dropbox/photo_grid/")
+# import grid as gd
+# import shapefile
+# import numpy as np
+# import pandas as pd
+# import rasterio
+
+# grid = gd.GRID()
+# os.chdir("/Users/jameschen/Dropbox/photo_grid/test/zhou")
+# grid.loadData(
+#     pathImg="/Users/jameschen/Dropbox/photo_grid/test/seasons/s2.tif",
+#     pathShp="/Users/jameschen/Dropbox/photo_grid/test/seasons/s1/s1.shp")
+
+# grid.cropImg(pts=[[718.3549060542798, 3950.951983298539],
+#                   [5798.1503131524005, 2488.5866388308978],
+#                   [7722.315240083507, 8799.847599164927],
+#                   [2462.9311064718163, 10185.246346555323]])
+# grid.binarizeImg(k=5, lsSelect=[0, 1], valShad=0, valSmth=0, outplot=True)
+
+# img = grid.imgs.get("crop")
+# raw = grid.imgs.get("raw")
+
+# gimg = grid.imgs
+
+# affine = gimg.tiff_transform
+# pts_crop = gimg.pts_crop
+# mat_H = gimg.mat_H
+
+# # load agents
+# agents = gimg.f_shp.shapeRecords()
+
+# n_agents = len(agents)
+# print("Test shp")
+# i = 0
+# # extract agent info
+# pts_ag = agents[i].shape.points
+# att_ag = agents[i].record
+
+# # find the remap pts
+# pts_xy = [invAffine(pts_ag[i], affine) for i in range(4)]
 
 
+# # get affine old
+# grid_old = gd.GRID()
+# grid_old.loadData(pathImg="/Users/jameschen/Dropbox/photo_grid/test/seasons/s1.tif")
 
-def aff(pt, affine, affine2):
-    x = (pt[0] - affine[2]) / affine[0]
-    y = (pt[1] - affine[5]) / affine[4]
-    return (x, y)
+# crs1 = grid.imgs.crs
+# crs2 = grid_old.imgs.crs
+# crs1 == crs2
 
-
-affine2 = grid_old.imgs.tiff_transform
-pts_xy2 = [aff(pts_ag[i], affine, affine2) for i in range(4)]
-
-dx = (affine[2] - affine2[2]) / affine[0]
-dy = (affine[5] - affine2[5]) / affine[4]
-dx
-dy
-
-plt.figure(figsize=(10, 10))
-plt.imshow(raw)
-for pt in pts_xy:
-    plt.plot(pt[0], pt[1], "x", color="red")
+# def aff(pt, affine, affine2):
+#     x = (pt[0] - affine[2]) / affine[0]
+#     y = (pt[1] - affine[5]) / affine[4]
+#     return (x, y)
 
 
+# affine2 = grid_old.imgs.tiff_transform
+# pts_xy2 = [aff(pts_ag[i], affine, affine2) for i in range(4)]
 
-plt.figure(figsize=(10, 10))
-plt.imshow(raw)
-for pt in pts_xy2:
-    plt.plot(pt[0], pt[1], "x", color="red")
-
-
-# pts_xy2 = [aff(pts_ag[i], affine2, affine2) for i in range(4)]
+# dx = (affine[2] - affine2[2]) / affine[0]
+# dy = (affine[5] - affine2[5]) / affine[4]
+# dx
+# dy
 
 # plt.figure(figsize=(10, 10))
-# plt.imshow(grid_old.imgs.get("raw"))
+# plt.imshow(raw)
+# for pt in pts_xy:
+#     plt.plot(pt[0], pt[1], "x", color="red")
+
+# plt.figure(figsize=(10, 10))
+# plt.imshow(raw)
 # for pt in pts_xy2:
 #     plt.plot(pt[0], pt[1], "x", color="red")
 
 
+# # pts_xy2 = [aff(pts_ag[i], affine2, affine2) for i in range(4)]
+
+# # plt.figure(figsize=(10, 10))
+# # plt.imshow(grid_old.imgs.get("raw"))
+# # for pt in pts_xy2:
+# #     plt.plot(pt[0], pt[1], "x", color="red")
+
+# pts_crop_temp = np.matmul(
+#     mat_H, np.float32(pts_xy).transpose()).transpose()
+
+# pts_crop = np.array([pts_crop_temp[i, :2] / pts_crop_temp[i, 2]
+#                     for i in range(4)], dtype=int)
+
+# plt.figure(figsize=(10, 10))
+# plt.imshow(img)
+# for pt in pts_crop:
+#     plt.plot(pt[0], pt[1], "x", color="red")
+
+# agent = grid.agents.get(3, 10)
+# pts_crop = [[agent.border["WEST"], agent.border["NORTH"]],
+#             [agent.border["EAST"], agent.border["NORTH"]],
+#             [agent.border["EAST"], agent.border["SOUTH"]],
+#             [agent.border["WEST"], agent.border["SOUTH"]]]
+# pts_crop = [[0, 0], [0, img.shape[0]], [img.shape[1], 0], [img.shape[1], img.shape[0]]]
+
+# plt.imshow(img)
+# for pt in pts_crop:
+#     plt.plot(pt[0], pt[1], "x", color="red")
+
+
+# mat_H = grid.imgs.mat_H
+
+# # pts_rec = recover_scale(pts_crop, mat_H)
+# n_points = len(pts_crop)
+# # conver mat_in into 4 x 3 matrix
+# mat_in = np.array([list(pts_crop[i]) + [1] for i in range(4)])
+
+# # solve recovered matrix
+# mat_recover = np.matmul(np.linalg.inv(mat_H), mat_in.transpose())
+
+# # transpose back to the right dimension (4 x 3)
+# mat_recover = mat_recover.transpose()
+
+# # extract the first 2 elements in each point (4 x 2)
+# mat_recover = [mat_recover[i, :2] / mat_recover[i, 2]
+#                for i in range(n_points)]
+
+# # return
+# pts_rec = np.array(np.matrix(mat_recover)).tolist()
+
+
+# plt.figure(figsize=(12, 8))
+# plt.imshow(raw)
+# for pt in pts_rec:
+#     plt.plot(pt[0], pt[1], "x", color="red")
+
+# tiff_transform = grid.imgs.tiff_transform
+# # try remapping to Tiff coordinate
+# pts_rec = [list(tiff_transform * pts_rec[i])
+#            for i in range(4)]
 
 
 
-
-
-pts_crop_temp = np.matmul(
-    mat_H, np.float32(pts_xy).transpose()).transpose()
-
-pts_crop = np.array([pts_crop_temp[i, :2] / pts_crop_temp[i, 2]
-                    for i in range(4)], dtype=int)
-
-plt.figure(figsize=(10, 10))
-plt.imshow(img)
-for pt in pts_crop:
-    plt.plot(pt[0], pt[1], "x", color="red")
-
-
-
-
-
-
-agent = grid.agents.get(3, 10)
-pts_crop = [[agent.border["WEST"], agent.border["NORTH"]],
-            [agent.border["EAST"], agent.border["NORTH"]],
-            [agent.border["EAST"], agent.border["SOUTH"]],
-            [agent.border["WEST"], agent.border["SOUTH"]]]
-pts_crop = [[0, 0], [0, img.shape[0]], [img.shape[1], 0], [img.shape[1], img.shape[0]]]
-
-plt.imshow(img)
-for pt in pts_crop:
-    plt.plot(pt[0], pt[1], "x", color="red")
-
-
-mat_H = grid.imgs.mat_H
-
-# pts_rec = recover_scale(pts_crop, mat_H)
-n_points = len(pts_crop)
-# conver mat_in into 4 x 3 matrix
-mat_in = np.array([list(pts_crop[i]) + [1] for i in range(4)])
-
-# solve recovered matrix
-mat_recover = np.matmul(np.linalg.inv(mat_H), mat_in.transpose())
-
-# transpose back to the right dimension (4 x 3)
-mat_recover = mat_recover.transpose()
-
-# extract the first 2 elements in each point (4 x 2)
-mat_recover = [mat_recover[i, :2] / mat_recover[i, 2]
-               for i in range(n_points)]
-
-# return
-pts_rec = np.array(np.matrix(mat_recover)).tolist()
-
-
-plt.figure(figsize=(12, 8))
-plt.imshow(raw)
-for pt in pts_rec:
-    plt.plot(pt[0], pt[1], "x", color="red")
-
-tiff_transform = grid.imgs.tiff_transform
-# try remapping to Tiff coordinate
-pts_rec = [list(tiff_transform * pts_rec[i])
-           for i in range(4)]
-
-
-
-grid.cpuSeg(outplot=True)
+# grid.cpuSeg(outplot=True)
 
 # ========= 20200727 recover shapefile =========
 # import os, sys
@@ -287,19 +300,6 @@ grid.cpuSeg(outplot=True)
 #            for i in range(4)]
 
 
-# ========= 20200727 recover shapefile =========
-
-# ========= 20200727 geo ref =========
-# import rasterio
-# import shapefile
-# path = "/Users/jameschen/Dropbox/photo_grid/test/Jacob/RGB-integer.tif"
-# path = "/Users/jameschen/Dropbox/photo_grid/test/Jacob/jacob_kmeans.png"
-# rasObj = rasterio.open(path)
-# rasObj.crs
-# CRS({'init': 'epsg:32618'})
-
-# crs = rasObj.crs.wkt
-
 # ========= 20200706 improve map flexibility =========
 # import os, sys
 # from PyQt5.QtWidgets import QApplication
@@ -329,9 +329,8 @@ grid.cpuSeg(outplot=True)
 
 # g = GRID_GUI(grid, 4)  # 0:input, 1:crop, 2:kmean, 3:anchor, 4:output
 # app.exec_()
-# ========= 20200706 improve map flexibility =========
 
-# ========= 20200630 improve flexibility of border defining =========
+# ========= 20200630 improve flexibility of border defining (2 rows)=========
 # import os, sys
 # from PyQt5.QtWidgets import QApplication
 # import numpy as np
@@ -363,10 +362,8 @@ grid.cpuSeg(outplot=True)
 # grid.agents.setup(gmap=grid.map,
 #                   gimg=grid.imgs)
 
-# g = GRID_GUI(grid, 3)  # 0:input, 1:crop, 2:kmean, 3:anchor, 4:output
+# g = GRID_GUI(grid, 4)  # 0:input, 1:crop, 2:kmean, 3:anchor, 4:output
 # app.exec_()
-
-# ========= 20200630 improve flexibility of border defining =========
 
 
 
